@@ -1,0 +1,9 @@
+#+TITLE: Job Finder
+
+* Job Finder
+This is a job finder where users are able to create a job or accept a job.
+* Project Members
++ [[https://github.com/haileydennis][Hailey Dennis]]
++ [[https://github.com/jdasnake81][Jake Cogswell]]
++ [[https://github.com/PineappleMiner][James Field]]
++ [[https://github.com/Simponic][Logan Hunt]]
