@@ -1,1 +1,1 @@
-web: gunicorn jobfind.wsgi
+web: gunicorn findjobapp.wsgi
