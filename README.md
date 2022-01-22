@@ -44,7 +44,7 @@ And finally run the server
 python3 manage.py runserver
 ```
 
-Note that you might need to set your environment variables in your shell. The file `.env.example` provides a list of example environment variables you need to set. You can use the defaults set in .env.example by running 
+Note that you might need to set your environment variables in your shell. The file `.env.example` provides a list of example environment variables you need to set. You can use the defaults set in `.env.example` by running 
 ```bash
 export $(cat .env.example)
 ```
