@@ -1,4 +1,4 @@
-# Project Name Here
+# Job Finder
 
 ## Project Overview
 This project aims to provide a platform for people who perform yard-work (workers) to find jobs in their desired location as well 
@@ -26,12 +26,12 @@ analysis and that any development activity (requirements capture, analysis, desi
 during any phase.  Early phases will focus on understanding (requirements capture and analysis) and subsequent phases 
 will focus on design and implementation.  Each phase will include a retrospective.
 
- Phase | Iteration 
-:---|:---
- 1.    |  Phase 1 - Requirements Capture
- 2.    |  Phase 2 - Analysis, Architectural, UI, and DB Design
- 3.    |  Phase 3 - Implementation, and Unit Testing
- 4.    |  Phase 4 - More Implementation and Testing 
+| Phase | Iteration 
+|:---|:---
+| 1.    |  Phase 1 - Requirements Capture
+| 2.    |  Phase 2 - Analysis, Architectural, UI, and DB Design
+| 3.    |  Phase 3 - Implementation, and Unit Testing
+| 4.    |  Phase 4 - More Implementation and Testing 
 
 
 
@@ -86,7 +86,7 @@ submissions', version control and data tracking.
 * Payment
   * Likelihood - Low
   * Severity - High
-  * Consequences - If payment is not correctly handles this could cause many angry customers and/or workers.
+  * Consequences - If payment is not correctly handled this could cause many angry customers and/or workers.
   * Work-arounds -
 
 
