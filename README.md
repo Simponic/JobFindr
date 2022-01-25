@@ -1,4 +1,4 @@
-# Job Finder
+# JobFind
 This is a job finder where users are able to create a job or accept a job.
 
 # Project Members
