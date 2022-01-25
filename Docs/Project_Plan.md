@@ -91,4 +91,4 @@ submissions', version control and data tracking.
 
 
 ## Configuration Management
-See the README.md in the Git repository.
+See the [README.md](https://github.com/Simponic/cs3450-team-one/blob/main/README.md) in the Git repository.
