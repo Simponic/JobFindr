@@ -1,4 +1,4 @@
-# Job Finder
+# Job Find
 
 ## Project Overview
 This project aims to provide a platform for people who perform yard-work (workers) to find jobs in their desired location as well 
