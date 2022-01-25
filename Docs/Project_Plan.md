@@ -28,10 +28,10 @@ will focus on design and implementation.  Each phase will include a retrospectiv
 
  Phase | Iteration 
 :---|:---
- 1. |  Phase 1 - Requirements Capture
- 2. |  Phase 2 - Analysis, Architectural, UI, and DB Design
- 3. |  Phase 3 - Implementation, and Unit Testing
- 4. |  Phase 4 - More Implementation and Testing 
+ 1.    |  Phase 1 - Requirements Capture
+ 2.    |  Phase 2 - Analysis, Architectural, UI, and DB Design
+ 3.    |  Phase 3 - Implementation, and Unit Testing
+ 4.    |  Phase 4 - More Implementation and Testing 
 
 
 
@@ -41,7 +41,7 @@ behaviors.
 
 
 ## Communication Policies, Procedures, and Tools
-Discord - This will be the number one tool used for communication outside of class. We will use dicord to discuss each
+[Discord](https://discord.com) - This will be the number one tool used for communication outside of class. We will use dicord to discuss each
 persons' assignment as well as make plans for when we need to meet in person to help better solve any issues we face.
 
 In Class - Since We have class every Tuesday and Thursday, and we all sit next to each other we can use the time before 
@@ -52,6 +52,42 @@ GitHub - This will be where our project is stored so that we can all access it a
 submissions', version control and data tracking. 
 
 ## Risk Analysis 
+* Database Structure
+  * Likelihood - Low
+  * Severity - Very High
+  * Consequences - Most other parts of this project require the databasse. If the database fails almost everything else
+  will be unusable. 
+  * Work-arounds - None, the database is needed
+
+* Login
+  * Likelihood - Low
+  * Severity - Medium
+  * Consequences - Inability or difficulty for users to log in will make it difficult for costumers to create jobs and 
+  for workers to accept jobs as well as manage their preferences, location and payment information.
+  * Work-arounds - Remove login feature
+    * Difficulty - Easy
+    * Impact - Users will have to type in their information every time they use our serves
+    * Pros - Easier to implement
+    * Cons - No saved preferences, accounts or locations. Have to re-enter information everytime you use the service. 
+    Can't store money on app need to pay at time of service.
+
+* UI
+  * Likelihood - Low
+  * Severity - High
+  * Consequences - Inability for users to do anything if UI doesn't function
+  * Work-arounds - None, a good UI is needed
+
+* Spread jobs around
+  * Likelihood - Low
+  * Severity - Low
+  * Consequences - Some users may get jobs more often then others
+  * Work-arounds -
+
+* Payment
+  * Likelihood - Low
+  * Severity - High
+  * Consequences - If payment is not correctly handles this could cause many angry customers and/or workers.
+  * Work-arounds -
 
 
 ## Configuration Management
