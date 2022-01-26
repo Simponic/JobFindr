@@ -12,7 +12,7 @@ being taken out of the customers' payment.
 ## Team Organization 
 Project Manager: Logan Hunt
 
-Designers and Developers: Hailey Dennis, Jake Cogswell nad James Field
+Designers and Developers: Hailey Dennis, Jake Cogswell and James Field
 
 ## Software Development Process
 The development will be broken up into five phases.  Each phase will be a little like a Sprint in an Agile method and a 
@@ -77,17 +77,28 @@ submissions', version control and data tracking.
   * Consequences - Inability for users to do anything if UI doesn't function
   * Work-arounds - None, a good UI is needed
 
-* Spread jobs around
+* Spreading jobs around with beneficial treatment to higher rated workers
   * Likelihood - Low
   * Severity - Low
-  * Consequences - Some users may get jobs more often then others
-  * Work-arounds -
+  * Consequences - Some workers may not get jobs if they are rated too low.
+  * Work-arounds - Make it a simple que with no priority based on ratings
+    * Difficulty - Easy
+    * Impact - Better rated workers won't get the better jobs
+    * Pros - No need to worry about reviews, Easier to implement
+    * Cons - Removes the positive impact to workers who get better reviews/removes desire to get better ratings.
 
 * Payment
   * Likelihood - Low
   * Severity - High
-  * Consequences - If payment is not correctly handled this could cause many angry customers and/or workers.
-  * Work-arounds -
+  * Consequences - If payment is not correctly handled this could cause many angry customers and/or workers. May be 
+  difficult refunding customers if workers withdraw money too quickly.
+  * Work-arounds - Hold payment for a few days before sending it to the worker
+    * Difficulty - Medium
+    * Impact - Worker won't get access to their money immediately
+    * Pros - Won't have to worry as much about refunds if there is a problem with the work because the money will remain 
+    in limbo for few days before being paid to the worker. 
+    * Cons - Will need an extra place to store the money. Need to make sure the money goes to the right worker after the 
+    money is in limbo. 
 
 
 ## Configuration Management
