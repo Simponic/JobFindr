@@ -1,12 +1,15 @@
 # Job Find
 
 ## Project Overview
-This project aims to provide a platform for people who perform yard-work (workers) to find jobs in their desired location as well 
-as providing a platform for users (customers) who are looking for yard-work to be done on their property to find workers to do the
-desired jobs.
+This project aims to provide a platform for people who perform yard-work (workers) to find jobs in their desired 
+location as well as providing a platform for users (customers) who are looking for yard-work to be done on their 
+property to find workers to do the desired jobs.
 
-This system will allow customers to place jobs for their property and allow workers to accept these jobs with a 10% fee
-being taken out of the customers' payment. 
+This system will allow customers to create job listings for their property. When a job is created it will then allow 
+workers to accept the created job. After the worker completes the job payment will move from the customer to the worker
+with a 10% service fee being taken out for the owner. The work can include but is not limited to lawn mowing, leaf
+raking, snow shoveling, drain cleaning, hedge trimming and other such yard work.
+
 
 
 ## Team Organization 
