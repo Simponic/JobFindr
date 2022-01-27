@@ -58,7 +58,7 @@ submissions', version control and data tracking.
 * Database Structure
   * Likelihood - Low
   * Severity - Very High
-  * Consequences - Most other parts of this project require the databasse. If the database fails almost everything else
+  * Consequences - Most other parts of this project require the database. If the database fails almost everything else
   will be unusable. 
   * Work-arounds - None, the database is needed
 
@@ -84,7 +84,7 @@ submissions', version control and data tracking.
   * Likelihood - Low
   * Severity - Low
   * Consequences - Some workers may not get jobs if they are rated too low.
-  * Work-arounds - Make it a simple que with no priority based on ratings
+  * Work-arounds - Make it a simple queue with no priority based on ratings
     * Difficulty - Easy
     * Impact - Better rated workers won't get the better jobs
     * Pros - No need to worry about reviews, Easier to implement
@@ -105,4 +105,4 @@ submissions', version control and data tracking.
 
 
 ## Configuration Management
-See the [README.md](https://github.com/Simponic/cs3450-team-one/blob/main/README.md) in the Git repository.
+See the [README.md](../README.md) in the Git repository.
