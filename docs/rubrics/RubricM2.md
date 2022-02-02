@@ -1,4 +1,4 @@
-#Milestone 2 Rubric
+# Milestone 2 Rubric
 
 | Criteria | Pts | Completed By| Comments|
 | :---     | :---| :---        | :---    |
