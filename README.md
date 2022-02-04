@@ -10,18 +10,18 @@ This is a job finder where users can create a job or accept a job.
 # Organization / Name Scheme
 The `docs` directory contains documentation relevant to the project. 
 
-The `static` directory contains static content (css, images, possibly js in the future).
+This project uses the [Django Framework](https://djangoproject.com) to resolve requests and mutate objects stored in a PostgreSQL database. For the frontend, we are using [React](https://reactjs.org/). [Nginx](https://nginx.com) is used to act as a reverse proxy for HTTP requests. [Docker](https://docker.com) is used to ease the build process of the app in development (and production in the future).
 
-Features requiring modularization will be organized into seperate "apps". For example, non-dynamic pages are controlled by the `pages` "app" (like the homepage and other static pages in the future).
-
-The root "app" is in `findjobapp`. Configuration in this directory is global in that it affects the runtime of the whole app.
+All the frontend code is in `frontend`, and likewise for the backend.
 
 General naming convention and organization should try to follow [this guide](https://streamhacker.com/2011/01/03/django-application-conventions/) which was chosen arbitrarily to make sure there is at least some baseline standard.
 
 # Getting It Up And Running (Tools / Building Locally)
-This project uses the [Django Framework](https://djangoproject.com) to resolve requests and mutate objects stored in an SQLite database. For the frontend, we are using [React](https://reactjs.org/).
+Credit note: A lot of the Docker stuff in this repo is from [this blog post](https://testdriven.io/blog/django-spa-auth/).
 
-To run the app locally first install python3 and pip3 if they are not yet present on your system. 
+First, install:
+* `docker` [instructions for Mac/Windows](https://docs.docker.com/desktop/) [instructions for Linux](https://docs.docker.com/engine/)
+* `docker-compose` [instructions](https://docs.docker.com/compose/install/)
 
 Then, clone the repo and `cd` into it
 ```bash
@@ -29,16 +29,29 @@ git clone git@github.com:Simponic/cs3450-team-one.git jobfinder
 cd jobfinder
 ```
 
-TODO: USE DOCKER
-
-And finally run the server
+And run the DB, Frontend, and Backend with one command:
 ```bash
-python3 manage.py runserver
+sudo docker-compose up -d --build
 ```
 
-Note that you might need to set your environment variables in your shell. The file `.env.example` provides a list of example environment variables you need to set. You can use the defaults set in `.env.example` by running 
+The app should be live at `http://localhost:42069`.
+
+You might find yourself needing to do migrations. To do so, first list all the running docker containers:
 ```bash
-export $(cat .env.example)
+$ sudo docker ps
+CONTAINER ID   IMAGE                 COMMAND                  CREATED          STATUS          PORTS                                       NAMES
+be5d05526668   project-v2_backend    "python manage.py ru…"   6 minutes ago    Up 6 minutes    8000/tcp                                    project-v2_backend_1
+959151ab9c21   project-v2_frontend   "docker-entrypoint.s…"   15 minutes ago   Up 12 minutes   3000/tcp                                    project-v2_frontend_1
+50536f1737d5   postgres:14.1         "docker-entrypoint.s…"   18 minutes ago   Up 13 minutes   0.0.0.0:5438->5432/tcp, :::5438->5432/tcp   project-v2_db_1
+```
+
+And select the container ID of the image running the backend; in this case `be5d05526668`. Start a shell.
+
+```bash
+$ sudo docker exec -it be5d05526668 /bin/sh
+/usr/src/app # ls
+Dockerfile        authentication    findjobapp        manage.py         requirements.txt
+/usr/src/app # python3 migrate.py migrate
 ```
 
 # Meta-tools
@@ -68,4 +81,4 @@ Once you have found a bug or inconvenience to the user, create an issue on GitHu
 As discussed above in the contribution guidelines, the issue will then be assigned to the backlog to die.
 
 # Deploying
-Deployment is done with Heroku since they have a free tier. This repo is hosted at https://find-job-app.herokuapp.com. Only the user that hosts the `upstream` branch through their account on Heroku may push changes from the main branch to production.
+Deployment will be automated with Docker. Possibly hosted on a Rasperry Pi or something.

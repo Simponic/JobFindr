@@ -1,13 +1,29 @@
 version: '3.8'
 
-services:
+networks:
+  static:
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.22.0.0/16
 
+services:
   backend:
     build: ./backend
     volumes:
       - ./backend:/usr/src/app
     expose:
       - 8000
+    environment:
+      - ENV=DEV
+      - PGHOST=172.22.0.102
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - PGPORT=5432
+    networks:
+      static:
+        ipv4_address: 172.22.0.100
 
   frontend:
     stdin_open: true
@@ -19,6 +35,9 @@ services:
       - 3000
     environment:
       - NODE_ENV=development
+    networks:
+      static:
+        ipv4_address: 172.22.0.101
     depends_on:
       - backend
 
@@ -29,3 +48,21 @@ services:
     depends_on:
       - backend
       - frontend
+  
+  db:
+    image: postgres:14.1
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - '5438:5432'
+    networks:
+      static:
+        ipv4_address: 172.22.0.102
+    volumes: 
+      - ./postgres-data:/var/lib/postgresql/data

@@ -4,3 +4,4 @@ venv
 staticfiles
 .env
 backend/db.sqlite3
+postgres-data
