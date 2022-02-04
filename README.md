@@ -19,28 +19,20 @@ The root "app" is in `findjobapp`. Configuration in this directory is global in 
 General naming convention and organization should try to follow [this guide](https://streamhacker.com/2011/01/03/django-application-conventions/) which was chosen arbitrarily to make sure there is at least some baseline standard.
 
 # Getting It Up And Running (Tools / Building Locally)
-This project uses the [Django Framework](https://djangoproject.com) to resolve requests and mutate objects stored in an SQLite database.
+This project uses the [Django Framework](https://djangoproject.com) to resolve requests and mutate objects stored in an SQLite database. For the frontend, we are using [React](https://reactjs.org/).
 
 To run the app locally first install python3 and pip3 if they are not yet present on your system. 
 
 Then, clone the repo and `cd` into it
-``` bash
+```bash
 git clone git@github.com:Simponic/cs3450-team-one.git jobfinder
 cd jobfinder
 ```
 
-To install dependencies
-``` bash
-pip3 install -r requirements.txt
-```
-
-Migrate your database
-``` bash
-python3 manage.py migrate
-```
+TODO: USE DOCKER
 
 And finally run the server
-``` bash
+```bash
 python3 manage.py runserver
 ```
 
