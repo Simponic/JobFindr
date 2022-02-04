@@ -1,0 +1,6 @@
+*.swp
+venv
+*.pyc
+staticfiles
+.env
+backend/db.sqlite3
