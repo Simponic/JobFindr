@@ -11,5 +11,5 @@
 |Class Diagram that document the classes of object in the system and their relationships | 6 | | |
 |Activity Diagrams that document key execution flows | 6 | | |
 |high-fidelity prototype<br>one of two prototypes for the purpose of improving the understanding of two or three high-priority features. | 12 | | |
-|low-fidelity prototype<br>one of two prototypes for the purpose of improving the understanding of two or three high-priority features. | 10 | | |
+|low-fidelity prototype<br>one of two prototypes for the purpose of improving the understanding of two or three high-priority features. | 10 | | [Low_Fidelity_Prototype.md](../Low_Fidelity_Prototype.md)|
 |History on the Scrum board showing who is working which items and when the items are completed| 4 | | |
