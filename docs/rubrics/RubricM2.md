@@ -9,7 +9,7 @@
 |Requirements Definition (revised from Phase 1, if necessary)<br>1. Introduction and Context<br>2. Users and their Goals<br>3. Functional Requirements<br>4. Non-functional Requirements<br>5. Future Features<br>6. Glossary | 6 | No revision made do to revision full credit on milestone 1. | [Requirements Definition.docx](../Requirements%20Definition.docx) <br> [Requirements Definition.pdf](../Requirements%20Definition.pdf)|
 |Use Case Diagrams that document the actors and their goals | 4 | | |
 |Class Diagram that document the classes of object in the system and their relationships | 6 | | |
-|Activity Diagrams that document key execution flows | 6 | | |
+|Activity Diagrams that document key execution flows | 6 | | [Activity Diagrams](../ActivityDiagrams)|
 |high-fidelity prototype<br>one of two prototypes for the purpose of improving the understanding of two or three high-priority features. | 12 | | |
 |low-fidelity prototype<br>one of two prototypes for the purpose of improving the understanding of two or three high-priority features. | 10 | | [Low_Fidelity_Prototype.md](../Low_Fidelity_Prototype.md)|
 |History on the Scrum board showing who is working which items and when the items are completed| 4 | | |
