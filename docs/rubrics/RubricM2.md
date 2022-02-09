@@ -12,4 +12,4 @@
 |Activity Diagrams that document key execution flows | 6 | | [Activity Diagrams](../ActivityDiagrams)|
 |high-fidelity prototype<br>one of two prototypes for the purpose of improving the understanding of two or three high-priority features. | 12 | | |
 |low-fidelity prototype<br>one of two prototypes for the purpose of improving the understanding of two or three high-priority features. | 10 | | [Low_Fidelity_Prototype.md](../Low_Fidelity_Prototype.md)|
-|History on the Scrum board showing who is working which items and when the items are completed| 4 | | |
+|History on the Scrum board showing who is working which items and when the items are completed| 4 | | [Github Projects](https://github.com/Simponic/cs3450-team-one/projects/1) |
