@@ -62,7 +62,7 @@ services:
   reverse_proxy:
     build: ./nginx
     ports:
-      - 42069:80
+      - 81:80
     networks:
       static:
         ipv4_address: 172.22.0.103
