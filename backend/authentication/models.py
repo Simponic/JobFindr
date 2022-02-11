@@ -1,14 +1,14 @@
 from django.db import models
 from django.conf import settings
-import datetime
+from datetime import datetime, timedelta
 import jwt
 import bcrypt
 
-# Create your models here.
+
 class Role(models.TextChoices):
-  OWNER = "owner"
-  CUSTOMER = "customer"
-  WORKER = "worker"
+  OWNER = 'owner'
+  CUSTOMER = 'customer'
+  WORKER = 'worker'
 
 class User(models.Model):
   name = models.CharField(max_length=50, null=False)
@@ -29,20 +29,25 @@ class User(models.Model):
   )
 
   def set_password(self, password): 
-    self.password = bcrypt.hashpw(password, bcrypt.gensalt())
+    self.password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
   def compare_password(self, password):
-    return bcrypt.checkpw(password, self.password)
+    return bcrypt.checkpw(password.encode(), self.password)
 
   def get_jwt_token(self):
-    dt = datetime.now() + datetime.timedelta(hours=1)
+    dt = datetime.now() + timedelta(hours=3)
 
     token = jwt.encode({
         'id': self.pk,
         'exp': int(dt.strftime('%s'))
     }, settings.SECRET_KEY, algorithm='HS256')
 
-    return token.decode('utf-8')
+    return token
+  
+  class Meta:
+    constraints = [
+      models.UniqueConstraint(fields=['email', 'phone_number'], name='unique_email_phone'),
+    ]
 
 class Worker(models.Model):
   user = models.OneToOneField(
@@ -50,4 +55,18 @@ class Worker(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-  availability = models.CharField(max_length=1024)
+  
+  def update_availability(self, new_availability):
+    # TODO: Delete all old availability entries associated with this worker
+    #       and create new ones 
+    availabilities = WorkerAvailability.objects.filter(worker=self)
+
+class WorkerAvailability(models.Model):
+  worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+
+  # Day 0 = Sunday
+  day = models.IntegerField(default=0, null=False)
+  start_hour = models.IntegerField(default=0, null=False)
+  start_minute = models.IntegerField(default=0, null=False)
+  end_hour = models.IntegerField(default=23, null=False)
+  end_minute = models.IntegerField(default=59, null=False)

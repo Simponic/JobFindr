@@ -51,7 +51,7 @@ And select the container ID of the image running the backend; in this case `be5d
 $ sudo docker exec -it be5d05526668 /bin/sh
 /usr/src/app # ls
 Dockerfile        authentication    findjobapp        manage.py         requirements.txt
-/usr/src/app # python3 migrate.py migrate
+/usr/src/app # python3 manage.py migrate
 ```
 
 # Meta-tools
