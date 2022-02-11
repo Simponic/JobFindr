@@ -34,7 +34,7 @@ And run the DB, Frontend, and Backend with one command:
 sudo docker-compose up -d --build
 ```
 
-The app should be live at `http://localhost:42069`.
+The app should be live at `http://localhost:81`.
 
 You might find yourself needing to do migrations. To do so, first list all the running docker containers:
 ```bash
