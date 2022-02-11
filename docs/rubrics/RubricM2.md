@@ -10,6 +10,6 @@
 |Use Case Diagrams that document the actors and their goals | 4 | | [use_case_diagrams](../use_case_diagrams)|
 |Class Diagram that document the classes of object in the system and their relationships | 6 | | [database-uml-class-diagram.png](../database-uml-class-diagram.png) |
 |Activity Diagrams that document key execution flows | 6 | | [Activity Diagrams](../ActivityDiagrams)|
-|high-fidelity prototype<br>one of two prototypes for the purpose of improving the understanding of two or three high-priority features. | 12 | | |
+|High-Fidelity prototype<br>one of two prototypes for the purpose of improving the understanding of two or three high-priority features. | 12 | Our high-fidelity prototype is a simple sign-up form. Users can sign up as a customer or as a worker. This prototype helps the team understand how the API interfaces with the database, how the frontend should be organized, and how roles should be implemented. | |
 |low-fidelity prototype<br>one of two prototypes for the purpose of improving the understanding of two or three high-priority features. | 10 | Our prototype focuses on user authentication and menu navigation. We reviewed it as a team and adjusted it as necessary to create a consensus on overarching functionality. | [Low_Fidelity_Prototype.md](../Low_Fidelity_Prototype.md)|
 |History on the Scrum board showing who is working which items and when the items are completed| 4 | | [Github Projects](https://github.com/Simponic/cs3450-team-one/projects/1) |
