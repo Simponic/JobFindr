@@ -1,7 +1,17 @@
-from django.shortcuts import render
 from django.http import JsonResponse
-from authentication.models import User, Role, Worker, WorkerAvailability
+from authentication.models import User, Role, Worker
 import json
+
+def log_in(request):
+  body = json.loads(request.body.decode('utf-8'))
+  try:
+    user = User.objects.get(email=body['email'])
+  except User.DoesNotExist:
+    return JsonResponse({'success': False, 'message': 'Email does not exist'})
+
+  if (user.compare_password(body['password'])):
+    return JsonResponse({'success': True, 'jwt_token': user.get_jwt_token()})
+  return JsonResponse({'success': False, 'message': 'Error signing in. Double-check email and password'})
 
 def sign_up(request):
   body = json.loads(request.body.decode('utf-8'))

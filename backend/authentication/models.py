@@ -29,17 +29,16 @@ class User(models.Model):
   )
 
   def set_password(self, password): 
-    self.password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+    self.password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode('utf8')
 
   def compare_password(self, password):
-    return bcrypt.checkpw(password.encode(), self.password)
+    return bcrypt.checkpw(password.encode('utf8'), self.password.encode('utf8'))
 
   def get_jwt_token(self):
-    dt = datetime.now() + timedelta(hours=3)
-
     token = jwt.encode({
         'id': self.pk,
-        'exp': int(dt.strftime('%s'))
+        'name': self.name,
+        'exp': int((datetime.now() + timedelta(hours=3)).strftime('%s'))
     }, settings.SECRET_KEY, algorithm='HS256')
 
     return token

@@ -1,5 +1,6 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         </Navbar>
       </div>
       <Container>
+        <Toaster position="bottom-center" />
         <Outlet />
       </Container>
     </div>

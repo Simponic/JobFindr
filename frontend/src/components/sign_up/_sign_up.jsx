@@ -1,5 +1,7 @@
-import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import toast from 'react-hot-toast';
 
 export const SignUp = () => {
   const [firstName, setFirstName] = useState('');  
@@ -9,6 +11,7 @@ export const SignUp = () => {
   const [password, setPassword] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const validateForm = () => {
     if (!firstName) {
@@ -54,8 +57,8 @@ export const SignUp = () => {
       body: JSON.stringify(body)
     }).then((x) => x.json());
     if (res.success) {
-      // TODO: redirect to login page
-      console.log("SUCCESS")
+      toast.success("New user created successfully");
+      navigate('/login');
     } else if (res.message) {
       setError(res.message);
     }
