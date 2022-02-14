@@ -54,6 +54,9 @@ where we plan to be by the next class period.
 GitHub - This will be where our project is stored so that we can all access it as well as it beiong used for our 
 submissions', version control and data tracking. 
 
+Naming Procedures - We will name our directories by ...
+We will name our files by ...
+
 ## Risk Analysis 
 * Database Structure
   * Likelihood - Low
