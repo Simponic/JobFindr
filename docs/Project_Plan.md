@@ -15,6 +15,8 @@ raking, snow shoveling, drain cleaning, hedge trimming and other such yard work.
 ## Team Organization 
 Project Manager: Logan Hunt
 
+Scrum Leader: Will change periodically so that each member gets a chance lead our scrum meetings.
+
 Designers and Developers: Hailey Dennis, Jake Cogswell and James Field
 
 ## Software Development Process
@@ -51,11 +53,9 @@ In Class - Since We have class every Tuesday and Thursday, and we all sit next t
 and after class to have scrums where we talk about how the project is going and where we are running into issues and 
 where we plan to be by the next class period.
 
-GitHub - This will be where our project is stored so that we can all access it as well as it beiong used for our 
+GitHub - This will be where our project is stored so that we can all access it as well as it being used for our 
 submissions', version control and data tracking. 
 
-Naming Procedures - We will name our directories by ...
-We will name our files by ...
 
 ## Risk Analysis 
 * Database Structure
