@@ -35,13 +35,20 @@ class User(models.Model):
     return bcrypt.checkpw(password.encode('utf8'), self.password.encode('utf8'))
 
   def get_jwt_token(self):
-    token = jwt.encode({
-        'id': self.pk,
-        'name': self.name,
-        'exp': int((datetime.now() + timedelta(hours=3)).strftime('%s'))
-    }, settings.SECRET_KEY, algorithm='HS256')
+    return jwt.encode({
+      'id': self.pk,
+      'name': self.name,
+      'role': self.role,
+      'exp': int((datetime.now() + timedelta(hours=6)).strftime('%s'))
+    }, settings.JWT_SECRET, algorithm='HS256')
 
-    return token
+  @staticmethod
+  def get_user_from_jwt(token):
+    try:
+      payload = jwt.decode(token, settings.JWT_SECRET, algorithms=['HS256'])
+      return User.objects.get(pk=payload['id'])
+    except:
+      return None
   
   class Meta:
     constraints = [

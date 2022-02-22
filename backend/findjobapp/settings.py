@@ -28,11 +28,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if ENVIRONMENT == "DEV":
     DEBUG = True
     SECRET_KEY = 'django-insecure-+&5s9fgp*#@2y7(e@wlq335o!9atvj@!092)in8f01cms!7_7b'
+    JWT_SECRET = '348t5ujsd84jafsdkozvjojawawi4900jsxovjoiezrooiouasdfmk' 
+    JWT_REFRESH_SECRET = '932jxv9jajkrzxcvj4ajdojfcvlajawjnkxbncvkjaeuih'
 if ENVIRONMENT == "PROD":
     DEBUG = False
     SECRET_KEY = os.environ["SECRET_KEY"]
-
-# SECURITY WARNING: don't run with debug turned on in production!
+    JWT_SECRET = os.environ["JWT_SECRET"]
+    JWT_REFRESH_SECRET = os.environ["JWT_REFRESH_SECRET"]
 
 ALLOWED_HOSTS = []
 

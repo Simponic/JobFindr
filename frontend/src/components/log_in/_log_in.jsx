@@ -2,6 +2,7 @@ import { Form, Button } from "react-bootstrap";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../services/auth";
 import toast from "react-hot-toast";
 
 export const LogIn = () => {
@@ -20,22 +21,11 @@ export const LogIn = () => {
       setError('Password is required');
       return false;
     }
-    const res = await fetch("/api/user/login", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    }).then((x) => x.json());
-
+    const res = await auth.login(email, password);
     if (res.success) {
       toast.success('Logged in successfully');
-      // Local storage is prone to XSS attacks, but we don't care about security here :)
-      localStorage.setItem('token', res.jwt_token);
       navigate('/');
-
-      // TODO: The user isn't actually logged in, all we've done is store the JWT token.
+      window.location.reload(); // To rerender the appbar
     } else if (res.message) {
       setError(res.message);
     }

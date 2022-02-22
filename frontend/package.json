@@ -6,6 +6,8 @@
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.2",
     "react-cookie": "^4.1.1",

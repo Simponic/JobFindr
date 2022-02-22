@@ -26,8 +26,8 @@ export const SignUp = () => {
       setError('Email is required');
       return false;
     }
-    if (phone_number.length < 10 || phone_number.length > 15) {
-      setError('Phone number must be between 10 and 15 digits');
+    if (phone_number.length < 10 || phone_number.length > 16) {
+      setError('Phone number must be between 10 and 16 characters');
       return false;
     }
     setError('');
@@ -57,7 +57,7 @@ export const SignUp = () => {
       body: JSON.stringify(body)
     }).then((x) => x.json());
     if (res.success) {
-      toast.success("New user created successfully");
+      toast.success('Sign up successful. Please login.');
       navigate('/login');
     } else if (res.message) {
       setError(res.message);
