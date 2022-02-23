@@ -55,7 +55,7 @@ class Worker(models.Model):
   def update_availability(self, new_availabilities):
     # TODO: Delete all old availability entries associated with this worker
     #       and create new ones 
-    availabilities = WorkerAvailability.objects.filter(worker=self)
+    availabilities = self.workeravailabilities_set 
 
 class WorkerAvailability(models.Model):
   worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
