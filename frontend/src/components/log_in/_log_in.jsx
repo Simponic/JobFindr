@@ -1,14 +1,16 @@
 import { Form, Button } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../services/auth";
+import { AuthContext } from "../../services/auth";
+
 import toast from "react-hot-toast";
 
 export const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const login = async (e) => {
     e.preventDefault();
@@ -25,7 +27,6 @@ export const LogIn = () => {
     if (res.success) {
       toast.success('Logged in successfully');
       navigate('/');
-      window.location.reload(); // To rerender the appbar
     } else if (res.message) {
       setError(res.message);
     }

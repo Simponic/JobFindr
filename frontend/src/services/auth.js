@@ -1,8 +1,12 @@
 import jwt_decode from "jwt-decode";
-import _ from "lodash";
+import { useState, createContext } from "react";
 
-export const auth = {
-  async login(email, password) {
+export const AuthContext = createContext();
+export const AuthContextProvider = ({ children }) => {
+  // user contains an id, name, role, and the time the token expires
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const login = async (email, password) => {
     const res = await fetch("/api/user/login", {
       method: "POST",
       credentials: "same-origin",
@@ -12,40 +16,25 @@ export const auth = {
       body: JSON.stringify({ email, password })
     }).then((x) => x.json());
     if (res.success) {
+      setUser(jwt_decode(res.jwt_token));
+      setToken(res.jwt_token);
+      // localStorage is prone to XSS, but we don't care about security here :)
+      // If this were to be a real app, we'd want to store the token in a secure
+      // cookie, and implement a refresh token flow.
       localStorage.setItem("token", res.jwt_token);
-      localStorage.setItem("token-body", JSON.stringify(jwt_decode(res.jwt_token)));
+      localStorage.setItem("user", JSON.stringify(jwt_decode(res.jwt_token)));
     }
     return res;
-  },
-  tokenNotExpired() {
-    return Date.now()/1000 < JSON.parse(localStorage.getItem("token-body")).exp;
-  },
-  async get(url) {
-    let res;
-    if (this.tokenNotExpired()) {
-      res = await fetch(url, {
-        method: "GET",
-        credentials: "same-origin",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }).then((x) => x.json());
-    } else {
-      this.logout();
-      return { success: false, message: "Session expired. Please log in again." };
-    }
-    return res;
-  },
-  logout() {
-    window.location.reload();
-    localStorage.removeItem("token");
-    localStorage.removeItem("token-body");
-  },
-  getUser() {
-    let tokenBody = localStorage.getItem("token-body");
-    if (tokenBody) {
-      return _.pick(JSON.parse(localStorage.getItem("token-body")), ["name", "id", "role"]);
-    }
-    return null;
   }
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.setItem("token", null);
+    localStorage.setItem("user", null);
+  }
+  return (
+    <AuthContext.Provider value={{ user, token, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  )
 };

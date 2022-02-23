@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             name='Worker',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='authentication.user')),
+                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, serialize=False, to='authentication.user')),
                 ('availability', models.CharField(max_length=1024)),
             ],
         ),

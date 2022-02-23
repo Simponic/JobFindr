@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 import jwt
 import bcrypt
 
-
 class Role(models.TextChoices):
   OWNER = 'owner'
   CUSTOMER = 'customer'
@@ -42,14 +41,6 @@ class User(models.Model):
       'exp': int((datetime.now() + timedelta(hours=6)).strftime('%s'))
     }, settings.JWT_SECRET, algorithm='HS256')
 
-  @staticmethod
-  def get_user_from_jwt(token):
-    try:
-      payload = jwt.decode(token, settings.JWT_SECRET, algorithms=['HS256'])
-      return User.objects.get(pk=payload['id'])
-    except:
-      return None
-  
   class Meta:
     constraints = [
       models.UniqueConstraint(fields=['email', 'phone_number'], name='unique_email_phone'),
@@ -59,10 +50,9 @@ class Worker(models.Model):
   user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        primary_key=True,
     )
   
-  def update_availability(self, new_availability):
+  def update_availability(self, new_availabilities):
     # TODO: Delete all old availability entries associated with this worker
     #       and create new ones 
     availabilities = WorkerAvailability.objects.filter(worker=self)
