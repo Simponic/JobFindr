@@ -9,6 +9,7 @@ export const APIUserContextProvider = ({ children }) => {
   const makeAuthenticatedRequest = async (url, method="GET", body={}) => {
     const options = {
       method: method,
+      credentials: "same-origin",
       headers: {},
     }
     if (auth.token) {
@@ -28,7 +29,6 @@ export const APIUserContextProvider = ({ children }) => {
     return await makeAuthenticatedRequest(url);
   }
 
-  // eslint-disable-next-line no-unused-vars
   const post = async (url, body) => {
     return await makeAuthenticatedRequest(url, "POST", body);
   }
