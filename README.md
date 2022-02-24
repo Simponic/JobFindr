@@ -48,10 +48,10 @@ be5d05526668   project-v2_backend    "python manage.py ru…"   6 minutes ago   
 And select the container ID of the image running the backend; in this case `be5d05526668`. Start a shell.
 
 ```bash
-$ sudo docker exec -it be5d05526668 /bin/sh
-/usr/src/app # ls
-Dockerfile        authentication    findjobapp        manage.py         requirements.txt
-/usr/src/app # python3 manage.py migrate
+$ sudo docker exec -it be5d05526668 /usr/local/bin/python3 manage.py migrate 
+Operations to perform:
+  Apply all migrations: admin, auth, authentication, contenttypes, sessions
+...
 ```
 
 # Meta-tools
@@ -82,3 +82,25 @@ As discussed above in the contribution guidelines, the issue will then be assign
 
 # Deploying
 Deployment will be automated with Docker. Possibly hosted on a Rasperry Pi or something.
+
+# Helpful commands
+
+## Interacting with DB
+To connect to the database hosted with docker, first find the container id associated with the `postgres` image:
+```bash
+$ sudo docker ps
+CONTAINER ID   IMAGE                      COMMAND                  CREATED        STATUS          PORTS                                       NAMES
+1a2205c294ab   project-v2_reverse_proxy   "/docker-entrypoint.…"   40 hours ago   Up 26 minutes   0.0.0.0:81->80/tcp, :::81->80/tcp           project-v2_reverse_proxy_1
+4a497a6396cf   project-v2_frontend        "docker-entrypoint.s…"   40 hours ago   Up 26 minutes   3000/tcp                                    project-v2_frontend_1
+5154452292bd   postgres:14.1              "docker-entrypoint.s…"   40 hours ago   Up 26 minutes   0.0.0.0:5438->5432/tcp, :::5438->5432/tcp   project-v2_db_1
+d20c2566bcbe   project-v2_backend         "python manage.py ru…"   40 hours ago   Up 26 minutes   8000/tcp                                    project-v2_backend_1
+```
+
+And connect to a psql "repl":
+```bash
+$ sudo docker exec -it 5154452292bd /usr/bin/psql -U postgres
+psql (14.1 (Debian 14.1-1.pgdg110+1))
+Type "help" for help.
+
+postgres=# 
+```
