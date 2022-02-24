@@ -14,7 +14,7 @@ export const AvailabilitySelector = () => {
 
   const updateAvailability = async (e) => {
     e.preventDefault();
-    let body = [
+    setAvailability([
       {
         day: 0,
         start_hour: 1,
@@ -29,8 +29,8 @@ export const AvailabilitySelector = () => {
         end_hour: 3,
         end_minute: 0
       },
-    ];
-    const res = await api.post(`/api/worker/${id}/availabilities`, body);
+    ]);
+    const res = await api.post(`/api/worker/${id}/availabilities`, availability);
 
     if (res.success) {
       toast.success('Availability updated successfully.');
