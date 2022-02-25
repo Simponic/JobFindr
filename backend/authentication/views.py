@@ -9,9 +9,10 @@ import jwt
 def get_user_or_error(request):
   try:
     auth_header = request.headers.get('Authorization')
-    token = jwt.decode(auth_header.split('Bearer ')[1], settings.JWT_SECRET, algorithms=['HS256'])
-    if (token['exp'] < int(datetime.now().strftime('%s'))):
-      return {'success': False, 'message': 'Token expired'}
+    try:
+      token = jwt.decode(auth_header.split('Bearer ')[1], settings.JWT_SECRET, algorithms=['HS256'])
+    except jwt.exceptions.ExpiredSignatureError:
+      return {'success': False, 'message': 'Session expired. Please re-login.'}
     try:
       user = User.objects.get(pk=token['id'])
       return {'success': True, 'user': user}
@@ -21,13 +22,14 @@ def get_user_or_error(request):
     return {'success': False, 'message': 'Error authenticating user'}
 
 def me(request):
-  me = get_user_or_error(request)
-  if (me['success']):
-    resp = {'success': True, 'user': serialize_user(me['user'])}
-    if (me['user'].role == Role.WORKER):
-      resp['worker'] = serialize_worker(me['user'].worker)
+  user_error_tup = get_user_or_error(request)
+  if (user_error_tup['success']):
+    user = user_error_tup['user']
+    resp = {'success': True, 'user': serialize_user(user)}
+    if (user.role == Role.WORKER):
+      resp['worker'] = serialize_worker(user.worker)
     return JsonResponse(resp)
-  return JsonResponse(me)
+  return JsonResponse(user_error_tup)
 
 def log_in(request):
   body = json.loads(request.body.decode('utf-8'))
