@@ -112,4 +112,4 @@ In the case that you need to install a new npm package, do the same as above to 
 $ sudo docker exec -it 4a497a6396cf /usr/local/bin/npm install <packages>
 ```
 
-And make sure to let your teammates know they need to rebuild the frontend docker image.
+And make sure to let your teammates know they need to ```sudo docker exec -it 4a497a6396cf /usr/local/bin/npm install .```
