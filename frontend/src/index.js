@@ -6,7 +6,6 @@ import { SignUp } from './components/sign_up/_sign_up';
 import { LogIn } from './components/log_in/_log_in';
 import { NotFound } from './components/errors/not_found';
 import { AvailabilitySelector } from './components/availability_selector/availability_selector';
-import './App.css';
 
 ReactDOM.render(
   <BrowserRouter>

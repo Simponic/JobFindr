@@ -12,26 +12,30 @@ def worker_availabilities(request, id):
     return JsonResponse(user_error_tup)
 
   if (request.method == "GET"):
-    return JsonResponse({
-      'success': True,
-      'availability': serialize_worker(user.worker)['availability']
-    })
+    try:
+      return JsonResponse({
+        'success': True,
+        'availability': serialize_worker(user.worker)['availability']
+      })
+    except:
+      return JsonResponse({'success': False, 'message': 'Error fetching worker availabilities'})
+
   elif (request.method == "POST"):
-    body = json.loads(request.body.decode('utf-8'))
-
-    if (user.worker.id == id or user.role == Role.OWNER):
-      availabilities = [
-        WorkerAvailability(
-          day=entry['day'],
-          start_hour=entry['start_hour'],
-          start_minute=entry['start_minute'],
-          end_hour=entry['end_hour'],
-          end_minute=entry['end_minute'],
-          worker=user.worker
-        )
-        for entry in body
-      ]
-      user.worker.update_availability(availabilities)
-      return JsonResponse({'success': True})
-
-    return JsonResponse({'success': False, 'message': 'Error fetching worker availabilities'})
+    try:
+      body = json.loads(request.body.decode('utf-8'))
+      if (user.worker.id == id or user.role == Role.OWNER):
+        availabilities = [
+          WorkerAvailability(
+            day=entry['day'],
+            start_hour=entry['start_hour'],
+            start_minute=entry['start_minute'],
+            end_hour=entry['end_hour'],
+            end_minute=entry['end_minute'],
+            worker=user.worker
+          )
+          for entry in body
+        ]
+        user.worker.update_availability(availabilities)
+        return JsonResponse({'success': True})
+    except:
+      return JsonResponse({'success': False, 'message': 'Error posting new worker availabilities'})
