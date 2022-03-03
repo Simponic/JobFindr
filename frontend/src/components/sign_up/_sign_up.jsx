@@ -1,7 +1,8 @@
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from 'react-hot-toast';
+import { AuthContext } from "../../services/auth";
 
 export const SignUp = () => {
   const [firstName, setFirstName] = useState('');  
@@ -12,6 +13,7 @@ export const SignUp = () => {
   const [phone_number, setPhoneNumber] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const auth = useContext(AuthContext);
 
   const validateForm = () => {
     if (!firstName) {
@@ -56,9 +58,21 @@ export const SignUp = () => {
       },
       body: JSON.stringify(body)
     }).then((x) => x.json());
+
     if (res.success) {
-      toast.success('Sign up successful. Please login.');
-      navigate('/login');
+      await auth.login(email, password).then(loginRes => {
+        if (loginRes.success) {
+          if (role === "worker") {
+            navigate(`/worker/load-availability`);
+          }
+          else {
+            toast.success('Sign up successful.');
+            navigate('/');
+          }
+        } else if (loginRes.message) {
+          setError(loginRes.message);
+        }
+        });
     } else if (res.message) {
       setError(res.message);
     }
