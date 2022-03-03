@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthContextProvider } from "./services/auth";
 import { MenuBar } from "./components/menu_bar";
 import { APIUserContextProvider } from "./services/api";
+import "./App.css";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
             </Navbar>
           </div>
           <Container>
-            <Toaster position="top-right" />
+            <Toaster position="top-center" />
             <Outlet />
           </Container>
         </div>

@@ -1,23 +1,60 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../services/auth";
-import { Nav, Navbar } from "react-bootstrap";
+import { Nav, Navbar, Button, Popover, OverlayTrigger, Image, Container, Row, Col } from "react-bootstrap";
 import { APIUserContext } from "../services/api";
+import toast from "react-hot-toast";
+
+const popover = (user, logoutF) => {
+  return (
+    <Popover id="popover-basic">
+      <Popover.Body>
+        <a href={`/profile/${user.id}/edit`}>
+          <Button variant="secondary">
+            <Container>
+              <Row>
+                <Col xs={3}><Image src={user.avatar} className="avatar-sm" alt="avatar" /></Col>
+                <Col xs={9}>
+                  <h5>{user.name}</h5>
+                  <span>{user.role}</span>
+                </Col>
+              </Row>
+            </Container>
+          </Button>
+        </a>
+        <Button variant="danger" onClick={logoutF}>
+          Logout
+        </Button>
+      </Popover.Body>
+    </Popover>
+  )
+};
 
 export const MenuBar = () => {
   const auth = useContext(AuthContext);
   const api = useContext(APIUserContext);
+  const [user, setUser] = useState({});
 
-  const echoMe = async () => console.log(await api.get("/api/user/me")); 
-
+  const fetchMe = async () => {
+    const res = await api.get(`/api/user/${auth.user.id}`);
+    if (res.success) {
+      setUser(res.user);
+    } else if (res.message) {
+      toast.error(res.message);
+    }
+  }
+  useEffect(() => {
+    if (auth.user) {
+      fetchMe();
+    }
+  }, []);
 
   if (auth.user) {
     return (
       <Nav className="justify-content-end">
-        <button onClick={echoMe}>Bruh</button>
         <Navbar.Text>
-          <a href="/#" onClick={auth.logout}>
-            {auth.user.name}
-          </a>
+          <OverlayTrigger trigger="click" placement="bottom" overlay={popover(user, auth.logout)}>
+            <Button variant="secondary" onClick={() => auth.user && !user?.id ? fetchMe() : null }>{auth.user.name}</Button>
+          </OverlayTrigger>
         </Navbar.Text>
       </Nav>
     );

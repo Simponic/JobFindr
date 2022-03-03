@@ -1,6 +1,5 @@
 import { Form, Button } from "react-bootstrap";
 import { useState, useContext } from "react";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../services/auth";
 
@@ -44,7 +43,6 @@ export const LogIn = () => {
           <Form.Control type="password" placeholder="Enter password" onChange={(e) => setPassword(e.target.value)} required />
         </Form.Group>
         <p className="text-danger">{error}</p>
-        <p><Link to="/forgot-password">Forgot Password?</Link></p>
         <Button variant="primary" type="submit">
           Submit
         </Button>
