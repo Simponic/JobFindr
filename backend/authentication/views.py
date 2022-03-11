@@ -21,15 +21,46 @@ def get_user_or_error(request):
   except:
     return {'success': False, 'message': 'Error authenticating user'}
 
-def me(request):
+def profile(request, id):
   user_error_tup = get_user_or_error(request)
   if (user_error_tup['success']):
-    user = user_error_tup['user']
+    if (user_error_tup['user'].id == id):
+      user = user_error_tup['user']
+    elif (user_error_tup['user'].role == Role.OWNER):
+      user = User.objects.get(pk=id)
+    else:
+      return JsonResponse({'success': False, 'message': 'You do not have permission to view this user'})
+  else:
+    return JsonResponse(user_error_tup)
+
+  if (request.method == "GET"):
     resp = {'success': True, 'user': serialize_user(user)}
     if (user.role == Role.WORKER):
       resp['worker'] = serialize_worker(user.worker)
     return JsonResponse(resp)
-  return JsonResponse(user_error_tup)
+
+  elif (request.method == "PUT"):
+    try:
+      body = json.loads(request.body.decode('utf-8'))
+      body['phone_number'] = User.strip_phone_number(body['phone_number'])
+
+      if (not body['email'] == user.email and User.objects.filter(email=body['email']).exists()):
+        return JsonResponse({'success': False, 'message': 'Email already exists'})
+      if (not body['phone_number'] == user.phone_number and User.objects.filter(phone_number=body['phone_number']).exists()):
+        return JsonResponse({'success': False, 'message': 'Phone number already exists'})
+
+      user.email = body['email']
+      user.phone_number = body['phone_number']
+      if (body['password']):
+        user.set_password(body['password'])
+      user.balance = body['balance']
+      user.avatar = body['avatar']
+      user.name = body['name']
+      user.save()
+
+      return JsonResponse({'success': True, 'new_token': user.get_jwt_token()})
+    except:
+      return {'success': False, 'message': 'Failed to update user'}
 
 def log_in(request):
   body = json.loads(request.body.decode('utf-8'))
@@ -44,6 +75,7 @@ def log_in(request):
 
 def sign_up(request):
   body = json.loads(request.body.decode('utf-8'))
+  body['phone_number'] = User.strip_phone_number(body['phone_number'])
 
   if (User.objects.filter(email=body['email']).exists()):
     return JsonResponse({'success': False, 'message': 'Email already exists'})
@@ -54,6 +86,8 @@ def sign_up(request):
     name=body['name'], 
     email=body['email'], 
     phone_number=body['phone_number'],
+    avatar=body['avatar'],
+    balance=body['balance'],
     role=Role.WORKER if body['role'] == 'worker' else Role.CUSTOMER
   )
   user.set_password(body['password'])
