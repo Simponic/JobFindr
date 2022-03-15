@@ -72,7 +72,7 @@ export const UserForm = ({ newUser }) => {
       phone_number,
       role,
       avatar,
-      balance: Math.min(balance, 0)
+      balance: Math.max(balance, 0)
     };
 
     if (newUser) {
