@@ -13,7 +13,7 @@ export const JobsPage = () => {
             as="li"
             className="d-flex justify-content-between align-items-start"
           >
-            <p className="jobtype">Type: Lawn Mowing <GiGrass/></p>
+            <p className="jobtype">Lawn Mowing <GiGrass/></p>
             <div>
               <div className="job-title">100 acre lawn $30 compensation asdf asdf asdfasd fasdf asdfasdf asdfasdf asdfasdfasdf</div>
               <Container className="flex-col">
