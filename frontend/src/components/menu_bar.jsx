@@ -50,19 +50,38 @@ export const MenuBar = () => {
 
   if (auth.user) {
     return (
-      <Nav className="justify-content-end">
-        <Navbar.Text>
-          <OverlayTrigger trigger="click" placement="bottom" overlay={popover(user, auth.logout)}>
-            <Button variant="secondary" onClick={() => auth.user && !user?.id ? fetchMe() : null }>{auth.user.name}</Button>
-          </OverlayTrigger>
-        </Navbar.Text>
-      </Nav>
+      <Container>
+        <Navbar>
+          <Nav className="me-auto">
+            <Nav.Item>
+              <Nav.Link href="/">Jobs</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/about">About</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/">Contact Us</Nav.Link>
+            </Nav.Item>
+          </Nav>
+          <Nav>
+            <Nav.Item>
+              <OverlayTrigger trigger="click" placement="bottom" overlay={popover(user, auth.logout)}>
+                <Button variant="outline-dark" onClick={() => auth.user && !user?.id ? fetchMe() : null }>{auth.user.name}</Button>
+              </OverlayTrigger>
+            </Nav.Item>
+          </Nav>
+        </Navbar>
+      </Container>
     );
   } else {
     return (
       <Nav className="me-auto">
-        <Nav.Link href="/sign-up">Sign Up</Nav.Link>
-        <Nav.Link href="/login">Log In</Nav.Link>
+          <Nav.Item>
+            <Nav.Link href="/signup">Sign Up</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link href="/login">Log In</Nav.Link>
+          </Nav.Item>
       </Nav>
     );
   }
