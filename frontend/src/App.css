@@ -60,7 +60,6 @@
   position: absolute;
 }
 
-.jobtype {
-  align-items: flex-start;
-  margin-top: auto;
+.list-icons {
+  font-size: 40px;
 }
