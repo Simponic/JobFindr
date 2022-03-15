@@ -16,6 +16,8 @@ const popover = (user, logoutF) => {
                 <Col xs={9}>
                   <h5>{user.name}</h5>
                   <span>{user.role}</span>
+                  <br />
+                  <span>${parseFloat(user.balance, 10).toFixed(2)}</span>
                 </Col>
               </Row>
             </Container>
