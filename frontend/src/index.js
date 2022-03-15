@@ -13,7 +13,7 @@ ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />} >
-        <Route path="sign-up" element={<UserForm newUser={true} />} />
+        <Route path="signup" element={<UserForm newUser={true} />} />
         <Route path="profile/:id/edit" element={<UserForm newUser={false} />} />
         <Route path="login" element={<LogIn />} />
         <Route path="worker/:id/availability" element={<AvailabilitySelector />} />
