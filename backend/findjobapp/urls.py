@@ -18,4 +18,5 @@ from django.urls import path, include
 urlpatterns = [
     path('api/user/', include('authentication.urls')),
     path('api/worker/', include('worker.urls')),
+    path('api/jobs/', include('jobs.urls')),
 ]
