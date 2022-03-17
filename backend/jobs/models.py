@@ -1,5 +1,5 @@
 from django.db import models
-from authentication.models import User
+from authentication.models import User, Worker
 from django.conf import settings
 
 class Status(models.TextChoices):
@@ -35,3 +35,8 @@ class Job(models.Model):
 
     job_type = models.OneToOneField(JobType, on_delete=models.SET_NULL, null=True)
 
+class WorkerJobTimes(models.Model):
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    start_time = models.BigIntegerField(default=0, null=False)
+    end_time = models.BigIntegerField(default=0, null=False)
