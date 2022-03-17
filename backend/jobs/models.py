@@ -1,4 +1,5 @@
 from django.db import models
+from authentication.models import User
 from django.conf import settings
 
 class Status(models.TextChoices):
@@ -20,8 +21,8 @@ class JobType(models.Model):
 
 
 class Job(models.Model):
-    user_id = models.IntegerField(null=False)
-    type_id = models.IntegerField(null=False)
+    user_id = models.ForeignKey(User)
+
     price = models.FloatField()
     time_estimate = models.FloatField()
     start_time = models.BigIntegerField(default=0, null=False)
