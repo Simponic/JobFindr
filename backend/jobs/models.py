@@ -21,7 +21,7 @@ class JobType(models.Model):
 
 
 class Job(models.Model):
-    user_id = models.ForeignKey(User)
+    user = models.ForeignKey(User)
 
     price = models.FloatField()
     time_estimate = models.FloatField()

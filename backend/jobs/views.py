@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from jobs.modles import JobType, Job
+from jobs.models import JobType, Job
 from authentication.models import Role, User
 import json
 from authentication.views import get_user_or_error
