@@ -33,5 +33,5 @@ class Job(models.Model):
     comment = models.CharField(max_length=150)
     status = models.CharField(max_length=15, choices=Status.choices, default=Status.AVAILABLE)
 
-    job_type = models.OneToOneField(JobType, on_delete=models.CASCADE,)
+    job_type = models.OneToOneField(JobType, on_delete=models.SET_NULL, null=True)
 
