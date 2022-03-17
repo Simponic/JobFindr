@@ -11,7 +11,7 @@ class Status(models.TextChoices):
 
 class JobType(models.Model):
     job_type = models.CharField(max_length=50, null=False)
-    icon = models.CharField(null=False)
+    icon = models.CharField(max_length=100, null=False)
     available = models.BooleanField(null=False, default=True)
 
     def create_new_job_type(self, jobType, icon):
@@ -21,13 +21,13 @@ class JobType(models.Model):
 
 
 class Job(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     price = models.FloatField()
     time_estimate = models.FloatField()
     start_time = models.BigIntegerField(default=0, null=False)
     end_time = models.BigIntegerField(default=0, null=False)
-    address = models.CharField()
+    address = models.CharField(max_length=150)
     latitude = models.FloatField(null=False)
     longitude = models.FloatField(null=False)
     comment = models.CharField(max_length=150)
