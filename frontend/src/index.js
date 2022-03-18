@@ -20,6 +20,7 @@ ReactDOM.render(
         <Route path="worker/:id/availability" element={<AvailabilitySelector />} />
         <Route path="worker/load-availability" element={<LoadingAvailability />} />
         <Route path="about" element={<About />} />
+        <Route path="jobs" element={<JobsPage />} />
         <Route path="jobs/add-job" element={<JobForm />} />
         <Route
           path="*"
