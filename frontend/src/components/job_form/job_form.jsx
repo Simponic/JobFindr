@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 
 export const JobForm = () => {
   const [jobTitle, setJobTitle] = useState('');
+  const [jobType, setJobType] = useState('');
   const [price, setPrice] = useState(0);
   const [timeEstimate, setTimeEstimate] = useState(0);
   const [address, setAddress] = useState('');
@@ -31,6 +32,12 @@ export const JobForm = () => {
       setError('Job title is required');
       return false;
     }
+
+    if (!jobType) {
+      setError('Job type is required');
+      return false;
+    }
+
     if (!price) {
       setError('Compensation is required');
       return false;
@@ -69,6 +76,7 @@ export const JobForm = () => {
     }
     // Check that user has enough money
     // Convert Dates to UNIX in the post body with Math.floor(startTime.getTime() / 1000);
+    // I think we're using jobtitle as 'comment' in the db
     toast.success("Success!");
   }
 
@@ -80,6 +88,21 @@ export const JobForm = () => {
         <Form.Group className="mb-3">
           <Form.Label>Listing Title*</Form.Label>
           <Form.Control id="title" type="text" placeholder="Lawn mowing gig near USU!" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label>Job Type*</Form.Label>
+          <Form.Control id="job-type"
+            as="select"
+            value={jobType}
+            onChange={(e) => setJobType(e.target.value)}
+          required> 
+          {/* MAP JOBTYPE OPTIONS HERE */}
+            <option value="Example Type 1">Example Type 1</option>
+            <option value="Example Type 2">Example Type 2</option>
+            <option value="Example Type 3">Example Type 3</option>
+            <option value="Example Type 4">Example Type 4</option>
+          </Form.Control>
         </Form.Group>
 
         <Form.Group className="mb-3">
