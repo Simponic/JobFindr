@@ -17,12 +17,15 @@ ReactDOM.render(
       <Route path="/" element={<App />} >
         <Route path="signup" element={<UserForm newUser={true} />} />
         <Route path="profile/:id/edit" element={<UserForm newUser={false} />} />
-        <Route path="login" element={<LogIn />} />
         <Route path="worker/:id/availability" element={<AvailabilitySelector />} />
         <Route path="worker/load-availability" element={<LoadingAvailability />} />
-        <Route path="about" element={<About />} />
+        <Route path="login" element={<LogIn />} />
+
         <Route path="jobs" element={<JobsPage />} />
-        <Route path="jobs/add-job" element={<JobForm />} />
+        <Route path="jobs/add-job" element={<JobForm newJob={true} />} />
+        <Route path="jobs/:id/edit" element={<JobForm />} />
+
+        <Route path="about" element={<About />} />
         <Route
           path="*"
           element={<NotFound />}

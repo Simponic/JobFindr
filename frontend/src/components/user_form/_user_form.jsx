@@ -41,8 +41,8 @@ export const UserForm = ({ newUser }) => {
       setBalance(res.user.balance);
       setPhoneNumber(res.user.phone_number);
 
-      setAddress(res.user.home_address !== undefined ? res.user.home_address : '');
-      if (res.user.home_latitude !== undefined && res.user.home_longitude !== undefined) {
+      setAddress(res.user.home_address ? res.user.home_address : '');
+      if (res.user.home_latitude && res.user.home_longitude) {
         setCoords({
           lat: res.user.home_latitude,
           lng: res.user.home_longitude
@@ -73,18 +73,6 @@ export const UserForm = ({ newUser }) => {
       return false;
     }
 
-    if (address) {
-      return await GeocodeWrapper.fromAddress(address).then(
-        (response) => {
-          setCoords(response.results[0].geometry.location);
-          setError('');
-          return true;
-        },
-        (error) => {
-          setError('Error geocoding address');
-        }
-      );
-    }
     setError('');
     return true;
   };
@@ -95,6 +83,22 @@ export const UserForm = ({ newUser }) => {
       return false;
     }
 
+    let coordinates = coords;
+    if (address) {
+      coordinates = await GeocodeWrapper.fromAddress(address).then(
+        (response) => {
+          setError('');
+          return response.results[0].geometry.location;
+        },
+        (error) => {
+          setError('Error geocoding address');
+          console.log(JSON.stringify(error));
+          return false;
+        }
+      );
+      setCoords(coordinates);
+    }
+
     let body = {
       name,
       email,
@@ -103,8 +107,7 @@ export const UserForm = ({ newUser }) => {
       role,
       avatar,
       address,
-      home_latitude: coords ? coords.lat : null,
-      home_longitude: coords ? coords.lng : null,
+      coords: coordinates,
       balance: Math.max(balance, 0)
     };
 
@@ -221,11 +224,11 @@ export const UserForm = ({ newUser }) => {
               }} />
             </Col>
             <Col md={6}>
-              <Form.Label>Home Address</Form.Label>
+              <Form.Label>Address</Form.Label>
               <Form.Control id="name" type="text" placeholder="123 Apple Drive #6, Logan, Utah, 84321" value={address} onChange={(e) => setAddress(e.target.value)} />
               {
-                coords ? 
-                  <p>Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`}.</p>
+                coords?.lat && coords?.lng ? 
+                  <p>Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`} and ignore address.</p>
                   : null}
             </Col>
           </Row>

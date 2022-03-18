@@ -46,9 +46,9 @@ def __set_fields(body, method="POST", user=None):
     user.name = body['name']
     if ('address' in body):
       user.home_address = body['address']
-    if ('home_latitude' in body and 'home_longitude' in body):
-      user.home_latitude = body['home_latitude']
-      user.home_longitude = body['home_longitude']
+    if ('coords' in body and 'lat' in body['coords'] and 'lng' in body['coords']):
+      user.home_latitude = body['coords']['lat']
+      user.home_longitude = body['coords']['lng']
     if (body['password']):
       user.set_password(body['password'])
     elif (method == "POST"):
