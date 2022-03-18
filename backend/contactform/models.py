@@ -1,6 +1,6 @@
-from django.db import models
+From django.db import models
 
-class Role(models.TextChoices):
+class Status(models.TextChoices):
     RESOLVED = 'resolved'
     OPEN = 'open'
 
@@ -10,5 +10,9 @@ class Submission(models.Model):
     body = models.CharField(max_length=500, null=False)
     status = models.CharField(
             max_length=20,
-            choices=Role.choices,
-            default=Role.OPEN)
+            choices=Status.choices,
+            default=Status.OPEN)
+
+    def create_new_submission(self, submission):
+        self.submission = submission
+        self.status = Status.OPEN
