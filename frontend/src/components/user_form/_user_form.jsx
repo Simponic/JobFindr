@@ -41,8 +41,8 @@ export const UserForm = ({ newUser }) => {
       setBalance(res.user.balance);
       setPhoneNumber(res.user.phone_number);
 
-      setAddress(res.user.home_address !== undefined ? res.user.home_address : '');
-      if (res.user.home_latitude !== undefined && res.user.home_longitude !== undefined) {
+      setAddress(res.user.home_address ? res.user.home_address : '');
+      if (res.user.home_latitude && res.user.home_longitude) {
         setCoords({
           lat: res.user.home_latitude,
           lng: res.user.home_longitude
@@ -76,12 +76,14 @@ export const UserForm = ({ newUser }) => {
     if (address) {
       return await GeocodeWrapper.fromAddress(address).then(
         (response) => {
-          setCoords(response.results[0].geometry.location);
+          setCoords({...response.results[0].geometry.location});
           setError('');
           return true;
         },
         (error) => {
           setError('Error geocoding address');
+          console.log(JSON.stringify(error));
+          return false;
         }
       );
     }
@@ -94,7 +96,7 @@ export const UserForm = ({ newUser }) => {
     if (!(await validateForm())) {
       return false;
     }
-
+    console.log(coords);
     let body = {
       name,
       email,
@@ -103,8 +105,7 @@ export const UserForm = ({ newUser }) => {
       role,
       avatar,
       address,
-      home_latitude: coords ? coords.lat : null,
-      home_longitude: coords ? coords.lng : null,
+      coords,
       balance: Math.max(balance, 0)
     };
 
@@ -224,7 +225,7 @@ export const UserForm = ({ newUser }) => {
               <Form.Label>Home Address</Form.Label>
               <Form.Control id="name" type="text" placeholder="123 Apple Drive #6, Logan, Utah, 84321" value={address} onChange={(e) => setAddress(e.target.value)} />
               {
-                coords ? 
+                coords?.lat && coords?.lng ? 
                   <p>Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`}.</p>
                   : null}
             </Col>
