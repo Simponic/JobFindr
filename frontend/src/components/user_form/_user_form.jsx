@@ -73,20 +73,6 @@ export const UserForm = ({ newUser }) => {
       return false;
     }
 
-    if (address) {
-      return await GeocodeWrapper.fromAddress(address).then(
-        (response) => {
-          setCoords({...response.results[0].geometry.location});
-          setError('');
-          return true;
-        },
-        (error) => {
-          setError('Error geocoding address');
-          console.log(JSON.stringify(error));
-          return false;
-        }
-      );
-    }
     setError('');
     return true;
   };
@@ -96,7 +82,23 @@ export const UserForm = ({ newUser }) => {
     if (!(await validateForm())) {
       return false;
     }
-    console.log(coords);
+
+    let coordinates = coords;
+    if (address) {
+      coordinates = await GeocodeWrapper.fromAddress(address).then(
+        (response) => {
+          setError('');
+          return response.results[0].geometry.location;
+        },
+        (error) => {
+          setError('Error geocoding address');
+          console.log(JSON.stringify(error));
+          return false;
+        }
+      );
+      setCoords(coordinates);
+    }
+
     let body = {
       name,
       email,
@@ -105,7 +107,7 @@ export const UserForm = ({ newUser }) => {
       role,
       avatar,
       address,
-      coords,
+      coords: coordinates,
       balance: Math.max(balance, 0)
     };
 

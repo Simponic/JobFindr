@@ -29,7 +29,7 @@ export const MapContainer = ({spec}) => {
         onClick={onClick}
         onIdle={onIdle}
       >
-        {spec.coords.map((coord, index) => (
+        {spec.coords?.map((coord, index) => (
           <Marker key={index} position={coord} />
         ))}
       </Map>
