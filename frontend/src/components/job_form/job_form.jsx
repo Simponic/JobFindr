@@ -1,17 +1,53 @@
 import { BasicDateTimePicker } from "./time_picker"
-import { Container, Form, Button } from 'react-bootstrap';
-import { useState } from 'react';
+import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import { useParams } from "react-router-dom";
+import { useState, useContext, useEffect } from 'react';
+import { MapContainer } from "../maps/_map_container";
+import { APIUserContext } from "../../services/api";
+import { AuthContext } from "../../services/auth";
+import { GeocodeWrapper } from "../../services/geocoder";
 import toast from 'react-hot-toast';
 
-export const JobForm = () => {
+export const JobForm = ({ newJob }) => {
+  const { id } = useParams(); // id is null when newJob is true
+  const api = useContext(APIUserContext);
+  const auth = useContext(AuthContext);
+
   const [jobTitle, setJobTitle] = useState('');
   const [jobType, setJobType] = useState('');
   const [price, setPrice] = useState(0);
   const [timeEstimate, setTimeEstimate] = useState(0);
   const [address, setAddress] = useState('');
-  const [error, setError] = useState('');
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
+
+  const [coords, setCoords] = useState(null);
+
+  const [error, setError] = useState('');
+
+  const fetchJob = async () => {
+    // const res = await api.get(`/api/job/${id}`);  
+    // set job fields
+  }
+
+  const setAddressFromUser = async () => {
+    const res = await api.get(`/api/user/${auth.user.id}`);
+    setAddress(res.user.home_address ? res.user.home_address : '');
+    if (res.user.home_latitude && res.user.home_longitude) {
+      setCoords({
+        lat: res.user.home_latitude,
+        lng: res.user.home_longitude
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (!newJob) {
+      fetchJob();
+    } else {
+      setAddressFromUser();
+    }
+  }, []);
 
   const handleTimeChange = (e, timeFrame) => {
     if (timeFrame === "start") {
@@ -74,6 +110,23 @@ export const JobForm = () => {
     if (!validateForm()) {
       return false;
     }
+
+    let coordinates = coords;
+    if (address) {
+      coordinates = await GeocodeWrapper.fromAddress(address).then(
+        (response) => {
+          setError('');
+          return response.results[0].geometry.location;
+        },
+        (error) => {
+          setError('Error geocoding address');
+          console.log(JSON.stringify(error));
+          return false;
+        }
+      );
+      setCoords(coordinates);
+    }
+
     // Check that user has enough money
     // Convert Dates to UNIX in the post body with Math.floor(startTime.getTime() / 1000);
     // I think we're using jobtitle as 'comment' in the db
@@ -92,7 +145,7 @@ export const JobForm = () => {
 
         <Form.Group className="mb-3">
           <Form.Label>Job Type*</Form.Label>
-          <Form.Control id="job-type"
+          <Form.Select id="job-type"
             as="select"
             value={jobType}
             onChange={(e) => setJobType(e.target.value)}
@@ -102,7 +155,7 @@ export const JobForm = () => {
             <option value="Example Type 2">Example Type 2</option>
             <option value="Example Type 3">Example Type 3</option>
             <option value="Example Type 4">Example Type 4</option>
-          </Form.Control>
+          </Form.Select>
         </Form.Group>
 
         <Form.Group className="mb-3">
@@ -116,16 +169,38 @@ export const JobForm = () => {
         </Form.Group>
 
         <Form.Group className="mb-4">
-          <Form.Label>Address*</Form.Label>
-          <Form.Control id="address" type="text" placeholder="4205 Old Main Hill, Logan, UT 84322" value={address} onChange={(e) => setAddress(e.target.value)} required />
-        </Form.Group>
-        
-        <Form.Group className="mb-4">
           <BasicDateTimePicker label="Listing Opens" onTimeChange={(e) => handleTimeChange(e, "start")} />
         </Form.Group>
 
         <Form.Group className="mb-3">
           <BasicDateTimePicker label="Listing Ends" onTimeChange={(e) => handleTimeChange(e, "end")} />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Row>
+            <Col md={6}>
+              <MapContainer spec={{
+                style: {
+                  'height': '300px',
+                  'width': '100%'
+                },
+                onClick: (e) => {
+                  setCoords({lat: e.latLng.lat(), lng: e.latLng.lng()});
+                },
+                coords: [coords],
+                center: coords,
+                zoom: 15,
+              }} />
+            </Col>
+            <Col md={6}>
+              <Form.Label>Address</Form.Label>
+              <Form.Control id="name" type="text" placeholder="4205 Old Main Hill, Logan, UT 84322" value={address} onChange={(e) => setAddress(e.target.value)} />
+              {
+                coords ? 
+                  <p>Leave blank to only store job location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`} and ignore address.</p>
+                  : null}
+            </Col>
+          </Row>
         </Form.Group>
 
         <p className="text-danger">{error}</p>
