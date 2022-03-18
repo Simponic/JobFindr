@@ -1,25 +1,34 @@
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useContext, useEffect } from "react";
 import { APIUserContext } from "../../services/api";
 import { AuthContext } from "../../services/auth";
+import { MapContainer } from "../maps/_map_container";
+import { GeocodeWrapper } from "../../services/geocoder";
 import toast from 'react-hot-toast';
 
 export const UserForm = ({ newUser }) => {
   const { id } = useParams(); // id is null when newUser is true
   const api = useContext(APIUserContext);
   const auth = useContext(AuthContext);
+
+  const [auth_data, setAuthData] = useState({});
+  const [role, setRole] = useState('');
+
   const [name, setName] = useState('');  
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
   const [password, setPassword] = useState('');
   const [phone_number, setPhoneNumber] = useState('');
   // Using a string to store the avatar is a terrible idea; XSS attacks galore!
   // But, we don't care about security here :)
   const [avatar, setAvatar] = useState(newUser ? 'https://s3.amazonaws.com/37assets/svn/765-default-avatar.png' : '');
   const [balance, setBalance] = useState('');
+  const [address, setAddress] = useState('')
+
+  const [coords, setCoords] = useState(null);
+
   const [error, setError] = useState('');
-  const [auth_data, setAuthData] = useState({});
+
   const navigate = useNavigate();
 
   const fetchUser = async () => {
@@ -31,6 +40,14 @@ export const UserForm = ({ newUser }) => {
       setAvatar(res.user.avatar);
       setBalance(res.user.balance);
       setPhoneNumber(res.user.phone_number);
+
+      setAddress(res.user.home_address !== undefined ? res.user.home_address : '');
+      if (res.user.home_latitude !== undefined && res.user.home_longitude !== undefined) {
+        setCoords({
+          lat: res.user.home_latitude,
+          lng: res.user.home_longitude
+        });
+      }
     } else if (res.message) {
       setError(res.message);
     }
@@ -42,7 +59,7 @@ export const UserForm = ({ newUser }) => {
     }
   }, []);
 
-  const validateForm = () => {
+  const validateForm = async () => {
     if (!name) {
       setError('Name is required');
       return false;
@@ -55,13 +72,26 @@ export const UserForm = ({ newUser }) => {
       setError('Phone number must be between 10 and 16 characters');
       return false;
     }
+
+    if (address) {
+      return await GeocodeWrapper.fromAddress(address).then(
+        (response) => {
+          setCoords(response.results[0].geometry.location);
+          setError('');
+          return true;
+        },
+        (error) => {
+          setError('Error geocoding address');
+        }
+      );
+    }
     setError('');
     return true;
   };
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) {
+    if (!(await validateForm())) {
       return false;
     }
 
@@ -72,6 +102,9 @@ export const UserForm = ({ newUser }) => {
       phone_number,
       role,
       avatar,
+      address,
+      home_latitude: coords ? coords.lat : null,
+      home_longitude: coords ? coords.lng : null,
       balance: Math.max(balance, 0)
     };
 
@@ -160,10 +193,42 @@ export const UserForm = ({ newUser }) => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Avatar*</Form.Label>
-          <Form.Control type="text" value={avatar} placeholder={avatar} onChange={(e) => setAvatar(e.target.value) }/>
-          <br />
-          <img src={avatar} alt="Avatar" className="avatar"></img>
+          <Row>
+            <Col md={6} className="text-center">
+              <img src={avatar} alt="Avatar" className="avatar"></img>
+            </Col>
+            <Col md={6}>
+              <Form.Label>Avatar*</Form.Label>
+              <Form.Control type="text" value={avatar} placeholder={avatar} onChange={(e) => setAvatar(e.target.value) }/>
+            </Col>
+          </Row>
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Row>
+            <Col md={6}>
+              <MapContainer spec={{
+                style: {
+                  'height': '300px',
+                  'width': '100%'
+                },
+                onClick: (e) => {
+                  setCoords({lat: e.latLng.lat(), lng: e.latLng.lng()});
+                },
+                coords: [coords],
+                center: coords,
+                zoom: 15,
+              }} />
+            </Col>
+            <Col md={6}>
+              <Form.Label>Home Address</Form.Label>
+              <Form.Control id="name" type="text" placeholder="123 Apple Drive #6, Logan, Utah, 84321" value={address} onChange={(e) => setAddress(e.target.value)} />
+              {
+                coords ? 
+                  <p>Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`}.</p>
+                  : null}
+            </Col>
+          </Row>
         </Form.Group>
 
         {
@@ -178,7 +243,6 @@ export const UserForm = ({ newUser }) => {
           :
           null
         }
-
         <p className="text-danger">{error}</p>
         <Button variant="primary" type="submit">
           Submit
