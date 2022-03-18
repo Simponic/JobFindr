@@ -4,7 +4,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 export const JobForm = () => {
-  const [jobTitle, setJobTitle] = useState('');
+  const [comment, setComment] = useState('');
   const [jobType, setJobType] = useState('');
   const [price, setPrice] = useState(0);
   const [timeEstimate, setTimeEstimate] = useState(0);
@@ -28,8 +28,8 @@ export const JobForm = () => {
     let startUnix = Math.floor(startTime.getTime() / 1000);
     let endUnix = Math.floor(endTime.getTime() / 1000);
 
-    if (!jobTitle) {
-      setError('Job title is required');
+    if (!comment) {
+      setError('Job details is required');
       return false;
     }
 
@@ -62,10 +62,15 @@ export const JobForm = () => {
       return false;
     }
 
-    if (endUnix - startUnix < 172800) {
-      setError('Listing time too short, must be up for at least 2 days')
+    if ((endUnix - startUnix) < (3 * timeEstimate)) {
+      setError('Listing time too short')
       return false;
     }
+
+    if ((endUnix - startUnix) > 345600) {
+      setError('Maximum listing length is 4 days')
+    }
+    setError('');
     return true;
   };
 
@@ -74,9 +79,7 @@ export const JobForm = () => {
     if (!validateForm()) {
       return false;
     }
-    // Check that user has enough money
     // Convert Dates to UNIX in the post body with Math.floor(startTime.getTime() / 1000);
-    // I think we're using jobtitle as 'comment' in the db
     toast.success("Success!");
   }
 
@@ -85,24 +88,20 @@ export const JobForm = () => {
 
       <Form onSubmit={submit}>
         <h1 className="text-center">List New Job</h1>
-        <Form.Group className="mb-3">
-          <Form.Label>Listing Title*</Form.Label>
-          <Form.Control id="title" type="text" placeholder="Lawn mowing gig near USU!" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required />
-        </Form.Group>
 
         <Form.Group className="mb-3">
           <Form.Label>Job Type*</Form.Label>
-          <Form.Control id="job-type"
-            as="select"
+          <Form.Select id="job-type"
             value={jobType}
             onChange={(e) => setJobType(e.target.value)}
           required> 
           {/* MAP JOBTYPE OPTIONS HERE */}
+            <option> </option>
             <option value="Example Type 1">Example Type 1</option>
             <option value="Example Type 2">Example Type 2</option>
             <option value="Example Type 3">Example Type 3</option>
             <option value="Example Type 4">Example Type 4</option>
-          </Form.Control>
+          </Form.Select>
         </Form.Group>
 
         <Form.Group className="mb-3">
@@ -115,9 +114,14 @@ export const JobForm = () => {
           <Form.Control id="time-estimate" type="number" min="0.25" max="60" step=".25" placeholder="2.5" value={timeEstimate} onChange={(e) => setTimeEstimate(e.target.value)} required />
         </Form.Group>
 
-        <Form.Group className="mb-4">
+        <Form.Group className="mb-3">
           <Form.Label>Address*</Form.Label>
           <Form.Control id="address" type="text" placeholder="4205 Old Main Hill, Logan, UT 84322" value={address} onChange={(e) => setAddress(e.target.value)} required />
+        </Form.Group>
+
+        <Form.Group className="mb-4">
+          <Form.Label>Job Details*</Form.Label>
+          <Form.Control className="job-desc" id="title" as="textarea" rows="3" type="text" placeholder="E.g. garage door code, specific instructions, etc." value={comment} onChange={(e) => setComment(e.target.value)} required />
         </Form.Group>
         
         <Form.Group className="mb-4">
