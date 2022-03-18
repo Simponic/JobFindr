@@ -53,7 +53,10 @@ Operations to perform:
   Apply all migrations: admin, auth, authentication, contenttypes, sessions
 ...
 ```
-
+To seed initial values into the database:
+```bash
+$ sudo docker exec -it be5d05526668 /usr/local/bin/python3 manage.py loaddata <fixture-file-name>
+```
 # Meta-tools
 Most communication between members are done over [Discord](https://discord.com).
 
