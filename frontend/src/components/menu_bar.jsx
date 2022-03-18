@@ -58,7 +58,7 @@ export const MenuBar = () => {
         <Navbar>
           <Nav className="me-auto">
             <Nav.Item>
-              <Nav.Link href="/">Jobs</Nav.Link>
+              <Nav.Link href="/jobs">Jobs</Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link href="/about">About</Nav.Link>

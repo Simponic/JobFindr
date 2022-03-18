@@ -9,6 +9,7 @@ import { AvailabilitySelector } from './components/availability_selector/availab
 import { LoadingAvailability } from './components/availability_selector/loading';
 import { About } from './components/about_page/about';
 import { MapContainer } from './components/maps/_map_container';
+import { JobsPage } from './components/jobs_page/jobs_page';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -21,6 +22,7 @@ ReactDOM.render(
         <Route path="worker/load-availability" element={<LoadingAvailability />} />
         <Route path="about" element={<About />} />
         <Route path="map" element={<MapContainer />} />
+        <Route path="jobs" element={<JobsPage />} />
         <Route
           path="*"
           element={<NotFound />}
