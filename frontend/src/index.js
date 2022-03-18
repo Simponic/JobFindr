@@ -9,6 +9,7 @@ import { AvailabilitySelector } from './components/availability_selector/availab
 import { LoadingAvailability } from './components/availability_selector/loading';
 import { About } from './components/about_page/about';
 import { JobForm } from './components/job_form/job_form';
+import { JobsPage } from './components/jobs_page/jobs_page';
 
 ReactDOM.render(
   <BrowserRouter>
