@@ -8,6 +8,7 @@ const popover = (user, logoutF) => {
   return (
     <Popover id="popover-basic">
       <Popover.Body>
+        {user.id ?
           <a href={`/profile/${user.id}/edit`}>
             <Button variant="secondary">
               <Container>
@@ -23,6 +24,7 @@ const popover = (user, logoutF) => {
               </Container>
             </Button>
           </a>
+          : null }
         <Button variant="danger" onClick={logoutF}>
           Logout
         </Button>
