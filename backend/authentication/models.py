@@ -40,9 +40,10 @@ class User(models.Model):
       'role': self.role,
       'exp': int((datetime.now() + timedelta(hours=6)).strftime('%s'))
     }, settings.JWT_SECRET, algorithm='HS256')
+
   @staticmethod
   def strip_phone_number(phone_number):
-    return phone_number.replace('+', '').replace('-', '').replace('(', '').replace(')', '').replace(' ', '')
+    return phone_number.replace('+', '').replace('-', '').replace('(', '').replace(')', '').replace(' ', '') 
   class Meta:
     constraints = [
       models.UniqueConstraint(fields=['email', 'phone_number'], name='unique_email_phone'),
