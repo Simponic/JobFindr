@@ -1,6 +1,6 @@
 from django.db import models
 from authentication.models import User
-from job.models import User
+from jobs.models import Job
 
 class Status(models.TextChoices):
     RESOLVED = 'resolved'
