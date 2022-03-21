@@ -48,9 +48,9 @@ class Job(models.Model):
 
         if Distance < 25:
             if self.job_type.job_type in worker.WorkerJobTypes.job_type:
-                for i in worker.WorkerAvailability:
-                    if self.start_time <= i.start_hour and self.end_time >= i.end_hour:
-                        # worker.
+                for i in worker.WorkerJobTimes:
+                    if self.start_time <= i.start_time and self.end_time >= i.end_time:
+                        worker.WorkerAssignedJobs.assigned_jobs = self
                         self.status = 'assigned'
                         self.save()
                         worker.save()
@@ -67,6 +67,10 @@ class WorkerJobTimes(models.Model):
 class WorkerJobTypes(models.Model):
     worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
     job_type = models.OneToOneField(JobType, null=False)
+
+class WorkerAssignedJobs(models.Model):
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    assigned_jobs = models.OneToOneField(Job, on_delete=models.CASCADE)
 
 
 

@@ -6,7 +6,7 @@ from authentication.views import get_user_or_error
 
 
 
-def create_job(request, id):
+def create_job(request):
     user_error_tup = get_user_or_error(request)
 
     if (user_error_tup['success']):
@@ -36,7 +36,7 @@ def create_job(request, id):
         )
 
         for i in Worker:
-            i.assign_job(job, i)
+            Job.assign_job(job, i)
             if job.status == 'assigned':
                 break
         if job.status != 'assigned':
@@ -46,7 +46,7 @@ def create_job(request, id):
         job.save()
         return {'success': True, 'message': 'A worker is on their way'}
 
-def create_new_job_type(request, id):
+def create_new_job_type(request):
     user_error_tup = get_user_or_error(request)
 
     if (user_error_tup['success']):
