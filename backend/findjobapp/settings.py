@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'worker.apps.WorkerConfig',
     'jobs.apps.JobsConfig',
+    'contactform.apps.ContactformConfig',
     'corsheaders',
 ]
 
