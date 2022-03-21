@@ -31,18 +31,12 @@ class Job(models.Model):
 
     job_type = models.OneToOneField(JobType, on_delete=models.SET_NULL, null=True)
 
-class WorkerJobTimes(models.Model):
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
-    job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    start_time = models.BigIntegerField(default=0, null=False)
-    end_time = models.BigIntegerField(default=0, null=False)
-
-    def assign_job(self):
+    def assign_job(self, worker):
         # creating variables to make code in future less confusing when doing the math
-        userLat = self.job.latitude / 57.29577951
-        userLong = self.job.longitude / 57.29577951
-        workerLat = self.worker.user.home_latitude / 57.29577951
-        workerLong = self.worker.user.home_longitude / 57.29577951
+        userLat = self.latitude / 57.29577951
+        userLong = self.longitude / 57.29577951
+        workerLat = worker.user.home_latitude / 57.29577951
+        workerLong = worker.user.home_longitude / 57.29577951
         # 57.29577951 is approximately 180/PI, so converts values from degrees to radians
 
         Distance = 3963.0 * math.arccos[(math.sin(userLat) * math.sin(workerLat)) + math.cos(userLat) *
@@ -53,9 +47,20 @@ class WorkerJobTimes(models.Model):
         Distance = abs(Distance)
 
         if Distance < 25:
-            for i in self.WorkerAvailability
+            for i in worker.WorkerAvailability:
+                if self.start_time <= i.start_hour and self.end_time >= i.end_hour:
+                    worker.
+                    self.status = 'assigned'
 
-            self.job.status = 'assigned'
+
+
+class WorkerJobTimes(models.Model):
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    start_time = models.BigIntegerField(default=0, null=False)
+    end_time = models.BigIntegerField(default=0, null=False)
+
+
 
 
 
