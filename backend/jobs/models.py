@@ -1,5 +1,5 @@
 from django.db import models
-from authentication.models import User, Worker
+from authentication.models import User, Worker, WorkerJobTypes, WorkerAvailability
 from django.conf import settings
 import math
 
@@ -47,10 +47,13 @@ class Job(models.Model):
         Distance = abs(Distance)
 
         if Distance < 25:
-            for i in worker.WorkerAvailability:
-                if self.start_time <= i.start_hour and self.end_time >= i.end_hour:
-                    worker.
-                    self.status = 'assigned'
+            if self.job_type.job_type in worker.WorkerJobTypes.job_type:
+                for i in worker.WorkerAvailability:
+                    if self.start_time <= i.start_hour and self.end_time >= i.end_hour:
+                        # worker.
+                        self.status = 'assigned'
+                        self.save()
+                        worker.save()
 
 
 

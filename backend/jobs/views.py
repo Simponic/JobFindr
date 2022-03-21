@@ -36,7 +36,7 @@ def create_job(request, id):
         )
 
         for i in Worker:
-            i.assign_job(job)
+            i.assign_job(job, i)
             if job.status == 'assigned':
                 break
         if job.status != 'assigned':
