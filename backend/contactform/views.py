@@ -18,7 +18,7 @@ def create_new_submission(request):
     if ('user' in user_error_tup):
         submission.user = user_error_tup['user']
 
-    if ('job_id' in body):
+    if ('job_id' in body and body['job_id']):
         try:
             job = Job.objects.get(pk=body['job_id'])
             submission.job = job
