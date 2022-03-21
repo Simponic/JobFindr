@@ -15,7 +15,7 @@ def create_job(request, id):
         return JsonResponse(user_error_tup)
 
     if (request.method == "GET"):
-        resp = {'success': True, 'user': }
+        resp = {'success': True, 'user': user}
 
         return JsonResponse(resp)
 

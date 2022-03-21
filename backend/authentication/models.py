@@ -3,7 +3,6 @@ from django.conf import settings
 from datetime import datetime, timedelta
 import jwt
 import bcrypt
-from jobs.models import JobType
 
 class Role(models.TextChoices):
   OWNER = 'owner'
@@ -72,7 +71,4 @@ class WorkerAvailability(models.Model):
   end_minute = models.IntegerField(default=59, null=False)
 
 
-class WorkerJobTypes(models.Model):
-  worker = models.ManyToOneRel(Worker, on_delete=models.CASCADE)
-  job_type = models.OneToOneField(JobType, null=False)
 

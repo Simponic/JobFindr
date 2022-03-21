@@ -64,6 +64,11 @@ class WorkerJobTimes(models.Model):
     end_time = models.BigIntegerField(default=0, null=False)
 
 
+class WorkerJobTypes(models.Model):
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    job_type = models.OneToOneField(JobType, null=False)
+
+
 
 
 
