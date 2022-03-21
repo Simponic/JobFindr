@@ -8,6 +8,7 @@ import { NotFound } from './components/errors/not_found';
 import { AvailabilitySelector } from './components/availability_selector/availability_selector';
 import { LoadingAvailability } from './components/availability_selector/loading';
 import { About } from './components/about_page/about';
+import { MapContainer } from './components/maps/_map_container';
 import { JobsPage } from './components/jobs_page/jobs_page';
 import { ContactForm } from './components/contactform/contact_form';
 
@@ -21,6 +22,7 @@ ReactDOM.render(
         <Route path="worker/:id/availability" element={<AvailabilitySelector />} />
         <Route path="worker/load-availability" element={<LoadingAvailability />} />
         <Route path="about" element={<About />} />
+        <Route path="map" element={<MapContainer />} />
         <Route path="jobs" element={<JobsPage />} />
         <Route path="contact" element={<ContactForm />} />
         <Route

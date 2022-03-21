@@ -35,6 +35,8 @@ services:
       - 3000
     environment:
       - NODE_ENV=development
+    env_file:
+      - .env
     networks:
       static:
         ipv4_address: 172.22.0.101

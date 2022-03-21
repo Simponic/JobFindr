@@ -8,21 +8,23 @@ const popover = (user, logoutF) => {
   return (
     <Popover id="popover-basic">
       <Popover.Body>
-        <a href={`/profile/${user.id}/edit`}>
-          <Button variant="secondary">
-            <Container>
-              <Row>
-                <Col xs={3}><Image src={user.avatar} className="avatar-sm" alt="avatar" /></Col>
-                <Col xs={9}>
-                  <h5>{user.name}</h5>
-                  <span>{user.role}</span>
-                  <br />
-                  <span>${parseFloat(user.balance, 10).toFixed(2)}</span>
-                </Col>
-              </Row>
-            </Container>
-          </Button>
-        </a>
+        {user.id ?
+          <a href={`/profile/${user.id}/edit`}>
+            <Button variant="secondary">
+              <Container>
+                <Row>
+                  <Col xs={3}><Image src={user.avatar} className="avatar-sm" alt="avatar" /></Col>
+                  <Col xs={9}>
+                    <h5>{user.name}</h5>
+                    <span>{user.role}</span>
+                    <br />
+                    <span>${parseFloat(user.balance, 10).toFixed(2)}</span>
+                  </Col>
+                </Row>
+              </Container>
+            </Button>
+          </a>
+          : null }
         <Button variant="danger" onClick={logoutF}>
           Logout
         </Button>

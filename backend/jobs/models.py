@@ -13,12 +13,7 @@ class JobType(models.Model):
     job_type = models.CharField(max_length=50, null=False)
     icon = models.CharField(max_length=100, null=False)
     archived = models.BooleanField(null=False, default=False)
-
-    def create_new_job_type(self, jobType, icon):
-        self.jobType = jobType
-        self.available = True
-        self.icon = icon
-
+    
 
 class Job(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
