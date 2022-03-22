@@ -30,6 +30,9 @@ class Job(models.Model):
 
     job_type = models.OneToOneField(JobType, on_delete=models.SET_NULL, null=True)
 
+    def get_title(self):
+        return self.job_type.job_type + " @ " + self.address
+
 class WorkerJobTimes(models.Model):
     worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)

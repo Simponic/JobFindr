@@ -4,8 +4,6 @@ from authentication.models import Role, User
 import json
 from authentication.views import get_user_or_error
 
-
-
 def create_job(request, id):
     user_error_tup = get_user_or_error(request)
 

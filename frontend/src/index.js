@@ -10,6 +10,7 @@ import { LoadingAvailability } from './components/availability_selector/loading'
 import { About } from './components/about_page/about';
 import { JobForm } from './components/job_form/job_form';
 import { JobsPage } from './components/jobs_page/jobs_page';
+import { ContactForm } from './components/contactform/contact_form';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -21,11 +22,13 @@ ReactDOM.render(
         <Route path="worker/load-availability" element={<LoadingAvailability />} />
         <Route path="login" element={<LogIn />} />
 
+        <Route path="about" element={<About />} />
+        <Route path="contact" element={<ContactForm />} />
+
         <Route path="jobs" element={<JobsPage />} />
         <Route path="jobs/add-job" element={<JobForm newJob={true} />} />
         <Route path="jobs/:id/edit" element={<JobForm />} />
 
-        <Route path="about" element={<About />} />
         <Route
           path="*"
           element={<NotFound />}
