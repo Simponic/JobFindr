@@ -56,23 +56,17 @@ export const MenuBar = () => {
       <Container>
         <Navbar>
           <Nav className="me-auto">
-            <Nav.Item>
-              <Nav.Link href="/jobs">Jobs</Nav.Link>
-            </Nav.Item>
+            {auth.user ?
+              <Nav.Item>
+                <Nav.Link href="/jobs">Jobs</Nav.Link>
+              </Nav.Item>
+              : null}
             <Nav.Item>
               <Nav.Link href="/about">About</Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link href="/contact">Contact Us</Nav.Link>
             </Nav.Item>
-            {
-              !auth.user ?
-                <><Nav.Item>
-                  <Nav.Link href="/signup">Sign Up</Nav.Link>
-                </Nav.Item><Nav.Item>
-                    <Nav.Link href="/login">Log In</Nav.Link>
-                  </Nav.Item></>
-              : null}
           </Nav>
           {
             auth.user ?
@@ -83,7 +77,11 @@ export const MenuBar = () => {
                   </OverlayTrigger>
                 </Nav.Item>
               </Nav>
-              : null}
+              : <><Nav.Item>
+                  <Nav.Link href="/signup">Sign Up</Nav.Link>
+                </Nav.Item><Nav.Item>
+                    <Nav.Link href="/login">Log In</Nav.Link>
+                  </Nav.Item></>}
         </Navbar>
       </Container>
     );
