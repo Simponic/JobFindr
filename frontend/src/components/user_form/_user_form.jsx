@@ -224,11 +224,11 @@ export const UserForm = ({ newUser }) => {
               }} />
             </Col>
             <Col md={6}>
-              <Form.Label>Home Address</Form.Label>
+              <Form.Label>Address</Form.Label>
               <Form.Control id="name" type="text" placeholder="123 Apple Drive #6, Logan, Utah, 84321" value={address} onChange={(e) => setAddress(e.target.value)} />
               {
                 coords?.lat && coords?.lng ? 
-                  <p>Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`}.</p>
+                  <p>Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`} and ignore address.</p>
                   : null}
             </Col>
           </Row>
