@@ -82,4 +82,11 @@ class WorkerAvailability(models.Model):
         work_ranges.append((s[0], availabilities[i+1][1]))
       else:
         work_ranges.append(s)
-    return work_ranges
+    if len(work_ranges) <= 1:
+      return work_ranges
+    elif len(work_ranges) > 1:
+      non_overlapped = [work_ranges[0]]
+      for i in range(1, len(work_ranges)):
+        if not work_ranges[i-1][1] == work_ranges[i][1]:
+          non_overlapped.append(work_ranges[i])
+      return non_overlapped

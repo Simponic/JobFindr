@@ -35,20 +35,18 @@ class Job(models.Model):
     def availabilities_in_time_range(self, availabilities):
         start_time = datetime.datetime.fromtimestamp(self.start_time)
         end_time = datetime.datetime.fromtimestamp(self.end_time)
-        days = [start_time.weekday()+1]
+        days = [(start_time.weekday()+1)%7]
 
         possible_work_times = []
         index = 0
-        while not days[-1] == end_time.weekday() and not (index > 0 and days[-1] == days[0]):
-            weekday = (days[index]+1) % 7
-            days.append(weekday)
-            index += 1
-            availabilities_on_day = list(filter(lambda x: x.day == weekday, availabilities))
-            print(str(availabilities_on_day), str(weekday))
+        while not days[-1] == (end_time.weekday()+1)%7 and not (index > 0 and days[-1] == days[0]):
+            availabilities_on_day = list(filter(lambda x: x.day == days[index], availabilities))
             for a in availabilities_on_day:
                 s = start_time.replace(hour=a.start_hour, minute=a.start_minute)+datetime.timedelta(days=index)
                 e = min(end_time, start_time.replace(hour=a.end_hour, minute=a.end_minute)+datetime.timedelta(days=index))
                 possible_work_times.append((s, e))
+            days.append((days[index]+1)%7)
+            index += 1
         
         work_ranges = WorkerAvailability.union_datetime_ranges_over_days(possible_work_times)
 
