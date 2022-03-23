@@ -12,6 +12,7 @@ Every team member is expected to attend each meeting. If a situation occurs wher
 not attend the meeting they will let the rest of the team know beforehand. Our metric for team evaluation
 this sprint will depend on meeting attendance.
 
+
 Based on our first sprint retrospective, we are aiming to improve on code reviews. Each member should be keeping
 up with the rest of the teams submissions.
 

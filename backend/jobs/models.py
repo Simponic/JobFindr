@@ -1,6 +1,8 @@
 from django.db import models
-from authentication.models import User, Worker
+from authentication.models import User, Worker, WorkerAvailability
 from django.conf import settings
+import math
+import datetime
 
 class Status(models.TextChoices):
     AVAILABLE = 'available'
@@ -13,7 +15,7 @@ class JobType(models.Model):
     job_type = models.CharField(max_length=50, null=False)
     icon = models.CharField(max_length=100, null=False)
     archived = models.BooleanField(null=False, default=False)
-    
+
 
 class Job(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -29,6 +31,68 @@ class Job(models.Model):
     status = models.CharField(max_length=15, choices=Status.choices, default=Status.AVAILABLE)
 
     job_type = models.OneToOneField(JobType, on_delete=models.SET_NULL, null=True)
+
+    def availabilities_job_completeable_in(self, availabilities):
+        start_time = datetime.datetime.fromtimestamp(self.start_time).replace(seconds=0)
+        end_time = datetime.datetime.fromtimestamp(self.end_time).replace(seconds=0)
+        days = [(start_time.weekday()+1)%7]
+
+        possible_work_times = []
+        index = 0
+        while not days[-1] == (end_time.weekday()+1)%7 and not (index > 0 and days[-1] == days[0]):
+            availabilities_on_day = list(filter(lambda x: x.day == days[index], availabilities))
+            for a in availabilities_on_day:
+                s = start_time.replace(hour=a.start_hour, minute=a.start_minute)+datetime.timedelta(days=index)
+                e = min(end_time, start_time.replace(hour=a.end_hour, minute=a.end_minute)+datetime.timedelta(days=index))
+                possible_work_times.append((s, e))
+            days.append((days[index]+1)%7)
+            index += 1
+        
+        work_ranges = WorkerAvailability.union_datetime_ranges_over_days(possible_work_times)
+
+        return list(filter(lambda x: x[1] - x[0] >= datetime.timedelta(hours=self.time_estimate), work_ranges))
+
+    def assign_worker(self):
+        if (datetime.datetime.timestamp() + self.time_estimate * 3600 > self.end_time):
+            return {'success': False, 'message': 'Job cannot be completed any more (impossible time estimate)'}
+        if (not self.status == Status.AVAILABLE):
+            return {'success': False, 'message': 'Job not available'}
+        def distance(worker):
+            jobLat = self.latitude / 57.29577951
+            jobLong = self.longitude / 57.29577951
+            workerLat = worker.user.home_latitude / 57.29577951
+            workerLong = worker.user.home_longitude / 57.29577951
+            # 57.29577951 is approximately 180/PI, so converts values from degrees to radians
+
+            return abs(3963.0 * math.acos((math.sin(jobLat) * math.sin(workerLat)) + math.cos(jobLat) *
+                                            math.cos(workerLat) * math.cos(workerLong - jobLong)))
+        workers_in_radius = list(filter(lambda x: distance(x) <= settings.WORKER_RADIUS, Worker.objects.filter(job_types=self.job_type)))
+
+        for worker in workers_in_radius:
+            worker_availabilities = self.availabilities_job_completeable_in(WorkerAvailability.objects.filter(worker=worker).order_by('start_hour', 'start_minute'))
+
+            worker_job_times = WorkerJobTimes.objects.filter(worker=worker)
+            for job_times in worker_job_times:
+                availabilities = []
+                job_times.start_time = datetime.datetime.fromtimestamp(job_times.start_time).replace(seconds=0)
+                job_times.end_time = datetime.datetime.fromtimestamp(job_times.end_time).replace(seconds=0)
+                for a in worker_availabilities:
+                    if a[0] <= job_times.start_time and a[1] >= job_times.end_time:
+                        availabilities += list(filter(lambda x: x[0] - x[1] >= datetime.timedelta(hours=self.time_estimate), [(a[0], job_times.start_time), (job_times.end_time, a[1])]))
+                        break
+                    availabilities.push(a)
+                worker_availabilities = availabilities
+            if len(worker_availabilities):
+                WorkerJobTimes.objects.create(
+                    job=self,
+                    worker=worker,
+                    start_time=worker_availabilities[0][0].replace(seconds=0).timestamp(),
+                    end_time=worker_availabilities[0][0].replace(seconds=0).timestamp()+self.time_estimate*3600
+                )
+                self.status = Status.ASSIGNED
+                self.save()
+                return worker
+        return {'success': False, 'message': 'No workers available for this job. Try again later'}
 
     def get_title(self):
         return self.job_type.job_type + " @ " + self.address

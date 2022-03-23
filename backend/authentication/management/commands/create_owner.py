@@ -34,7 +34,6 @@ class Command(BaseCommand):
     )
 
   def handle(self, *args, **options):
-    print(options)
     email = options['email']
     phone_number = options['phone_number']
     password = options['password']

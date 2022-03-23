@@ -20,30 +20,59 @@ export const AvailabilitySelector = () => {
     const res = await api.get(`/api/worker/${id}/availabilities`);
     if (res.success) {
       const availability = res.availability;
-      const l = availability.map(av => {
-        return {
-          start: moment().day(av.day).hour(av.start_hour).minute(av.start_minute).format(),
-          end: moment().day(av.day).hour(av.end_hour).minute(av.end_minute).format(),
+      const availabilities = [];
+      for (let i = 0; i < availability.length; i++) {
+        if (i < availability.length-1 && ((availability[i].day + 1) % 7) === availability[i+1].day && availability[i].end_hour === 23 && availability[i].end_minute === 59 && availability[i+1].start_hour === 0 && availability[i+1].start_minute === 0) {
+          availabilities.push({
+            start: moment().utc().day(availability[i].day).hour(availability[i].start_hour).minute(availability[i].start_minute).format(),
+            end: moment().utc().day(availability[i+1].day).hour(availability[i+1].end_hour).minute(availability[i+1].end_minute).format(),
+          });
+          i += 1;
+        } else {
+          availabilities.push({
+            start: moment().utc().day(availability[i].day).hour(availability[i].start_hour).minute(availability[i].start_minute).format(),
+            end: moment().utc().day(availability[i].day).hour(availability[i].end_hour).minute(availability[i].end_minute).format(),
+          });
         }
-      });
-      setInitialEvents(l);
+      }
+      setInitialEvents(availabilities);
     } else if (res.message) {
       setError(res.message);
     }
   };
 
   const updateAvailability = async () => {
-    const res = await api.post(`/api/worker/${id}/availabilities`, events.map(x => {
-      const start = moment(x.start);
-      const end = moment(x.end);
-      return {
-        day: start.weekday(),
-        start_hour: start.hour(),
-        end_hour: end.hour(),
-        start_minute: start.minute(),
-        end_minute: end.minute()
-      };
-    }));
+    const availabilities = [];
+    for (let event of events) {
+      const start = moment.utc(event.start);
+      const end = moment.utc(event.end);
+      if (start.weekday() === end.weekday()) {
+        availabilities.push({
+          day: start.weekday(),
+          start_hour: start.hour(),
+          start_minute: start.minute(),
+          end_hour: end.hour(),
+          end_minute: end.minute(),
+        });
+      } else {
+        // In the worst case the availability is split into two days; no need to worry about anything longer
+        availabilities.push({
+          day: start.weekday(),
+          start_hour: start.hour(),
+          start_minute: start.minute(),
+          end_hour: 23,
+          end_minute: 59,
+        });
+        availabilities.push({
+          day: end.weekday(),
+          start_hour: 0,
+          start_minute: 0,
+          end_hour: end.hour(),
+          end_minute: end.minute(),
+        })
+      }
+    }
+    const res = await api.post(`/api/worker/${id}/availabilities`, availabilities);
 
     if (res.success) {
       toast.success('Availability updated successfully.');

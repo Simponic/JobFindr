@@ -54,6 +54,7 @@ class Worker(models.Model):
         User,
         on_delete=models.CASCADE,
     )
+  job_types = models.ManyToManyField('jobs.JobType', blank=True)
   
   def update_availability(self, new_availabilities):
     WorkerAvailability.objects.filter(worker_id=self.id).delete()
@@ -69,3 +70,24 @@ class WorkerAvailability(models.Model):
   start_minute = models.IntegerField(default=0, null=False)
   end_hour = models.IntegerField(default=23, null=False)
   end_minute = models.IntegerField(default=59, null=False)
+
+  @staticmethod
+  def union_datetime_ranges_over_days(availabilities):
+    # Availabilities is a list of tuples containing (start_time, end_time)
+    # Returns a list of tuples containting (start_time, end_time) unioned over days if they are withing a minute of each other
+    # ex [[(day=0, time=12:50), (day=0, time=23:59)], [(day=1, time=00:00), (day=1, time=12:00)]] -> [(day=0, time=12:50), (day=1, time=12:00)]
+    work_ranges = []
+    for i in range(len(availabilities)):
+      s = availabilities[i]
+      if ((i < len(availabilities)-1) and ((s[1].weekday() + 1) % 7) == (availabilities[i+1][0].weekday()) and s[1].hour == 23 and s[1].minute == 59 and availabilities[i+1][0].hour == 0 and availabilities[i+1][0].minute == 0):
+        work_ranges.append((s[0], availabilities[i+1][1]))
+      else:
+        work_ranges.append(s)
+    if len(work_ranges) <= 1:
+      return work_ranges
+    elif len(work_ranges) > 1:
+      non_overlapped = [work_ranges[0]]
+      for i in range(1, len(work_ranges)):
+        if not work_ranges[i-1][1] == work_ranges[i][1]:
+          non_overlapped.append(work_ranges[i])
+      return non_overlapped
