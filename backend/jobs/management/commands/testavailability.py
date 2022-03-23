@@ -7,8 +7,7 @@ class Command(BaseCommand):
   def handle(self, *args, **options):
     j = Job.objects.filter(pk=3)
     w = Worker.objects.get(pk=1)
-    wa = WorkerAvailability.objects.filter(worker=w)
-    self.stdout.write(str(j.first().availabilities_in_time_range(wa)))
+    self.stdout.write(str(j.first().assign_worker()))
 
 
 

@@ -54,6 +54,7 @@ class Worker(models.Model):
         User,
         on_delete=models.CASCADE,
     )
+  job_types = models.ManyToManyField('jobs.JobType', blank=True)
   
   def update_availability(self, new_availabilities):
     WorkerAvailability.objects.filter(worker_id=self.id).delete()
