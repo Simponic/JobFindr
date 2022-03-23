@@ -52,41 +52,37 @@ export const MenuBar = () => {
     }
   }, []);
 
-  if (auth.user) {
     return (
       <Container>
         <Navbar>
           <Nav className="me-auto">
-            <Nav.Item>
-              <Nav.Link href="/jobs">Jobs</Nav.Link>
-            </Nav.Item>
+            {auth.user ?
+              <Nav.Item>
+                <Nav.Link href="/jobs">Jobs</Nav.Link>
+              </Nav.Item>
+              : null}
             <Nav.Item>
               <Nav.Link href="/about">About</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link href="/">Contact Us</Nav.Link>
+              <Nav.Link href="/contact">Contact Us</Nav.Link>
             </Nav.Item>
           </Nav>
-          <Nav>
-            <Nav.Item>
-              <OverlayTrigger trigger="click" placement="bottom" overlay={popover(user, auth.logout)}>
-                <Button variant="outline-dark" onClick={() => auth.user && !user?.id ? fetchMe() : null }>{auth.user.name}</Button>
-              </OverlayTrigger>
-            </Nav.Item>
-          </Nav>
+          {
+            auth.user ?
+              <Nav>
+                <Nav.Item>
+                  <OverlayTrigger trigger="click" placement="bottom" overlay={popover(user, auth.logout)}>
+                    <Button variant="outline-dark" onClick={() => auth.user && !user?.id ? fetchMe() : null }>{auth.user.name}</Button>
+                  </OverlayTrigger>
+                </Nav.Item>
+              </Nav>
+              : <><Nav.Item>
+                  <Nav.Link href="/signup">Sign Up</Nav.Link>
+                </Nav.Item><Nav.Item>
+                    <Nav.Link href="/login">Log In</Nav.Link>
+                  </Nav.Item></>}
         </Navbar>
       </Container>
     );
-  } else {
-    return (
-      <Nav className="me-auto">
-          <Nav.Item>
-            <Nav.Link href="/signup">Sign Up</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/login">Log In</Nav.Link>
-          </Nav.Item>
-      </Nav>
-    );
-  }
 };

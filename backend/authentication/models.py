@@ -70,5 +70,16 @@ class WorkerAvailability(models.Model):
   end_hour = models.IntegerField(default=23, null=False)
   end_minute = models.IntegerField(default=59, null=False)
 
-
-
+  @staticmethod
+  def union_datetime_ranges_over_days(availabilities):
+    # Availabilities is a list of tuples containing (start_time, end_time)
+    # Returns a list of tuples containting (start_time, end_time) unioned over days if they are withing a minute of each other
+    # ex [[(day=0, time=12:50), (day=0, time=23:59)], [(day=1, time=00:00), (day=1, time=12:00)]] -> [(day=0, time=12:50), (day=1, time=12:00)]
+    work_ranges = []
+    for i in range(len(availabilities)):
+      s = availabilities[i]
+      if ((i < len(availabilities)-1) and ((s[1].weekday() + 1) % 7) == (availabilities[i+1][0].weekday()) and s[1].hour == 23 and s[1].minute == 59 and availabilities[i+1][0].hour == 0 and availabilities[i+1][0].minute == 0):
+        work_ranges.append((s[0], availabilities[i+1][1]))
+      else:
+        work_ranges.append(s)
+    return work_ranges

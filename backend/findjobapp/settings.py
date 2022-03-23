@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'worker.apps.WorkerConfig',
     'jobs.apps.JobsConfig',
+    'contactform.apps.ContactformConfig',
     'corsheaders',
 ]
 
@@ -154,3 +155,6 @@ if ENVIRONMENT == "PROD":
 ALLOWED_HOSTS=['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
+
+# Custom application settings
+WORKER_RADIUS=10

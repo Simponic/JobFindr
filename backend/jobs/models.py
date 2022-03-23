@@ -1,7 +1,8 @@
 from django.db import models
-from authentication.models import User, Worker, WorkerJobTypes, WorkerAvailability
+from authentication.models import User, Worker, WorkerAvailability
 from django.conf import settings
 import math
+import datetime
 
 class Status(models.TextChoices):
     AVAILABLE = 'available'
@@ -31,31 +32,48 @@ class Job(models.Model):
 
     job_type = models.OneToOneField(JobType, on_delete=models.SET_NULL, null=True)
 
-    def assign_job(self, worker):
+    def availabilities_in_time_range(self, availabilities):
+        start_time = datetime.datetime.fromtimestamp(self.start_time)
+        end_time = datetime.datetime.fromtimestamp(self.end_time)
+        days = [start_time.weekday()+1]
+
+        possible_work_times = []
+        index = 0
+        while not days[-1] == end_time.weekday() and not (index > 0 and days[-1] == days[0]):
+            weekday = (days[index]+1) % 7
+            days.append(weekday)
+            index += 1
+            availabilities_on_day = list(filter(lambda x: x.day == weekday, availabilities))
+            print(str(availabilities_on_day), str(weekday))
+            for a in availabilities_on_day:
+                s = start_time.replace(hour=a.start_hour, minute=a.start_minute)+datetime.timedelta(days=index)
+                e = min(end_time, start_time.replace(hour=a.end_hour, minute=a.end_minute)+datetime.timedelta(days=index))
+                possible_work_times.append((s, e))
+        
+        work_ranges = WorkerAvailability.union_datetime_ranges_over_days(possible_work_times)
+
+        return list(filter(lambda x: x[1] - x[0] >= datetime.timedelta(hours=self.time_estimate), work_ranges))
+
+    def find_worker(self):
         # creating variables to make code in future less confusing when doing the math
-        userLat = self.latitude / 57.29577951
-        userLong = self.longitude / 57.29577951
-        workerLat = worker.user.home_latitude / 57.29577951
-        workerLong = worker.user.home_longitude / 57.29577951
-        # 57.29577951 is approximately 180/PI, so converts values from degrees to radians
+        def distance(worker):
+            jobLat = self.latitude / 57.29577951
+            jobLong = self.longitude / 57.29577951
+            workerLat = worker.user.home_latitude / 57.29577951
+            workerLong = worker.user.home_longitude / 57.29577951
+            # 57.29577951 is approximately 180/PI, so converts values from degrees to radians
 
-        Distance = 3963.0 * math.arccos[(math.sin(userLat) * math.sin(workerLat)) + math.cos(userLat) *
-                                        math.cos(workerLat) * math.cos(workerLong - userLong)]
+            return abs(3963.0 * math.arccos[(math.sin(jobLat) * math.sin(workerLat)) + math.cos(jobLat) *
+                                            math.cos(workerLat) * math.cos(workerLong - jobLong)])
+        workers_in_radius = filter(lambda x: distance(x) <= settings.WORKER_RADIUS, Worker.objects.all())
 
-        # formula from https://www.geeksforgeeks.org/program-distance-two-points-earth/
+        for worker in workers_in_radius:
+            worker_availabilities = self.availabilities_in_time_range(WorkerAvailability.objects.filter(worker=worker))
+            
+            #worker_job_times = WorkerJobTimes.objects.filter(worker=worker)
 
-        Distance = abs(Distance)
-
-        if Distance < 25:
-            if self.job_type.job_type in worker.WorkerJobTypes.job_type:
-                for i in worker.WorkerJobTimes:
-                    if self.start_time <= i.start_time and self.end_time >= i.end_time:
-                        worker.WorkerAssignedJobs.assigned_jobs = self
-                        self.status = 'assigned'
-                        self.save()
-                        worker.save()
-
-
+    def get_title(self):
+        return self.job_type.job_type + " @ " + self.address
 
 class WorkerJobTimes(models.Model):
     worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
@@ -66,14 +84,4 @@ class WorkerJobTimes(models.Model):
 
 class WorkerJobTypes(models.Model):
     worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
-    job_type = models.OneToOneField(JobType, null=False)
-
-class WorkerAssignedJobs(models.Model):
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
-    assigned_jobs = models.OneToOneField(Job, on_delete=models.CASCADE)
-
-
-
-
-
-
+    job_type = models.OneToOneField(JobType, on_delete=models.CASCADE)

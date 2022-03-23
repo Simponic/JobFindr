@@ -1,5 +1,3 @@
-from authentication.models import WorkerAvailability
-
 def serialize_user(user):
   return {
     'id': user.id,

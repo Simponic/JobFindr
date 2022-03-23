@@ -63,3 +63,7 @@
 .list-icons {
   font-size: 30px;
 }
+
+.job-desc {
+  resize: none;
+}

@@ -194,7 +194,7 @@ export const UserForm = ({ newUser }) => {
           <Form.Label>Balance</Form.Label>
           <Form.Control type="number" step="0.01" min="0" value={balance} placeholder={"0.00"} onChange={(e) => setBalance(e.target.value) } />
         </Form.Group>
-
+        <hr />
         <Form.Group className="mb-3">
           <Row>
             <Col md={6} className="text-center">
@@ -206,7 +206,7 @@ export const UserForm = ({ newUser }) => {
             </Col>
           </Row>
         </Form.Group>
-
+        <hr />
         <Form.Group className="mb-3">
           <Row>
             <Col md={6}>
@@ -224,16 +224,16 @@ export const UserForm = ({ newUser }) => {
               }} />
             </Col>
             <Col md={6}>
-              <Form.Label>Home Address</Form.Label>
+              <Form.Label>Address</Form.Label>
               <Form.Control id="name" type="text" placeholder="123 Apple Drive #6, Logan, Utah, 84321" value={address} onChange={(e) => setAddress(e.target.value)} />
               {
                 coords?.lat && coords?.lng ? 
-                  <p>Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`}.</p>
+                  <p class="text-muted">Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`} and ignore address.<br />Or, enter your address and submit to update your location.</p>
                   : null}
             </Col>
           </Row>
         </Form.Group>
-
+        <hr />
         {
           newUser ? 
           <>
