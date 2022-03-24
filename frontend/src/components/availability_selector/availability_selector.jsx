@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import { Button, Container, Row } from "react-bootstrap";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { APIUserContext } from "../../services/api";
@@ -8,6 +8,7 @@ import FullCalendar from '@fullcalendar/react';
 import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { useEffect } from "react";
+import { JobType } from "./job_type";
 
 export const AvailabilitySelector = () => {
   const api = useContext(APIUserContext);
@@ -15,10 +16,24 @@ export const AvailabilitySelector = () => {
   const [error, setError] = useState('');
   const [initialEvents, setInitialEvents] = useState([]);
   const [events, setEvents] = useState([]);
+  const [jobTypes, setJobTypes] = useState([]);
+  const [selectedJobTypes, setSelectedJobTypes] = useState([]);
 
-  const fetchEvents = async () => {
+  const icons = require('react-icons/gi');
+
+  const fetchJobTypes = async () => {
+    const res = await api.get('/api/jobs/job-types');
+    if (res.success) {
+      setJobTypes(res.job_types);
+    } else if (res.message) {
+      setError(res.message);
+    }
+  }
+
+  const fetchAvailability = async () => {
     const res = await api.get(`/api/worker/${id}/availabilities`);
     if (res.success) {
+      setSelectedJobTypes(res.jobtypes);
       const availability = res.availability;
       const availabilities = [];
       for (let i = 0; i < availability.length; i++) {
@@ -72,7 +87,7 @@ export const AvailabilitySelector = () => {
         })
       }
     }
-    const res = await api.post(`/api/worker/${id}/availabilities`, availabilities);
+    const res = await api.post(`/api/worker/${id}/availabilities`, { availabilities , jobtypes: selectedJobTypes.map((x) => x.id) });
 
     if (res.success) {
       toast.success('Availability updated successfully.');
@@ -95,14 +110,30 @@ export const AvailabilitySelector = () => {
   };
 
   useEffect(() => {
-    fetchEvents();
+    fetchJobTypes();
+    fetchAvailability();
   }, []);
+
+  const toggleSelect = (jobType) => {
+    if (selectedJobTypes.find((s) => s.id == jobType.id)) {
+      setSelectedJobTypes(selectedJobTypes.filter((s) => s.id != jobType.id));
+    } else {
+      setSelectedJobTypes([...selectedJobTypes, jobType]);
+    }
+  }
 
   return (
     <div>
       <h1 className="text-center">Worker Availability</h1>
       <div className="mx-5">
         <p className="text-danger">{error}</p>
+          <Container>
+            <Row>
+              {jobTypes.map((jobType) => 
+                <JobType key={jobType.id} jobType={jobType} selected={selectedJobTypes.find((s) => s.id == jobType.id)} onSelected={() => toggleSelect(jobType)} icon={icons[jobType.icon]} />
+              )}
+            </Row>
+          </Container>
         <FullCalendar
           plugins={[ timeGridPlugin , interactionPlugin ]}
           initialView="timeGridWeek"

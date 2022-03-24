@@ -1,3 +1,5 @@
+from jobs.serializers import serialize_jobtype
+
 def serialize_user(user):
   return {
     'id': user.id,
@@ -34,4 +36,5 @@ def serialize_worker(worker):
   return {
     'id': worker.id,
     'availability': [serialize_worker_availability(x) for x in worker.workeravailability_set.all()],
+    'jobtypes': [serialize_jobtype(x) for x in worker.job_types.all()],
   }

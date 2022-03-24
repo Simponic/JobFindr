@@ -61,6 +61,11 @@ class Worker(models.Model):
     for availability in new_availabilities:
       availability.save()
 
+  def update_jobtypes(self, new_job_types):
+    self.job_types.clear()
+    list(map(lambda x: self.job_types.add(x), new_job_types))
+
+
 class WorkerAvailability(models.Model):
   worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
 
