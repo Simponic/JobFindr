@@ -13,7 +13,6 @@ import { JobType } from "./job_type";
 export const AvailabilitySelector = () => {
   const api = useContext(APIUserContext);
   const { id } = useParams();
-  const [error, setError] = useState('');
   const [initialEvents, setInitialEvents] = useState([]);
   const [events, setEvents] = useState([]);
   const [jobTypes, setJobTypes] = useState([]);
@@ -26,7 +25,7 @@ export const AvailabilitySelector = () => {
     if (res.success) {
       setJobTypes(res.job_types);
     } else if (res.message) {
-      setError(res.message);
+      toast.error(res.message);
     }
   }
 
@@ -52,7 +51,7 @@ export const AvailabilitySelector = () => {
       }
       setInitialEvents(availabilities);
     } else if (res.message) {
-      setError(res.message);
+      toast.error(res.message);
     }
   };
 
@@ -93,7 +92,7 @@ export const AvailabilitySelector = () => {
       toast.success('Availability updated successfully.');
     }
     else if (res.message) {
-      setError(res.message);
+      toast.error(res.message);
     }
   };
 
@@ -126,14 +125,13 @@ export const AvailabilitySelector = () => {
     <div>
       <h1 className="text-center">Worker Availability</h1>
       <div className="mx-5">
-        <p className="text-danger">{error}</p>
-          <Container>
-            <Row>
-              {jobTypes.map((jobType) => 
-                <JobType key={jobType.id} jobType={jobType} selected={selectedJobTypes.find((s) => s.id == jobType.id)} onSelected={() => toggleSelect(jobType)} icon={icons[jobType.icon]} />
-              )}
-            </Row>
-          </Container>
+        <Container>
+          <Row>
+            {jobTypes.map((jobType) => 
+              <JobType key={jobType.id} jobType={jobType} selected={selectedJobTypes.find((s) => s.id == jobType.id)} onSelected={() => toggleSelect(jobType)} icon={icons[jobType.icon]} />
+            )}
+          </Row>
+        </Container>
         <FullCalendar
           plugins={[ timeGridPlugin , interactionPlugin ]}
           initialView="timeGridWeek"

@@ -29,7 +29,7 @@ def worker_availabilities(request, id):
       return JsonResponse({'success': False, 'message': 'Error fetching worker availabilities'})
 
   elif (request.method == "POST"):
-#    try:
+    try:
       body = json.loads(request.body.decode('utf-8'))
       availabilities = [
         WorkerAvailability(
@@ -45,5 +45,5 @@ def worker_availabilities(request, id):
       worker.update_availability(availabilities)
       worker.update_jobtypes(body['jobtypes'])
       return JsonResponse({'success': True})
-#    except:
-#      return JsonResponse({'success': False, 'message': 'Error posting new worker availabilities'})
+    except:
+      return JsonResponse({'success': False, 'message': 'Error posting new worker availabilities'})
