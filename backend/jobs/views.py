@@ -1,9 +1,12 @@
 from django.http import JsonResponse
 from jobs.models import JobType, Job, Status
 from authentication.models import Role, User, Worker, WorkerAvailability
+from jobs.serializers import serialize_jobtype
 import json
 from authentication.views import get_user_or_error
 
+def job_types(request):
+    return JsonResponse({'success': True, 'job_types': list(map(lambda x: serialize_jobtype(x), JobType.objects.filter(archived=False)))})
 
 def create_job(request):
     body = json.loads(request.body.decode('utf-8'))

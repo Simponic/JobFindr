@@ -1,5 +1,3 @@
-from authentication.serializers import serialize_user
-
 def serialize_jobtype(job_type):
   return {
     'id': job_type.id,
@@ -21,5 +19,5 @@ def serialize_job(job):
     'longitude': job.longitude,
     'comment': job.comment,
     'status': job.status,
-    'user_id': serialize_user(job.user),
+    'user_id': job.user.id,
   }

@@ -22,7 +22,8 @@ def worker_availabilities(request, id):
     try:
       return JsonResponse({
         'success': True,
-        'availability': serialize_worker(worker)['availability']
+        'availability': serialize_worker(worker)['availability'],
+        'jobtypes': serialize_worker(worker)['jobtypes']
       })
     except:
       return JsonResponse({'success': False, 'message': 'Error fetching worker availabilities'})
@@ -39,9 +40,10 @@ def worker_availabilities(request, id):
           end_minute=entry['end_minute'],
           worker=user.worker
         )
-        for entry in body
+        for entry in body['availabilities']
       ]
       worker.update_availability(availabilities)
+      worker.update_jobtypes(body['jobtypes'])
       return JsonResponse({'success': True})
     except:
       return JsonResponse({'success': False, 'message': 'Error posting new worker availabilities'})
