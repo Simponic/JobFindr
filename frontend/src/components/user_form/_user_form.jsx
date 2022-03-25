@@ -155,7 +155,7 @@ export const UserForm = ({ newUser }) => {
 
         {
           !newUser && auth_data?.user?.role === 'worker' && auth_data?.worker ?
-          <Link to={`/worker/${auth_data.worker.id}/availability`} target="_blank">Change availability</Link>
+          <Link to={`/worker/${auth_data.worker.id}/availability`} target="_blank">Change availability/available job types</Link>
           :
           null
         }

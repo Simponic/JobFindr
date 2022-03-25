@@ -142,7 +142,7 @@ export const AvailabilitySelector = () => {
           }}
           editable={true}
           selectable={true}
-          dayHeaderFormat={{ weekday: 'long' }}
+          dayHeaderFormat={{ weekday: 'short' }}
           select={onDateClick}
           allDaySlot={false}
           slotMinTime={'08:00:00'}
@@ -151,6 +151,7 @@ export const AvailabilitySelector = () => {
           eventsSet={(e) => { setEvents(e); }}
           eventClick={handleEventClick}
         />
+        <br />
         <Button variant="primary" onClick={updateAvailability}>
           Save
         </Button>
