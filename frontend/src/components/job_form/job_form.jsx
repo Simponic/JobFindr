@@ -14,6 +14,7 @@ export const JobForm = ({ newJob }) => {
   const auth = useContext(AuthContext);
 
   const [comment, setComment] = useState('');
+  const [jobTypes, setJobTypes] = useState([]);
   const [jobType, setJobType] = useState('');
   const [price, setPrice] = useState(0);
   const [timeEstimate, setTimeEstimate] = useState(0);
@@ -30,6 +31,15 @@ export const JobForm = ({ newJob }) => {
     // set job fields
   }
 
+  const fetchJobTypes = async () => {
+    const res = await api.get('/api/jobs/job-types');
+    if (res.success) {
+      setJobTypes(res.job_types);
+    } else if (res.message) {
+      toast.error(res.message);
+    }
+  }
+
   const setAddressFromUser = async () => {
     const res = await api.get(`/api/user/${auth.user.id}`);
     setAddress(res.user.home_address ? res.user.home_address : '');
@@ -42,6 +52,7 @@ export const JobForm = ({ newJob }) => {
   }
 
   useEffect(() => {
+    fetchJobTypes();
     if (!newJob) {
       fetchJob();
     } else {
@@ -138,8 +149,7 @@ export const JobForm = ({ newJob }) => {
   }
 
   return(
-    <Container className='mx-5'>
-
+    <Container>
       <Form onSubmit={submit} className='mb-5'>
         <h1 className="text-center">List New Job</h1>
         <Form.Group className="mb-3">
@@ -148,12 +158,11 @@ export const JobForm = ({ newJob }) => {
             value={jobType}
             onChange={(e) => setJobType(e.target.value)}
             required> 
-          {/* MAP JOBTYPE OPTIONS HERE */}
-            <option> </option>
-            <option value="Example Type 1">Example Type 1</option>
-            <option value="Example Type 2">Example Type 2</option>
-            <option value="Example Type 3">Example Type 3</option>
-            <option value="Example Type 4">Example Type 4</option>
+            {
+              jobTypes.map((jobType) => {
+                return <option key={jobType.id} value={jobType.id}>{jobType.job_type}</option>
+              })
+            }
           </Form.Select>
         </Form.Group>
 
