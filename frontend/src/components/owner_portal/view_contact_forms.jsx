@@ -1,48 +1,45 @@
 import { Table, Container } from 'react-bootstrap';
 import { useState, useEffect, useContext } from 'react';
 import { APIUserContext } from "../../services/api";
-import { useNavigate } from 'react-router-dom';
 
 
-export const ViewAllUsers = () => {
+export const ViewContactForms = () => {
   const api = useContext(APIUserContext);
-  const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
+  const [forms, setForms] = useState([]);
   const [error, setError] = useState('');
 
-  const fetchUsers = async () => {
-    const res = await api.get('/api/user/all-users');
+  const fetchForms = async () => {
+    const res = await api.get('/api/contact/all-forms');
     if (res.success) {
-      setUsers(res.users);
+      console.log(res);
+      // setForms(res.forms);
     } else if (res.message) {
       setError(res.message);
     }
   }
 
   useEffect(() => {
-    fetchUsers();
+    fetchForms();
   }, []);
 
 
   return (
     <Container>
-
       <Table className="mt-5 mb-5" striped bordered hover>
         <thead>
           <tr>
-            <th>id</th>
-            <th>Name</th>
+            <th>Job id</th>
             <th>Email</th>
-            <th>Role</th>
+            <th>Message</th>
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
-            <tr onClick={() =>(navigate(`/profile/${user.id}/edit`))} key={user.id}>
-              <td>{user.id}</td> 
+          {forms.map((form) => (
+            <tr key={form.id}>
+              {/* <td>{}</td> 
               <td>{user.name}</td>
               <td>{user.email}</td>
-              <td>{user.role}</td>
+              <td>{user.role}</td> */}
             </tr>
           ))}
         </tbody>

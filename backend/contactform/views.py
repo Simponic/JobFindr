@@ -27,3 +27,15 @@ def create_new_submission(request):
 
     submission.save()
     return JsonResponse({'success': True})
+
+def get_forms_or_error(request):
+    user_error_tup = get_user_or_error(request)
+    if (user_error_tup['success']):
+        if (user_error_tup['user'].role == Role.OWNER):
+            try:
+                submissions = Submission.objects.all()
+                return JsonResponse({'success': True, 'submissions': [serialize_submission(submission) for submission in submissions]})
+            except:
+                return JsonResponse({'success': False, 'message': 'Failed to get submissions'})
+    else:
+        return JsonResponse({'success': False, 'message': 'You do not have permission to view this user'})

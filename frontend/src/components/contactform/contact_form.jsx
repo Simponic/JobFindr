@@ -43,14 +43,14 @@ export const ContactForm = () => {
 	return (
 		<div className="mx-5">
 			<Form onSubmit={submit}>
-				<h1 className="text-center">Contact us!</h1>
+				<h1 className="text-center mt-5">Contact us!</h1>
 				<Form.Group className="mb-3">
 					<Form.Label>Email*</Form.Label>
           <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 				</Form.Group>
 				<Form.Group className="mb-3">
 					<Form.Label>Leave us a message below</Form.Label>
-					<Form.Control as="textarea" value={body} onChange={(e) => setBody(e.target.value)} placeholder="Hi, my name is Johnny Appleseed and I..." rows={4}/>
+					<Form.Control as="textarea" className="job-desc" maxLength={2000} value={body} onChange={(e) => setBody(e.target.value)} placeholder="Hi, my name is Johnny Appleseed and I..." rows={4}/>
 				</Form.Group>
 				{auth.user?.id ? 
 					<Form.Group className="mb-3">
