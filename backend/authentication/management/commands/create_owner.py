@@ -39,6 +39,6 @@ class Command(BaseCommand):
     password = options['password']
     name = options['first_name'] + " " + options['last_name']
 
-    admin = User(email=email, phone_number=phone_number, name=name, role=Role.OWNER)
+    admin = User(email=email, phone_number=phone_number, name=name, role=Role.OWNER, avatar='https://s3.amazonaws.com/37assets/svn/765-default-avatar.png')
     admin.set_password(password)
     admin.save()

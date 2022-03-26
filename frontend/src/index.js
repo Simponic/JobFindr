@@ -11,6 +11,7 @@ import { About } from './components/about_page/about';
 import { JobForm } from './components/job_form/job_form';
 import { JobsPage } from './components/jobs_page/jobs_page';
 import { ContactForm } from './components/contactform/contact_form';
+import { ViewAllUsers } from './components/owner_portal/view_all_users';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -28,6 +29,7 @@ ReactDOM.render(
         <Route path="jobs" element={<JobsPage />} />
         <Route path="jobs/add-job" element={<JobForm newJob={true} />} />
         <Route path="jobs/:id/edit" element={<JobForm />} />
+        <Route path="owner/view-users" element={<ViewAllUsers/>} />
 
         <Route
           path="*"
