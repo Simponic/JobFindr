@@ -16,8 +16,8 @@ export const JobForm = ({ newJob }) => {
   const [comment, setComment] = useState('');
   const [jobTypes, setJobTypes] = useState([]);
   const [jobType, setJobType] = useState('');
-  const [price, setPrice] = useState(0);
-  const [timeEstimate, setTimeEstimate] = useState(0);
+  const [price, setPrice] = useState('');
+  const [timeEstimate, setTimeEstimate] = useState('');
   const [address, setAddress] = useState('');
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
@@ -35,6 +35,7 @@ export const JobForm = ({ newJob }) => {
     const res = await api.get('/api/jobs/job-types');
     if (res.success) {
       setJobTypes(res.job_types);
+      setJobType(res.job_types[0].id);
     } else if (res.message) {
       toast.error(res.message);
     }
@@ -95,11 +96,6 @@ export const JobForm = ({ newJob }) => {
       return false;
     }
 
-    if (!address) {
-      setError('Address is required');
-      return false;
-    }
-
     if (startUnix < currUnix) {
       setStartTime(new Date());
     }
@@ -144,8 +140,27 @@ export const JobForm = ({ newJob }) => {
       setCoords(coordinates);
     }
 
-    // Convert Dates to UNIX in the post body with Math.floor(startTime.getTime() / 1000);
-    toast.success("Success!");
+    if (!coordinates) {
+      setError('Error geocoding address');
+      return false;
+    }
+
+    const data = {
+      comment,
+      jobType,
+      price,
+      timeEstimate,
+      startTime: Math.floor(startTime.getTime() / 1000),
+      endTime: Math.floor(endTime.getTime() / 1000),
+      address,
+      coords,
+    };
+    const res = await api.post('/api/jobs/create-job', data);
+    if (res.success) {
+      toast.success("Success!");
+    } else if (res.message) {
+      toast.error(res.message);
+    }
   }
 
   return(

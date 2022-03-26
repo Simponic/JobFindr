@@ -1,38 +1,37 @@
 import { ListGroup, Container, Button } from 'react-bootstrap';
 import { FaLongArrowAltRight } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { APIUserContext } from "../../services/api";
+import { AuthContext } from "../../services/auth";
+import toast from 'react-hot-toast';
 
 export const JobsPage = () => {
   let CurrIcon = null;
 
+  const api = useContext(APIUserContext);
+  const auth = useContext(AuthContext);
   const [jobs, setJobs] = useState([]);
-
-  useEffect(() => {
-    // Api call to get jobs (depends on worker or customer)
-    // Set jobs
-  });
 
   // Only take from gi library
   const icons = require('react-icons/gi');
 
-  let testJobs = ['replace', 'with', 'actual', 'jobs', 'a', 'b', 'c', 'd'];
+  const fetchJobs = async () => {
+    const res = await api.get(`/api/jobs/user/${auth.user.id}`);
+    if (res.success) {
+      setJobs(res.jobs);
+    } else if (res.message) {
+      toast.error(res.message);
+    }
+  };
 
 
-  // Won't need this once we can access job.jobtype.icon
-  const job_type_icons = ['GiGrass', 'GiSpade', 'GiRake', 'GiHammerNails', 'GiSnowing', 'GiBriefcase', 'GiBeerStein', 'GiCigar']
+  useEffect(() => {
+    fetchJobs();
+  }, []);
 
-  // Also won't need this
-  const getIcon = (num) => {
-    let iconName = job_type_icons[num];
+  const getIcon = (iconName) => {
     CurrIcon = icons[iconName]; 
   }
-
-  // Replace the function above with this one, then just call getIcon() below
-  // const getIcon = () => {
-  //   CurrIcon = icons[job.jobtype.icon] 
-  // }
-  
-
 
   return (
     <Container className="flex">
@@ -41,17 +40,17 @@ export const JobsPage = () => {
       <div className="job-scroll scrollbar-primary">
 
         <ListGroup as="ul">
-          {testJobs.map((job) => (
+          {jobs.map((job) => (
             <ListGroup.Item
-              key={job} // Change to job.id
+              key={job.id} // Change to job.id
               as="li"
               className="d-flex justify-content-between align-items-start m-2">
               <div className="pt-4">
-              {getIcon(testJobs.indexOf(job)) /* Change to just getIcon() */}
+              {getIcon(job.job_type.icon)}
               <CurrIcon className="list-icons"/>
               </div>
               <div>
-                <div className="job-title">100 acre lawn $30 compensation asdf asdf asdfasd fasdf asdfasdf asdfasdf asdfasdfasdf</div>
+                <div className="job-title">{job.title}</div>
                 <Container className="flex-col">
                   <div className="job-listing">
                     <Button variant="secondary">
