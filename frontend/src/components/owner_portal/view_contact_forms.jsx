@@ -25,7 +25,8 @@ export const ViewContactForms = () => {
 
   return (
     <Container>
-      <Table className="mt-5 mb-5" striped bordered hover>
+      <h1 className="mt-5">Contact Forms</h1>
+      <Table className="mb-5" striped bordered hover>
         <thead>
           <tr>
             <th>Job id</th>

@@ -67,3 +67,25 @@
 .job-desc {
   resize: none;
 }
+
+.portal-cards {
+  display: flex;
+  flex-direction: row;
+}
+
+.card-desc {
+  position: relative;
+  height: 100%;
+}
+
+.card-button {
+  position: absolute;
+  bottom: 1.5vh;
+  left: 1.5vh;
+}
+
+.card {
+  width: 12rem;
+  margin-right: 5vh;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}

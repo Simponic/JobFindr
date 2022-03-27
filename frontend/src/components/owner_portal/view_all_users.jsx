@@ -26,8 +26,8 @@ export const ViewAllUsers = () => {
 
   return (
     <Container>
-
-      <Table className="mt-5 mb-5" striped bordered hover>
+      <h1 className="mt-5" >Site Users</h1>
+      <Table className="mb-5" striped bordered hover>
         <thead>
           <tr>
             <th>id</th>
