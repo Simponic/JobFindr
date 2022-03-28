@@ -96,7 +96,7 @@ class Job(models.Model):
         return {'success': False, 'message': 'No workers available'}
 
     def get_title(self):
-        return self.job_type.job_type + " @ " + self.address
+        return self.job_type.job_type + " @ " + (self.address if self.address else f'{self.latitude}, {self.longitude}')
 
 class WorkerJobTimes(models.Model):
     worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
