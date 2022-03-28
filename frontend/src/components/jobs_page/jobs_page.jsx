@@ -1,4 +1,4 @@
-import { ListGroup, Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { APIUserContext } from "../../services/api";
@@ -37,7 +37,7 @@ export const JobsPage = () => {
     const res = await api.get(`/api/jobs/${id}/complete`);
     if (res.success) {
       fetchJobs();
-      toast.success(`Success. $${res.withdrawn.toFixed(2)} withdrawn`)
+      toast.success(`Success. $${res.withdrawn.toFixed(2)} withdrawn from customer account.`)
     } else if (res.message) {
       toast.error(res.message);
     }
@@ -95,31 +95,31 @@ export const JobsPage = () => {
                   key={job.id}
                   onClick={() => { setHighlighted(''); }}
                   as="li">
-                  <div className="job-title">{job.title}</div>
-                  <Col className="d-flex align-items-center">
+                  <Link to={`/job/${job.id}`}><div className="job-title">{job.title}</div></Link>
+                  <Col sm={2} className="d-flex align-items-center">
                     {getIcon(job.job_type.icon)}
                     <CurrIcon className="list-icons"/>
                   </Col>
-                  <Col className="d-flex align-items-center">
+                  <Col sm={6} className="d-flex align-items-center">
                     <p>
-                      {moment(job.start_time*1000).format("M/D HH:mm")} - {moment(job.end_time*1000).format("M/D HH:mm")}
-                      <br />
                       Estimated: {job.time_estimate.toFixed(2)} hours
                       <br />
                       Price: ${job.price.toFixed(2)}
+                      <br />
+                      Notes: {job.comment}
                     </p>
                   </Col>
-                  <Col>
+                  <Col sm={4}>
                       <span className="job-listing">Status: {job.status}</span>
                       <br />
                       {
-                        (auth.user.role === "worker" && job.status === "complete") || (auth.user.role !== "worker" && (job.status === "complete" || job.status === "assigned"))
+                        (auth.user.role === "worker" && job.status === "assigned") || (auth.user.role === "customer" && (job.status === "complete" || job.status === "assigned"))
                           ? <Link to={`/contact/dispute/${job.id}`}><Button variant="danger">Dispute</Button></Link>
                           : null
                       }
                       <br />
                       {
-                        (auth.user.role === "customer" && job.status === "assigned")
+                        (auth.user.role !== "worker" && job.status === "assigned")
                           ? <div className="mb-2">
                               <Button variant="success" onClick={() => completeJob(job.id)}>Complete</Button>
                             </div>
@@ -130,6 +130,11 @@ export const JobsPage = () => {
                           ? <div className="mb-2">
                               <Button variant="success" onClick={() => assignJob(job.id)}>Assign</Button>
                             </div>
+                          : null
+                      }
+                      {
+                        (auth.user.id == job.user_id || auth.user.role === "owner")
+                          ? <Link to={`/job/${job.id}/edit`}><Button variant="primary">Edit</Button></Link>
                           : null
                       }
                     </Col>

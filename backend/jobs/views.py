@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from authentication.serializers import serialize_public_user_fields
 from jobs.models import JobType, Job, Status, WorkerJobTimes
 from authentication.models import Role, User, Worker, WorkerAvailability
 from jobs.serializers import serialize_jobtype, serialize_job, serialize_job_time
@@ -13,7 +14,7 @@ def __set_fields(user, body, method="POST", job=None):
     try:
         if (method == "POST"):
             job = Job()
-        job.user = user
+            job.user = user
         job.price = body['price']
         job.job_type = JobType.objects.get(id=body['jobType'])
         job.time_estimate = float(body['timeEstimate'])
@@ -27,6 +28,56 @@ def __set_fields(user, body, method="POST", job=None):
         return job.try_assign_worker()
     except:
         return {'success': False, 'message': 'Failed to create or update job'}
+
+def job_detail(request, id):
+    user_error_tup = get_user_or_error(request)
+
+    if (user_error_tup['success']):
+        user = user_error_tup['user']
+    else:
+        return JsonResponse(user_error_tup)
+    
+    try:
+        job = Job.objects.get(id=id)
+    except Job.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Job does not exist'})
+    
+    try:
+        job_time = WorkerJobTimes.objects.get(job=job)
+    except WorkerJobTimes.DoesNotExist:
+        job_time = None
+    
+    if user.role == Role.WORKER:
+        if not job_time or not job_time.worker.user.id == user.id:
+            return JsonResponse({'success': False, 'message': 'You are not assigned to this job'})
+    elif not (user.id == job.user.id or user.role == Role.OWNER):
+        return JsonResponse({'success': False, 'message': 'You do not have permission to view this job'})
+
+    resp = {'success': True, 'job': serialize_job(job)}
+    if job_time:
+        resp['worker'] = serialize_public_user_fields(job_time.worker.user)
+        resp['job_time'] = serialize_job_time(job_time)
+    resp['customer'] = serialize_public_user_fields(job.user)
+    return JsonResponse(resp)
+
+def job_update(request, id):
+    body = json.loads(request.body.decode('utf-8'))
+    user_error_tup = get_user_or_error(request)
+
+    if (user_error_tup['success']):
+        user = user_error_tup['user']
+    else:
+        return JsonResponse(user_error_tup)
+
+    try:
+        job = Job.objects.get(id=id)
+        if not (user.id == job.user.id or user.role == Role.OWNER):
+            return JsonResponse({'success': False, 'message': 'You do not have permission to update this job'})
+    except Job.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Job does not exist'})
+    
+    job.status = Status.AVAILABLE
+    return JsonResponse(__set_fields(user, body, method="PUT", job=job))
 
 def create_job(request):
     body = json.loads(request.body.decode('utf-8'))
@@ -116,8 +167,8 @@ def complete_job(request, id):
 
     # MONEY
     job.user.balance -= job.price
-    worker.user.balance += settings.WORKERPERCENTAGE * job.price
-    owner.balance += (1 - settings.WORKERPERCENTAGE) * job.price
+    worker.user.balance += settings.WORKER_PERCENTAGE * job.price
+    owner.balance += (1 - settings.WORKER_PERCENTAGE) * job.price
 
     job.status = Status.COMPLETE
     job.save()

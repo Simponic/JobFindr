@@ -38,7 +38,7 @@ export const UserForm = ({ newUser }) => {
       setName(res.user.name);
       setEmail(res.user.email);
       setAvatar(res.user.avatar);
-      setBalance(res.user.balance);
+      setBalance(res.user.balance.toFixed(2));
       setPhoneNumber(res.user.phone_number);
 
       setAddress(res.user.home_address ? res.user.home_address : '');
@@ -228,7 +228,7 @@ export const UserForm = ({ newUser }) => {
               <Form.Control id="name" type="text" placeholder="123 Apple Drive #6, Logan, Utah, 84321" value={address} onChange={(e) => setAddress(e.target.value)} />
               {
                 coords?.lat && coords?.lng ? 
-                  <p class="text-muted">Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`} and ignore address.<br />Or, enter your address and submit to update your location.</p>
+                  <p className="text-muted">Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`} and ignore address.<br />Or, enter your address and submit to update your location.</p>
                   : null}
             </Col>
           </Row>

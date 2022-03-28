@@ -54,6 +54,7 @@ class Job(models.Model):
         return list(filter(lambda x: x[1] - x[0] >= datetime.timedelta(hours=self.time_estimate), work_ranges))
 
     def try_assign_worker(self):
+        WorkerJobTimes.objects.filter(job=self).delete()
         if (datetime.datetime.now().timestamp() + self.time_estimate * 3600 > self.end_time):
             return {'success': False, 'message': 'Impossible to complete job after its end time'}
         if (not self.status == Status.AVAILABLE):

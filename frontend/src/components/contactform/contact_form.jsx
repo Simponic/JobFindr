@@ -66,8 +66,8 @@ export const ContactForm = () => {
 						<div>
 							You can add a job id to dispute it if:
 							<ul>
-								<li>You are the customer associated with the job, and the job is assigned or marked as complete</li>
-								<li>You are a worker assigned to the job, and the job has been marked as complete</li>
+								<li>You are the customer associated with the job, and the job is <br />1) assigned to a worker and the assigned worker's scheduled end time has passed or <br />2) marked as complete</li>
+								<li>You are a worker assigned to the job, and the job has not been marked as complete</li>
 							</ul>
 						</div>
 					</>
