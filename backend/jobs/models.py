@@ -45,7 +45,7 @@ class Job(models.Model):
         for i in range(len(days)):
             availabilities_on_day = list(filter(lambda x: x.day == days[i], availabilities))
             for a in availabilities_on_day:
-                s = start_time.replace(hour=a.start_hour, minute=a.start_minute)+datetime.timedelta(days=i)
+                s = max(max(start_time.replace(hour=a.start_hour, minute=a.start_minute)+datetime.timedelta(days=i), datetime.datetime.now()), start_time)
                 e = min(end_time, start_time.replace(hour=a.end_hour, minute=a.end_minute)+datetime.timedelta(days=i))
                 possible_work_times.append((s, e))
         work_ranges = WorkerAvailability.union_datetime_ranges_over_days(possible_work_times)
