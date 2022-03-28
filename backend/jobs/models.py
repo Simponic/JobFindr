@@ -1,5 +1,6 @@
 from django.db import models
 from authentication.models import User, Worker, WorkerAvailability
+from jobs.serializers import serialize_job
 from django.conf import settings
 import math
 import datetime
@@ -92,8 +93,8 @@ class Job(models.Model):
                 )
                 self.status = Status.ASSIGNED
                 self.save()
-                return {'success': True}
-        return {'success': False, 'message': 'No workers available'}
+                return {'success': True, 'job': serialize_job(self)}
+        return {'success': False, 'message': 'No workers available', 'job_id': self.id}
 
     def get_title(self):
         return self.job_type.job_type + " @ " + (self.address if self.address else f'{self.latitude}, {self.longitude}')

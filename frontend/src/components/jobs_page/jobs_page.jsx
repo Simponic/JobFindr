@@ -1,8 +1,10 @@
-import { ListGroup, Container, Button } from 'react-bootstrap';
-import { FaLongArrowAltRight } from 'react-icons/fa';
+import { ListGroup, Container, Row, Col, Button } from 'react-bootstrap';
 import { useState, useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { APIUserContext } from "../../services/api";
 import { AuthContext } from "../../services/auth";
+import { WorkerSchedule } from './schedule';
+import moment from 'moment';
 import toast from 'react-hot-toast';
 
 export const JobsPage = () => {
@@ -10,7 +12,11 @@ export const JobsPage = () => {
 
   const api = useContext(APIUserContext);
   const auth = useContext(AuthContext);
+  const [initialJobs, setInitialJobs] = useState([]);
   const [jobs, setJobs] = useState([]);
+  const [jobTimes, setJobTimes] = useState([]);
+  const [jobFilterStatus, setJobFilterStatus] = useState("")
+  const [highlighted, setHighlighted] = useState("");
 
   // Only take from gi library
   const icons = require('react-icons/gi');
@@ -18,16 +24,42 @@ export const JobsPage = () => {
   const fetchJobs = async () => {
     const res = await api.get(`/api/jobs/user/${auth.user.id}`);
     if (res.success) {
-      setJobs(res.jobs);
+      setInitialJobs(res.jobs);
+      if (res.job_times) {
+        setJobTimes(res.job_times);
+      }
     } else if (res.message) {
       toast.error(res.message);
     }
   };
 
+  const completeJob = async (id) => {
+    const res = await api.get(`/api/jobs/${id}/complete`);
+    if (res.success) {
+      fetchJobs();
+      toast.success(`Success. $${res.withdrawn.toFixed(2)} withdrawn`)
+    } else if (res.message) {
+      toast.error(res.message);
+    }
+  }
+
+  const assignJob = async (id) => {
+    const res = await api.get(`/api/jobs/${id}/assign`);
+    if (res.success) {
+      fetchJobs();
+      toast.success(`Success. Worker assigned`)
+    } else if (res.message) {
+      toast.error(res.message);
+    }
+  }
 
   useEffect(() => {
     fetchJobs();
   }, []);
+
+  useEffect(() => {
+    setJobs(initialJobs.filter((job) => jobFilterStatus ? job.status === jobFilterStatus : true))
+  }, [initialJobs, jobFilterStatus]);
 
   const getIcon = (iconName) => {
     CurrIcon = icons[iconName]; 
@@ -35,35 +67,102 @@ export const JobsPage = () => {
 
   return (
     <Container className="flex">
+
       <div className="mt-5"></div>
       <h1 className="text-2xl mt-5 mb-3 logo-color">Jobs</h1>
-      <div className="job-scroll scrollbar-primary">
-
-        <ListGroup as="ul">
-          {jobs.map((job) => (
-            <ListGroup.Item
-              key={job.id} // Change to job.id
-              as="li"
-              className="d-flex justify-content-between align-items-start m-2">
-              <div className="pt-4">
-              {getIcon(job.job_type.icon)}
-              <CurrIcon className="list-icons"/>
-              </div>
-              <div>
-                <div className="job-title">{job.title}</div>
-                <Container className="flex-col">
-                  <div className="job-listing">
-                    <Button variant="secondary">
-                      <FaLongArrowAltRight />
-                    </Button>
-                  </div>
-                  <span className="job-listing">Status: Assigned</span>
-                </Container>
-              </div>
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
-      </div>
+      <Row>
+        <Col lg={6}>
+          {
+            [
+              { value: '', label: 'All' },
+              (auth.user.role === 'worker' ? null : { value: 'available', label: 'Unassigned' }),
+              { value: 'assigned', label: 'Assigned' },
+              { value: 'complete', label: 'Completed' },
+              { value: 'disputed', label: 'Disputed' },
+            ].map((filter, index) => (
+              (filter ? 
+                <Button key={index} variant={jobFilterStatus === filter.value ? "primary" : "outline-primary"} className="mr-2" onClick={() => {
+                  setJobFilterStatus(filter.value);
+                }}>{filter.label}</Button>
+                : null)
+              ))
+          }
+          <div className="job-scroll scrollbar-primary">
+              {jobs.map((job) => (
+                <Row
+                  className={`border rounded ${job.id == highlighted ? "highlighted" : ""}`}
+                  id={`job-${job.id}`}
+                  key={job.id}
+                  onClick={() => { setHighlighted(''); }}
+                  as="li">
+                  <div className="job-title">{job.title}</div>
+                  <Col className="d-flex align-items-center">
+                    {getIcon(job.job_type.icon)}
+                    <CurrIcon className="list-icons"/>
+                  </Col>
+                  <Col className="d-flex align-items-center">
+                    <p>
+                      {moment(job.start_time*1000).format("M/D HH:mm")} - {moment(job.end_time*1000).format("M/D HH:mm")}
+                      <br />
+                      Estimated: {job.time_estimate.toFixed(2)} hours
+                      <br />
+                      Price: ${job.price.toFixed(2)}
+                    </p>
+                  </Col>
+                  <Col>
+                      <span className="job-listing">Status: {job.status}</span>
+                      <br />
+                      {
+                        (auth.user.role === "worker" && job.status === "complete") || (auth.user.role !== "worker" && (job.status === "complete" || job.status === "assigned"))
+                          ? <Link to={`/contact/dispute/${job.id}`}><Button variant="danger">Dispute</Button></Link>
+                          : null
+                      }
+                      <br />
+                      {
+                        (auth.user.role === "customer" && job.status === "assigned")
+                          ? <div className="mb-2">
+                              <Button variant="success" onClick={() => completeJob(job.id)}>Complete</Button>
+                            </div>
+                          : null
+                      }
+                      {
+                        (auth.user.role === "customer" && job.status === "available")
+                          ? <div className="mb-2">
+                              <Button variant="success" onClick={() => assignJob(job.id)}>Assign</Button>
+                            </div>
+                          : null
+                      }
+                    </Col>
+                    <div>Job Id: {job.id}</div>
+                </Row>
+              ))}
+          </div>
+        </Col>
+      <Col lg={6}>
+      {
+        (auth.user.role === "worker" && jobFilterStatus === "assigned") ?
+          <WorkerSchedule 
+            workerEvents={jobTimes.map((j) => {
+              return {
+                id: j.job_id,
+                title: initialJobs.find((job) => job.id == j.job_id).title,
+                start: moment(j.start_time*1000).format(),
+                end: moment(j.end_time*1000).format(),
+              };
+            })}
+            onEventClick={(e) => {
+              const jobCard = document.getElementById(`job-${e.event.id}`);
+              setJobFilterStatus("assigned");
+              if (jobCard) {
+                jobCard.scrollIntoView()
+                setHighlighted(e.event.id);
+              }
+            }}
+          />
+        : null
+      }
+      </Col>
+      </Row>
     </Container>
   )
 }

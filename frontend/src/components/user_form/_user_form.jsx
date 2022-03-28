@@ -49,7 +49,7 @@ export const UserForm = ({ newUser }) => {
         });
       }
     } else if (res.message) {
-      setError(res.message);
+      toast.error(res.message);
     }
   }
 

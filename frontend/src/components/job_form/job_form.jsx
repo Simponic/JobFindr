@@ -1,6 +1,6 @@
 import { BasicDateTimePicker } from "./time_picker"
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useContext, useEffect } from 'react';
 import { MapContainer } from "../maps/_map_container";
 import { APIUserContext } from "../../services/api";
@@ -25,6 +25,8 @@ export const JobForm = ({ newJob }) => {
   const [coords, setCoords] = useState(null);
 
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
 
   const fetchJob = async () => {
     // const res = await api.get(`/api/job/${id}`);  
@@ -157,9 +159,14 @@ export const JobForm = ({ newJob }) => {
     };
     const res = await api.post('/api/jobs/create-job', data);
     if (res.success) {
-      toast.success("Success!");
+      toast.success("Success, a worker is on their way!");
+      navigate(`/job/${res.job.id}`);
     } else if (res.message) {
       toast.error(res.message);
+      if (res.job_id) {
+        navigate(`/job/${res.job_id}`);
+        return;
+      }
     }
   }
 

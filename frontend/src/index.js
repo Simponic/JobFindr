@@ -11,6 +11,7 @@ import { About } from './components/about_page/about';
 import { JobForm } from './components/job_form/job_form';
 import { JobsPage } from './components/jobs_page/jobs_page';
 import { ContactForm } from './components/contactform/contact_form';
+import { JobView } from './components/job_view/_job_view';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -24,10 +25,12 @@ ReactDOM.render(
 
         <Route path="about" element={<About />} />
         <Route path="contact" element={<ContactForm />} />
+        <Route path="contact/dispute/:id" element={<ContactForm />} />
 
         <Route path="jobs" element={<JobsPage />} />
         <Route path="jobs/add-job" element={<JobForm newJob={true} />} />
         <Route path="jobs/:id/edit" element={<JobForm />} />
+        <Route path="jobs/:id" element={<JobView />} />
 
         <Route
           path="*"
