@@ -140,7 +140,9 @@ export const UserForm = ({ newUser }) => {
     } else {
       const res = await api.put(`/api/user/${id}`, body);
       if (res.success) {
-        auth.updateUserAndToken(res.new_token);
+        if (auth.user.role !== "owner") {
+          auth.updateUserAndToken(res.new_token);
+        }
         toast.success('Updated successfully');
       } else if (res.message) {
         setError(res.message);

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaArrowRight} from 'react-icons/fa';
 import { AuthContext } from "../../services/auth";
 import { useContext } from "react";
+// import { PageNotFound } from "../page_not_found/page_not_found";
 
 
 export const OwnerPortal = () => {
@@ -63,7 +64,7 @@ export const OwnerPortal = () => {
 
 
         </div></>
-      : <PageNotFound />
+      : null
       } 
       
 
