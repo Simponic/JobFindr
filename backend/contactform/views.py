@@ -38,4 +38,4 @@ def get_forms_or_error(request):
             except:
                 return JsonResponse({'success': False, 'message': 'Failed to get submissions'})
     else:
-        return JsonResponse({'success': False, 'message': 'You do not have permission to view this user'})
+        return JsonResponse({'success': False, 'message': 'You do not have permission to view this page'})

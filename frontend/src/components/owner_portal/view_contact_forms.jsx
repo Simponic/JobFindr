@@ -12,8 +12,9 @@ export const ViewContactForms = () => {
     const res = await api.get('/api/contact/all-forms');
     if (res.success) {
       console.log(res);
-      // setForms(res.forms);
+      setForms(res.forms);
     } else if (res.message) {
+      console.log("hi");
       setError(res.message);
     }
   }

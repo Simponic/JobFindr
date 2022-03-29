@@ -3,14 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { FaArrowRight} from 'react-icons/fa';
 import { AuthContext } from "../../services/auth";
 import { useContext } from "react";
-// import { PageNotFound } from "../page_not_found/page_not_found";
+import { NotFound } from "../../components/errors/not_found";
 
 
 export const OwnerPortal = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
-
-
 
 
   return ( 
@@ -64,7 +62,7 @@ export const OwnerPortal = () => {
 
 
         </div></>
-      : null
+      : <NotFound />
       } 
       
 
