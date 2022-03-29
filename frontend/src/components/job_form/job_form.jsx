@@ -1,6 +1,6 @@
 import { BasicDateTimePicker } from "./time_picker"
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useContext, useEffect } from 'react';
 import { MapContainer } from "../maps/_map_container";
 import { APIUserContext } from "../../services/api";
@@ -16,25 +16,41 @@ export const JobForm = ({ newJob }) => {
   const [comment, setComment] = useState('');
   const [jobTypes, setJobTypes] = useState([]);
   const [jobType, setJobType] = useState('');
-  const [price, setPrice] = useState(0);
-  const [timeEstimate, setTimeEstimate] = useState(0);
+  const [price, setPrice] = useState('');
+  const [timeEstimate, setTimeEstimate] = useState('');
   const [address, setAddress] = useState('');
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
 
   const [coords, setCoords] = useState(null);
 
   const [error, setError] = useState('');
 
+  const navigate = useNavigate();
+
   const fetchJob = async () => {
-    // const res = await api.get(`/api/job/${id}`);  
-    // set job fields
+    const res = await api.get(`/api/jobs/${id}`);  
+    if (res.success && res.job) {
+      setPrice(res.job.price);
+      setTimeEstimate(res.job.time_estimate);
+      setStartTime(new Date(res.job.start_time*1000));
+      setEndTime(new Date(res.job.end_time*1000));
+      setJobType(res.job.job_type.id);
+      setComment(res.job.comment);
+      setAddress(res.job.address);
+      setCoords(res.job.coords);
+    } else if (res.message) {
+      toast.error(res.message);
+    }
   }
 
   const fetchJobTypes = async () => {
     const res = await api.get('/api/jobs/job-types');
     if (res.success) {
       setJobTypes(res.job_types);
+      if (newJob) {
+        setJobType(res.job_types[0].id);
+      }
     } else if (res.message) {
       toast.error(res.message);
     }
@@ -56,19 +72,11 @@ export const JobForm = ({ newJob }) => {
     if (!newJob) {
       fetchJob();
     } else {
+      setStartTime(new Date());
+      setEndTime(new Date());
       setAddressFromUser();
     }
   }, []);
-
-  const handleTimeChange = (e, timeFrame) => {
-    if (timeFrame === "start") {
-      setStartTime(e);
-    }
-
-    if (timeFrame === "end") {
-      setEndTime(e);
-    }
-  } 
 
   const validateForm = () => {
     let currUnix = Math.floor(new Date().getTime() / 1000);
@@ -92,11 +100,6 @@ export const JobForm = ({ newJob }) => {
 
     if (!timeEstimate) {
       setError('Time estimate is required');
-      return false;
-    }
-
-    if (!address) {
-      setError('Address is required');
       return false;
     }
 
@@ -144,14 +147,39 @@ export const JobForm = ({ newJob }) => {
       setCoords(coordinates);
     }
 
-    // Convert Dates to UNIX in the post body with Math.floor(startTime.getTime() / 1000);
-    toast.success("Success!");
+    if (!coordinates) {
+      setError('No coordinates found');
+      return false;
+    }
+
+    const data = {
+      comment,
+      jobType,
+      price,
+      timeEstimate,
+      startTime: Math.floor(startTime.getTime() / 1000),
+      endTime: Math.floor(endTime.getTime() / 1000),
+      address,
+      coords,
+    };
+    console.log(data);
+    const res = await (newJob ? api.post('/api/jobs/create-job', data) : api.put(`/api/jobs/${id}/edit`, data) );
+    if (res.success) {
+      toast.success("Success, a worker is scheduled to do the job!");
+      navigate(`/job/${res.job.id}`);
+    } else if (res.message) {
+      toast.error(res.message);
+      if (res.job_id) {
+        navigate(`/job/${res.job_id}`);
+        return;
+      }
+    }
   }
 
   return(
     <Container>
       <Form onSubmit={submit} className='mb-5'>
-        <h1 className="text-center">List New Job</h1>
+        <h1 className="text-center">{newJob ? 'New' : 'Update'} Job</h1>
         <Form.Group className="mb-3">
           <Form.Label>Job Type*</Form.Label>
           <Form.Select id="job-type"
@@ -182,12 +210,15 @@ export const JobForm = ({ newJob }) => {
         </Form.Group>
 
         <Form.Group className="mb-4">
-          <BasicDateTimePicker label="Listing Opens" onTimeChange={(e) => handleTimeChange(e, "start")} />
+          <BasicDateTimePicker label="Listing Opens" value={startTime} onTimeChange={(e) => setStartTime(e)} />
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <BasicDateTimePicker label="Listing Ends" onTimeChange={(e) => handleTimeChange(e, "end")} />
+          <BasicDateTimePicker label="Listing Ends" value={endTime} onTimeChange={(e) => setEndTime(e)} />
         </Form.Group>
+
+        {/* TODO: Datetimepickers don't update with startTime and endTime */}
+        {/* TODO: Owner should be able to update status of job */}
 
         <Form.Group className="mb-3">
           <Row>
@@ -210,7 +241,7 @@ export const JobForm = ({ newJob }) => {
               <Form.Control id="name" type="text" placeholder="4205 Old Main Hill, Logan, UT 84322" value={address} onChange={(e) => setAddress(e.target.value)} />
               {
                 coords ? 
-                  <p>Leave blank to only store job location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`} and ignore address.</p>
+                  <p className="text-muted">Leave blank to only store job location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`} and ignore address.<br />Or, enter your address and submit to update the job location.</p>
                   : null}
             </Col>
           </Row>

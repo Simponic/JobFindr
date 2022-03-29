@@ -1,11 +1,13 @@
 import { Form, Button } from "react-bootstrap";
 import { useState, useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { APIUserContext } from "../../services/api";
 import { AuthContext } from "../../services/auth";
 
 import toast from "react-hot-toast";
 
 export const ContactForm = () => {
+	const { id } = useParams(); // This is the job id we will dispute
   const api = useContext(APIUserContext);
 	const auth = useContext(AuthContext);
 
@@ -19,6 +21,9 @@ export const ContactForm = () => {
   }
 
   useEffect(() => {
+		if (id) { 
+			setJobId(id);
+		}
     if (auth.user?.id) {
       fetchFields();
     }
@@ -53,10 +58,19 @@ export const ContactForm = () => {
 					<Form.Control as="textarea" value={body} onChange={(e) => setBody(e.target.value)} placeholder="Hi, my name is Johnny Appleseed and I..." rows={4}/>
 				</Form.Group>
 				{auth.user?.id ? 
-					<Form.Group className="mb-3">
-						<Form.Label>Job id</Form.Label>
-						<Form.Control type="number" placeholder="Enter job id" value={jobId} onChange={(e) => setJobId(e.target.value)} />
-					</Form.Group>
+					<>
+						<Form.Group className="mb-3">
+							<Form.Label>Job id</Form.Label>
+							<Form.Control type="number" placeholder="Enter job id" value={jobId} onChange={(e) => setJobId(e.target.value)} />
+						</Form.Group>
+						<div>
+							You can add a job id to dispute it if:
+							<ul>
+								<li>You are the customer associated with the job, and the job is <br />1) assigned to a worker and the assigned worker's scheduled end time has passed or <br />2) marked as complete</li>
+								<li>You are a worker assigned to the job, and the job has not been marked as complete</li>
+							</ul>
+						</div>
+					</>
 					: null}
 				<Button variant="primary" type="submit">
 					Submit

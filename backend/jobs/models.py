@@ -1,5 +1,6 @@
 from django.db import models
 from authentication.models import User, Worker, WorkerAvailability
+from jobs.serializers import serialize_job
 from django.conf import settings
 import math
 import datetime
@@ -30,31 +31,32 @@ class Job(models.Model):
     comment = models.CharField(max_length=150)
     status = models.CharField(max_length=15, choices=Status.choices, default=Status.AVAILABLE)
 
-    job_type = models.OneToOneField(JobType, on_delete=models.SET_NULL, null=True)
+    job_type = models.ForeignKey(JobType, on_delete=models.CASCADE, null=False)
 
     def availabilities_job_completeable_in(self, availabilities):
-        start_time = datetime.datetime.fromtimestamp(self.start_time).replace(seconds=0)
-        end_time = datetime.datetime.fromtimestamp(self.end_time).replace(seconds=0)
+        start_time = datetime.datetime.fromtimestamp(self.start_time).replace(second=0)
+        end_time = datetime.datetime.fromtimestamp(self.end_time).replace(second=0)
         days = [(start_time.weekday()+1)%7]
 
         possible_work_times = []
         index = 0
         while not days[-1] == (end_time.weekday()+1)%7 and not (index > 0 and days[-1] == days[0]):
-            availabilities_on_day = list(filter(lambda x: x.day == days[index], availabilities))
-            for a in availabilities_on_day:
-                s = start_time.replace(hour=a.start_hour, minute=a.start_minute)+datetime.timedelta(days=index)
-                e = min(end_time, start_time.replace(hour=a.end_hour, minute=a.end_minute)+datetime.timedelta(days=index))
-                possible_work_times.append((s, e))
             days.append((days[index]+1)%7)
             index += 1
-        
+        for i in range(len(days)):
+            availabilities_on_day = list(filter(lambda x: x.day == days[i], availabilities))
+            for a in availabilities_on_day:
+                s = max(max(start_time.replace(hour=a.start_hour, minute=a.start_minute)+datetime.timedelta(days=i), datetime.datetime.now()), start_time)
+                e = min(end_time, start_time.replace(hour=a.end_hour, minute=a.end_minute)+datetime.timedelta(days=i))
+                possible_work_times.append((s, e))
         work_ranges = WorkerAvailability.union_datetime_ranges_over_days(possible_work_times)
 
         return list(filter(lambda x: x[1] - x[0] >= datetime.timedelta(hours=self.time_estimate), work_ranges))
 
-    def assign_worker(self):
-        if (datetime.datetime.timestamp() + self.time_estimate * 3600 > self.end_time):
-            return {'success': False, 'message': 'Job cannot be completed any more (impossible time estimate)'}
+    def try_assign_worker(self):
+        WorkerJobTimes.objects.filter(job=self).delete()
+        if (datetime.datetime.now().timestamp() + self.time_estimate * 3600 > self.end_time):
+            return {'success': False, 'message': 'Impossible to complete job after its end time'}
         if (not self.status == Status.AVAILABLE):
             return {'success': False, 'message': 'Job not available'}
         def distance(worker):
@@ -74,28 +76,29 @@ class Job(models.Model):
             worker_job_times = WorkerJobTimes.objects.filter(worker=worker)
             for job_times in worker_job_times:
                 availabilities = []
-                job_times.start_time = datetime.datetime.fromtimestamp(job_times.start_time).replace(seconds=0)
-                job_times.end_time = datetime.datetime.fromtimestamp(job_times.end_time).replace(seconds=0)
+                job_times.start_time = datetime.datetime.fromtimestamp(job_times.start_time).replace(second=0)
+                job_times.end_time = datetime.datetime.fromtimestamp(job_times.end_time).replace(second=0)
                 for a in worker_availabilities:
                     if a[0] <= job_times.start_time and a[1] >= job_times.end_time:
-                        availabilities += list(filter(lambda x: x[0] - x[1] >= datetime.timedelta(hours=self.time_estimate), [(a[0], job_times.start_time), (job_times.end_time, a[1])]))
-                        break
-                    availabilities.push(a)
+                        availabilities += list(filter(lambda x: x[1] - x[0] >= datetime.timedelta(hours=self.time_estimate), [(a[0], job_times.start_time), (job_times.end_time, a[1])]))
+                        continue
+                    else:
+                        availabilities.append(a)
                 worker_availabilities = availabilities
             if len(worker_availabilities):
                 WorkerJobTimes.objects.create(
                     job=self,
                     worker=worker,
-                    start_time=worker_availabilities[0][0].replace(seconds=0).timestamp(),
-                    end_time=worker_availabilities[0][0].replace(seconds=0).timestamp()+self.time_estimate*3600
+                    start_time=worker_availabilities[0][0].replace(second=0).timestamp(),
+                    end_time=worker_availabilities[0][0].replace(second=0).timestamp()+self.time_estimate*3600
                 )
                 self.status = Status.ASSIGNED
                 self.save()
-                return worker
-        return {'success': False, 'message': 'No workers available for this job. Try again later'}
+                return {'success': True, 'job': serialize_job(self)}
+        return {'success': False, 'message': 'No workers available', 'job_id': self.id}
 
     def get_title(self):
-        return self.job_type.job_type + " @ " + self.address
+        return self.job_type.job_type + " @ " + (self.address if self.address else f'{self.latitude}, {self.longitude}')
 
 class WorkerJobTimes(models.Model):
     worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
