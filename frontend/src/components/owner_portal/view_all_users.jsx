@@ -36,7 +36,7 @@ export const ViewAllUsers = () => {
             <th>Role</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="portal-table">
           {users.map((user) => (
             <tr onClick={() =>(navigate(`/profile/${user.id}/edit`))} key={user.id}>
               <td>{user.id}</td> 

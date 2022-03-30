@@ -2,6 +2,7 @@ import { Table, Container } from 'react-bootstrap';
 import { useState, useEffect, useContext } from 'react';
 import { APIUserContext } from "../../services/api";
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 
 export const ViewAllJobs = () => {
@@ -13,10 +14,19 @@ export const ViewAllJobs = () => {
   const fetchJobs = async () => {
     const res = await api.get('/api/jobs/all-jobs');
     if (res.success) {
-      setJobs(res.jobs);
+      setJobs(res.jobs.sort(compare));
     } else if (res.message) {
       setError(res.message);
     }
+  }
+  const compare = (a, b) => {
+    if (a.id < b.id) {
+      return 1;
+    }
+    if (a.id > b.id) {
+      return -1;
+    }
+    return 0;
   }
 
   useEffect(() => {
@@ -32,8 +42,8 @@ export const ViewAllJobs = () => {
           <tr>
             <th>id</th>
             <th>Compensation</th>
-            <th>Start Time</th>
-            <th>End Time</th>
+            <th>Start Date/Time</th>
+            <th>End Date/Time</th>
             <th>Address</th>
             <th>Latitude, Longitude</th>
             <th>Status</th>
@@ -42,13 +52,13 @@ export const ViewAllJobs = () => {
 
           </tr>
         </thead>
-        <tbody>
+        <tbody className="portal-table">
           {jobs.map((job) => (
             <tr onClick={() =>(navigate(`/job/${job.id}`))} key={job.id}>
               <td>{job.id}</td> 
               <td>${job.price}</td>
-              <td>{job.start_time}</td>
-              <td>{job.end_time}</td>
+              <td>{moment.unix(job.start_time).format('lll')}</td>
+              <td>{moment.unix(job.end_time).format('lll')}</td>
               <td>{job.address}</td>
               <td>{job.coords.lat}, {job.coords.lng}</td>
               <td>{job.status}</td>
