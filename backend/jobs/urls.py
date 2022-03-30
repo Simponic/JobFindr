@@ -11,4 +11,7 @@ urlpatterns = [
     path('create-new-job-type', views.create_new_job_type, name='new-job-type'),
     path('job-types', views.job_types, name='job-types'),
     path('user/<int:id>', views.user_jobs, name='user-jobs'),
+    path('all-jobs', views.all_jobs, name='all-jobs'),
+    path('all-job-types', views.all_job_types, name='all-job-types'),
+    path('<int:id>/toggle-job-type', views.toggle_archived, name='toggle-job-type'),
 ]

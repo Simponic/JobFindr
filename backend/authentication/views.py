@@ -20,6 +20,18 @@ def get_user_or_error(request):
   except:
     return {'success': False, 'message': 'Error authenticating user'}
 
+def get_users_or_error(request):
+  user_error_tup = get_user_or_error(request)
+  if (user_error_tup['success']):
+    if (user_error_tup['user'].role == Role.OWNER):
+      try:
+        return JsonResponse({'success': True, 'users': list(map(lambda x: serialize_user(x), User.objects.filter().order_by('-id')))})
+      except:
+        return {'success': False, 'message': 'Failed to get users'}
+    else:
+      return JsonResponse({'success': False, 'message': 'You do not have permission to view this page'})
+  
+
 def __set_fields(body, method="POST", user=None):
   if (method == "POST"):
     user = User()

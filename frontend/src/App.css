@@ -60,6 +60,30 @@
   resize: none;
 }
 
+.card-shadow {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
 .highlighted {
   background-color: #c7bda0;
+}
+
+.status-btn {
+  width: 100%;
+}
+
+.add-job-type-btn-col {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-job-type-btn {
+  height: 70%;
+  width: 100%;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.table-hover {
+  cursor: pointer;
 }

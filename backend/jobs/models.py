@@ -17,6 +17,14 @@ class JobType(models.Model):
     icon = models.CharField(max_length=100, null=False)
     archived = models.BooleanField(null=False, default=False)
 
+    def try_toggle_archived(self):
+        try:
+            self.archived = not self.archived
+            self.save()
+            return {'success': True, 'message': 'Job type status toggled successfully'}
+        except:
+            return {'success': False, 'message': 'An error occured when toggling the job type status'}
+
 
 class Job(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

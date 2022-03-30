@@ -6,6 +6,7 @@ from jobs.models import Job
 from jobs.models import Status as JobStatus
 from authentication.models import Role, User
 from authentication.views import get_user_or_error
+from contactform.serializers import serialize_contact_form
 import datetime
 import json
 
@@ -47,3 +48,31 @@ def create_new_submission(request):
 
     submission.save()
     return JsonResponse({'success': True})
+
+def get_forms_or_error(request):
+    user_error_tup = get_user_or_error(request)
+    if (user_error_tup['success']):
+        if (user_error_tup['user'].role == Role.OWNER):
+            try:
+                return JsonResponse({'success': True, 'forms': list(map(lambda x: serialize_contact_form(x), Submission.objects.all()))})
+            except:
+                return JsonResponse({'success': False, 'message': 'Failed to get submissions'})
+    else:
+        return JsonResponse({'success': False, 'message': 'You do not have permission to view this page'})
+
+def toggle_status(request, id):
+    user_error_tup = get_user_or_error(request)
+
+    if (user_error_tup['success']):
+        user = user_error_tup['user']
+    else:
+        return JsonResponse(user_error_tup)
+    
+    try: 
+        form = Submission.objects.get(id=id)
+        if not user.role == Role.OWNER:
+            return JsonResponse({'success': False, 'message': 'You don\'t have permission to access this'})
+    except Submission.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Contact form does not exist'})
+    
+    return JsonResponse(form.try_toggle_status())

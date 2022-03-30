@@ -52,6 +52,10 @@ export const MenuBar = () => {
             <Nav.Item>
               <Nav.Link href="/contact">Contact Us</Nav.Link>
             </Nav.Item>
+            {auth.user && auth.user.role === "owner" ?
+              <Nav.Item>
+                <Nav.Link href="/owner/portal">Owner Portal</Nav.Link>
+              </Nav.Item> : null}
           </Nav>
           {
             auth.user ?
