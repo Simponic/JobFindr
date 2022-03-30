@@ -2,6 +2,7 @@ import { Table, Container } from 'react-bootstrap';
 import { useState, useEffect, useContext } from 'react';
 import { APIUserContext } from "../../services/api";
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 
 export const ViewAllJobs = () => {
@@ -47,8 +48,8 @@ export const ViewAllJobs = () => {
             <tr onClick={() =>(navigate(`/job/${job.id}`))} key={job.id}>
               <td>{job.id}</td> 
               <td>${job.price}</td>
-              <td>{job.start_time}</td>
-              <td>{job.end_time}</td>
+              <td>{moment(job.start_time*1000).format('M/D/Y H:mm')}</td>
+              <td>{moment(job.end_time*1000).format('M/D/Y H:mm')}</td>
               <td>{job.address}</td>
               <td>{job.coords.lat}, {job.coords.lng}</td>
               <td>{job.status}</td>
