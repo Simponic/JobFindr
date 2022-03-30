@@ -158,3 +158,4 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # Custom application settings
 WORKER_RADIUS=10
+WORKER_PERCENTAGE=0.9
