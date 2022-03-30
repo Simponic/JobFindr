@@ -11,28 +11,34 @@ export const ViewContactForms = () => {
 
   const fetchForms = async () => {
     const res = await api.get('/api/contact/all-forms');
-    console.log(res);
     if (res.success) {
-      setForms(res.forms);
+      setForms(res.forms.sort(compare));
     } else if (res.message) {
       setError(res.message);
     }
   }
 
-  const toggleFormStatus = (id) => {
+  const toggleFormStatus = async (id) => {
     const res = await api.get(`/api/contact/${id}/toggle`);
-    if (res.success) {
-      toast.success(res.message);
-    }
     if (!res.success) {
       toast.error(res.message);
     }
+    fetchForms();
+  }
+
+  const compare = (a, b) => {
+    if (a.id < b.id) {
+      return -1;
+    }
+    if (a.id > b.id) {
+      return 1;
+    }
+    return 0;
   }
 
   useEffect(() => {
     fetchForms();
   }, []);
-
 
   return (
     <Container>
@@ -56,7 +62,7 @@ export const ViewContactForms = () => {
             <td>{form.email}</td>
             <td>{form.body}</td>
             <td>
-              <Button variant="secondary" onClick={() => {toggleFormStatus(form.id)}}>{form.status}</Button>
+              <Button className="status-btn" variant="secondary" onClick={() => {toggleFormStatus(form.id)}}>{form.status}</Button>
             </td>
             <td>{form.job_id}</td>
             <td>{form.user_id} </td>
