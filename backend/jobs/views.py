@@ -209,7 +209,7 @@ def all_jobs(request):
         return JsonResponse({'success': False, 'message': 'You do not have permission to view this page'})
     else:
         try:
-            return JsonResponse({'success': True, 'jobs': list(map(lambda x: serialize_job(x), Job.objects.all().order_by('-id')))})
+            return JsonResponse({'success': True, 'jobs': list(map(lambda x: serialize_job(x), Job.objects.filter().order_by('-id')))})
         except:
             return JsonResponse({'success': False, 'message': 'Error retrieving jobs'})
 
