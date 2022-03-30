@@ -25,7 +25,7 @@ def get_users_or_error(request):
   if (user_error_tup['success']):
     if (user_error_tup['user'].role == Role.OWNER):
       try:
-        return JsonResponse({'success': True, 'users': list(map(lambda x: serialize_user(x), User.objects.all()))})
+        return JsonResponse({'success': True, 'users': list(map(lambda x: serialize_user(x), User.objects.filter().order_by('-id')))})
       except:
         return {'success': False, 'message': 'Failed to get users'}
     else:

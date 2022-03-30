@@ -57,8 +57,8 @@ export const ViewAllJobs = () => {
             <tr onClick={() =>(navigate(`/job/${job.id}`))} key={job.id}>
               <td>{job.id}</td> 
               <td>${job.price}</td>
-              <td>{moment.unix(job.start_time).format('lll')}</td>
-              <td>{moment.unix(job.end_time).format('lll')}</td>
+              <td>{moment(job.start_time*1000).format('M/D/Y H:mm')}</td>
+              <td>{moment(job.end_time*1000).format('M/D/Y H:mm')}</td>
               <td>{job.address}</td>
               <td>{job.coords.lat}, {job.coords.lng}</td>
               <td>{job.status}</td>
