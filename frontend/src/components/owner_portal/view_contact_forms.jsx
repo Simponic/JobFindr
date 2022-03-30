@@ -1,4 +1,4 @@
-import { Table, Container } from 'react-bootstrap';
+import { Table, Container, Button } from 'react-bootstrap';
 import { useState, useEffect, useContext } from 'react';
 import { APIUserContext } from "../../services/api";
 
@@ -10,11 +10,10 @@ export const ViewContactForms = () => {
 
   const fetchForms = async () => {
     const res = await api.get('/api/contact/all-forms');
+    console.log(res);
     if (res.success) {
-      console.log(res);
       setForms(res.forms);
     } else if (res.message) {
-      console.log("hi");
       setError(res.message);
     }
   }
@@ -30,19 +29,27 @@ export const ViewContactForms = () => {
       <Table className="mb-5" striped bordered hover>
         <thead>
           <tr>
-            <th>Job id</th>
+            {console.log(forms)}
+            <th>Form id</th>
             <th>Email</th>
             <th>Message</th>
+            <th>Status</th>
+            <th>Job id</th>
+            <th>User id</th>
           </tr>
         </thead>
         <tbody>
           {forms.map((form) => (
-            <tr key={form.id}>
-              {/* <td>{}</td> 
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.role}</td> */}
-            </tr>
+          <tr key={form.id}>
+            <td>{form.id}</td>
+            <td>{form.email}</td>
+            <td>{form.body}</td>
+            <td>
+              <Button variant="secondary">{form.status}</Button>
+            </td>
+            <td>{form.job_id}</td>
+            <td>{form.user_id} </td>
+          </tr>
           ))}
         </tbody>
       </Table>  

@@ -6,6 +6,7 @@ from jobs.models import Job
 from jobs.models import Status as JobStatus
 from authentication.models import Role, User
 from authentication.views import get_user_or_error
+from contactform.serializers import serialize_contact_form
 import datetime
 import json
 
@@ -53,8 +54,7 @@ def get_forms_or_error(request):
     if (user_error_tup['success']):
         if (user_error_tup['user'].role == Role.OWNER):
             try:
-                submissions = Submission.objects.all()
-                return JsonResponse({'success': True, 'submissions': [serialize_submission(submission) for submission in submissions]})
+                return JsonResponse({'success': True, 'forms': list(map(lambda x: serialize_contact_form(x), Submission.objects.all()))}
             except:
                 return JsonResponse({'success': False, 'message': 'Failed to get submissions'})
     else:
