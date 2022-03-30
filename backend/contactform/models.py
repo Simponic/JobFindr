@@ -14,3 +14,16 @@ class Submission(models.Model):
             max_length=20,
             choices=Status.choices,
             default=Status.OPEN)
+
+    def try_toggle_status(self):
+        try:
+            if (self.status == Status.OPEN):
+                self.status = Status.RESOLVED
+                self.save()
+                return {'success': True, 'message': 'Contact form status toggled successfully'}
+            if (self.status == Status.RESOLVED):
+                self.status = Status.OPEN
+                self.save()
+                return {'success': True, 'message': 'Contact form status toggled successfully'}
+        except:
+            return {'success': False, 'message': 'An error occured when toggling the form status'}

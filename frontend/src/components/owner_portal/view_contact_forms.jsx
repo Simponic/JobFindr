@@ -1,6 +1,7 @@
 import { Table, Container, Button } from 'react-bootstrap';
 import { useState, useEffect, useContext } from 'react';
 import { APIUserContext } from "../../services/api";
+import { toast } from 'react-hot-toast';
 
 
 export const ViewContactForms = () => {
@@ -15,6 +16,16 @@ export const ViewContactForms = () => {
       setForms(res.forms);
     } else if (res.message) {
       setError(res.message);
+    }
+  }
+
+  const toggleFormStatus = (id) => {
+    const res = await api.get(`/api/contact/${id}/toggle`);
+    if (res.success) {
+      toast.success(res.message);
+    }
+    if (!res.success) {
+      toast.error(res.message);
     }
   }
 
@@ -45,7 +56,7 @@ export const ViewContactForms = () => {
             <td>{form.email}</td>
             <td>{form.body}</td>
             <td>
-              <Button variant="secondary">{form.status}</Button>
+              <Button variant="secondary" onClick={() => {toggleFormStatus(form.id)}}>{form.status}</Button>
             </td>
             <td>{form.job_id}</td>
             <td>{form.user_id} </td>
