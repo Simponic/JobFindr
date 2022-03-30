@@ -12,7 +12,7 @@ export const ViewContactForms = () => {
   const fetchForms = async () => {
     const res = await api.get('/api/contact/all-forms');
     if (res.success) {
-      setForms(res.forms.sort(compare));
+      setForms(res.forms.sort(compare).reverse());
     } else if (res.message) {
       setError(res.message);
     }
