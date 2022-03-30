@@ -6,5 +6,5 @@ from . import views
 urlpatterns = [
     path('new', views.create_new_submission, name='create-new-submission'),
     path('all-forms', views.get_forms_or_error, name='get-forms'),
-    path('<int:id>/toggle', views.toggleStatus, name='toggle-status'),
+    path('<int:id>/toggle', views.toggle_status, name='toggle-status'),
 ]

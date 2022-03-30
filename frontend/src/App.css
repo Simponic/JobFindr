@@ -72,3 +72,14 @@
   width: 100%;
 }
 
+.add-job-type-btn-col {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-job-type-btn {
+  height: 70%;
+  width: 100%;
+  font-size: 12px;
+  margin-top: 10px;
+}

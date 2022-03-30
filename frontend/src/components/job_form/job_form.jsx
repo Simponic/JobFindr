@@ -162,7 +162,7 @@ export const JobForm = ({ newJob }) => {
       address,
       coords,
     };
-    console.log(data);
+
     const res = await (newJob ? api.post('/api/jobs/create-job', data) : api.put(`/api/jobs/${id}/edit`, data) );
     if (res.success) {
       toast.success("Success, a worker is scheduled to do the job!");

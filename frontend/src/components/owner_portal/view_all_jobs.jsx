@@ -12,9 +12,7 @@ export const ViewAllJobs = () => {
 
   const fetchJobs = async () => {
     const res = await api.get('/api/jobs/all-jobs');
-    console.log(res);
     if (res.success) {
-      console.log(res.jobs);
       setJobs(res.jobs);
     } else if (res.message) {
       setError(res.message);

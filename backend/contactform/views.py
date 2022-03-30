@@ -60,7 +60,7 @@ def get_forms_or_error(request):
     else:
         return JsonResponse({'success': False, 'message': 'You do not have permission to view this page'})
 
-def toggleStatus(request, id):
+def toggle_status(request, id):
     user_error_tup = get_user_or_error(request)
 
     if (user_error_tup['success']):
@@ -75,8 +75,4 @@ def toggleStatus(request, id):
     except Submission.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'Contact form does not exist'})
     
-    # if form.status == Status.OPEN:
-    #     form.status = Status.RESOLVED
-    # if form.status == Status.RESOLVED:
-    #     form.status = Status.OPEN
     return JsonResponse(form.try_toggle_status())

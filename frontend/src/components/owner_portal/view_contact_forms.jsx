@@ -12,7 +12,7 @@ export const ViewContactForms = () => {
   const fetchForms = async () => {
     const res = await api.get('/api/contact/all-forms');
     if (res.success) {
-      setForms(res.forms.sort(compare).reverse());
+      setForms(res.forms.sort(compare));
     } else if (res.message) {
       setError(res.message);
     }
@@ -26,14 +26,25 @@ export const ViewContactForms = () => {
     fetchForms();
   }
 
+  // Sorts forms so that 'open' forms are first, then by most recent form id
   const compare = (a, b) => {
-    if (a.id < b.id) {
-      return -1;
+    if (a.status === b.status) {
+        if (a.id < b.id) {
+          return 1;
+        }
+        if (a.id > b.id) {
+          return -1;
+        }
+        return 0;
     }
-    if (a.id > b.id) {
-      return 1;
+    else {
+      if (a.status === 'open') {
+        return -1;
+      }
+      else {
+        return 1;
+      }
     }
-    return 0;
   }
 
   useEffect(() => {
@@ -46,13 +57,12 @@ export const ViewContactForms = () => {
       <Table className="mb-5" striped bordered hover>
         <thead>
           <tr>
-            {console.log(forms)}
             <th>Form id</th>
             <th>Email</th>
             <th>Message</th>
-            <th>Status</th>
             <th>Job id</th>
             <th>User id</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -61,11 +71,11 @@ export const ViewContactForms = () => {
             <td>{form.id}</td>
             <td>{form.email}</td>
             <td>{form.body}</td>
-            <td>
-              <Button className="status-btn" variant="secondary" onClick={() => {toggleFormStatus(form.id)}}>{form.status}</Button>
-            </td>
             <td>{form.job_id}</td>
             <td>{form.user_id} </td>
+            <td>
+              <Button className="status-btn" variant="outline-danger" onClick={() => {toggleFormStatus(form.id)}}>{form.status}</Button>
+            </td>
           </tr>
           ))}
         </tbody>

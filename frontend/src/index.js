@@ -16,6 +16,8 @@ import { ViewContactForms } from './components/owner_portal/view_contact_forms';
 import { OwnerPortal } from './components/owner_portal/owner_portal';
 import { JobView } from './components/job_view/_job_view';
 import { ViewAllJobs } from './components/owner_portal/view_all_jobs';
+import { ManageJobTypes } from './components/owner_portal/job_types/manage_job_types';
+import { JobTypeForm } from './components/owner_portal/job_types/job_type_form';
 
 
 ReactDOM.render(
@@ -40,6 +42,8 @@ ReactDOM.render(
         <Route path="owner/view-users" element={<ViewAllUsers/>} />
         <Route path="owner/view-jobs" element={<ViewAllJobs/>} />
         <Route path="owner/view-forms" element={<ViewContactForms/>} />
+        <Route path="owner/manage-job-types" element={<ManageJobTypes/>} />
+        <Route path="owner/manage-job-types/add" element={<JobTypeForm />} />
         <Route path="owner/portal" element={<OwnerPortal/>} />
 
         <Route

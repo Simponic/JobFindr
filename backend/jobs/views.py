@@ -107,7 +107,7 @@ def create_new_job_type(request):
     body = json.loads(request.body.decode('utf-8'))
 
     jobType = JobType(
-        name=body['name'],
+        job_type=body['name'],
         icon=body['icon'],
     )
 
@@ -212,3 +212,36 @@ def all_jobs(request):
             return JsonResponse({'success': True, 'jobs': list(map(lambda x: serialize_job(x), Job.objects.all()))})
         except:
             return JsonResponse({'success': False, 'message': 'Error retrieving jobs'})
+
+def all_job_types(request):
+    user_error_tup = get_user_or_error(request)
+
+    if (user_error_tup['success']):
+        user = user_error_tup['user']
+    else:
+        return JsonResponse(user_error_tup)
+    
+    if not (user.role == Role.OWNER):
+        return JsonResponse({'success': False, 'message': 'You do not have permission to view this page'})
+    else:
+        try:
+            return JsonResponse({'success': True, 'job_types': list(map(lambda x: serialize_jobtype(x), JobType.objects.all()))})
+        except:
+            return JsonResponse({'success': False, 'message': 'Error retrieving job types'})
+
+def toggle_archived(request, id):
+    user_error_tup = get_user_or_error(request)
+
+    if (user_error_tup['success']):
+        user = user_error_tup['user']
+    else:
+        return JsonResponse(user_error_tup)
+    
+    try: 
+        jobtype = JobType.objects.get(id=id)
+        if not user.role == Role.OWNER:
+            return JsonResponse({'success': False, 'message': 'You don\'t have permission to access this'})
+    except JobType.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Job type does not exist'})
+    
+    return JsonResponse(jobtype.try_toggle_archived())

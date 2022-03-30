@@ -63,7 +63,7 @@ export const OwnerPortal = () => {
               <Card.Text className="text-height">
                 A management tool to create, edit, or archive job types. {'\u00A0'.repeat(24)}
               </Card.Text>
-            <Button className="portal-btn" variant="secondary"><FaArrowRight /></Button>
+            <Button className="portal-btn" variant="secondary" onClick={() => {navigate('/owner/manage-job-types')}}><FaArrowRight /></Button>
             </Card.Body>
           </Card>
         </Col>
