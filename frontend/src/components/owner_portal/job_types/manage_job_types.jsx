@@ -91,7 +91,7 @@ export const ManageJobTypes = () => {
                 <CurrIcon className="list-icons"/>
               </td>
               <td>
-                <Button className="status-btn" variant="outline-danger" onClick={() => toggleJobTypeStatus(jobType.id)}>
+                <Button className="status-btn" variant={jobType.archived ? "danger" : "outline-danger"} onClick={() => toggleJobTypeStatus(jobType.id)}>
                   {jobType.archived ? 'Archived' : 'Active'}
                 </Button>
               </td>

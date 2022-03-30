@@ -74,7 +74,7 @@ export const ViewContactForms = () => {
             <td>{form.job_id}</td>
             <td>{form.user_id} </td>
             <td>
-              <Button className="status-btn" variant="outline-danger" onClick={() => {toggleFormStatus(form.id)}}>{form.status}</Button>
+              <Button className="status-btn" variant={form.status === "resolved" ? "danger" : "outline-danger"} onClick={() => {toggleFormStatus(form.id)}}>{form.status}</Button>
             </td>
           </tr>
           ))}
