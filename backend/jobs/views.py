@@ -196,3 +196,19 @@ def assign(request, id):
         return JsonResponse({'success': False, 'message': 'Job does not exist'})
     
     return JsonResponse(job.try_assign_worker())
+
+def all_jobs(request):
+    user_error_tup = get_user_or_error(request)
+
+    if (user_error_tup['success']):
+        user = user_error_tup['user']
+    else:
+        return JsonResponse(user_error_tup)
+    
+    if not (user.role == Role.OWNER):
+        return JsonResponse({'success': False, 'message': 'You do not have permission to view this page'})
+    else:
+        try:
+            return JsonResponse({'success': True, 'jobs': list(map(lambda x: serialize_job(x), Job.objects.all()))})
+        except:
+            return JsonResponse({'success': False, 'message': 'Error retrieving jobs'})

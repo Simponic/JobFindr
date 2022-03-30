@@ -11,12 +11,11 @@ import { About } from './components/about_page/about';
 import { JobForm } from './components/job_form/job_form';
 import { JobsPage } from './components/jobs_page/jobs_page';
 import { ContactForm } from './components/contactform/contact_form';
-
 import { ViewAllUsers } from './components/owner_portal/view_all_users';
 import { ViewContactForms } from './components/owner_portal/view_contact_forms';
 import { OwnerPortal } from './components/owner_portal/owner_portal';
-
 import { JobView } from './components/job_view/_job_view';
+import { ViewAllJobs } from './components/owner_portal/view_all_jobs';
 
 
 ReactDOM.render(
@@ -39,6 +38,7 @@ ReactDOM.render(
         <Route path="job/:id" element={<JobView />} />
 
         <Route path="owner/view-users" element={<ViewAllUsers/>} />
+        <Route path="owner/view-jobs" element={<ViewAllJobs/>} />
         <Route path="owner/view-forms" element={<ViewContactForms/>} />
         <Route path="owner/portal" element={<OwnerPortal/>} />
 

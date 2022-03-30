@@ -50,7 +50,7 @@ export const OwnerPortal = () => {
               <Card.Text className="text-height">
                 A list of all jobs posted to the site. Click on a job to view and edit it. {'\u00A0'.repeat(6)}
               </Card.Text>
-              <Button className="portal-btn" variant="secondary"><FaArrowRight /></Button>
+              <Button className="portal-btn" variant="secondary" onClick={() => {navigate('/owner/view-jobs')}}><FaArrowRight /></Button>
             </Card.Body>
           </Card>
         </Col>
