@@ -19,8 +19,9 @@ export const JobForm = ({ newJob }) => {
   const [price, setPrice] = useState('');
   const [timeEstimate, setTimeEstimate] = useState('');
   const [address, setAddress] = useState('');
-  const [startTime, setStartTime] = useState();
-  const [endTime, setEndTime] = useState();
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [jobStatus, setJobStatus] = useState('available');
 
   const [coords, setCoords] = useState(null);
 
@@ -39,6 +40,7 @@ export const JobForm = ({ newJob }) => {
       setComment(res.job.comment);
       setAddress(res.job.address);
       setCoords(res.job.coords);
+      setJobStatus(res.job.status);
     } else if (res.message) {
       toast.error(res.message);
     }
@@ -103,13 +105,16 @@ export const JobForm = ({ newJob }) => {
       return false;
     }
 
-    if (startUnix < currUnix) {
-      setStartTime(new Date());
-    }
-    
-    if (endUnix < startUnix || endUnix < currUnix) {
-      setError('Invalid listing dates and/or times');
-      return false;
+    if (newJob) {
+      if (startUnix < currUnix) {
+        setError('Start must be after current time');
+        return false;
+      }
+      
+      if (endUnix < startUnix || endUnix < currUnix) {
+        setError('End time must be after start time and after current time');
+        return false;
+      }
     }
 
     if ((endUnix - startUnix) < (3 * timeEstimate)) {
@@ -161,11 +166,13 @@ export const JobForm = ({ newJob }) => {
       endTime: Math.floor(endTime.getTime() / 1000),
       address,
       coords,
+      status: jobStatus,
     };
+    console.log(data);
 
     const res = await (newJob ? api.post('/api/jobs/create-job', data) : api.put(`/api/jobs/${id}/edit`, data) );
     if (res.success) {
-      toast.success("Success, a worker is scheduled to do the job!");
+      toast.success("Job created");
       navigate(`/job/${res.job.id}`);
     } else if (res.message) {
       toast.error(res.message);
@@ -194,6 +201,20 @@ export const JobForm = ({ newJob }) => {
           </Form.Select>
         </Form.Group>
 
+        {
+          auth.user && auth.user.role == "owner" ?
+            <Form.Group className="mb-3">
+              <Form.Label>Status*</Form.Label>
+              <Form.Select id="status" value={jobStatus} onChange={(e) => setJobStatus(e.target.value)} required>
+                <option value="disputed">Disputed</option>
+                <option value="complete">Complete</option>
+                <option value="assigned">Assigned</option>
+                <option value="available">Available</option>
+              </Form.Select>
+            </Form.Group>
+            : null
+        }
+
         <Form.Group className="mb-3">
           <Form.Label>Compensation (Dollars)*</Form.Label>
           <Form.Control id="compensation" type="number" min="0.01" step="0.01" placeholder="16.50" value={price} onChange={(e) => setPrice(e.target.value)} required />
@@ -210,15 +231,23 @@ export const JobForm = ({ newJob }) => {
         </Form.Group>
 
         <Form.Group className="mb-4">
-          <BasicDateTimePicker label="Listing Opens" value={startTime} initialValue={startTime} onTimeChange={(e) => setStartTime(e)} />
+          {
+            startTime ? 
+              <BasicDateTimePicker label="Listing Opens" initialValue={startTime} onTimeChange={(e) => setStartTime(e)} />
+              : null
+
+          }
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <BasicDateTimePicker label="Listing Ends" value={endTime} initialValue={endTime} onTimeChange={(e) => setEndTime(e)} />
+          {
+            endTime ?
+              <BasicDateTimePicker label="Listing Ends" initialValue={endTime} onTimeChange={(e) => setEndTime(e)} />
+              : null
+          }
         </Form.Group>
 
         {/* TODO: Datetimepickers don't update with startTime and endTime */}
-        {/* TODO: Owner should be able to update status of job */}
 
         <Form.Group className="mb-3">
           <Row>

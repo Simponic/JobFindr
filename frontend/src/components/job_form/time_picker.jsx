@@ -6,19 +6,17 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 
 export const BasicDateTimePicker = ({label, onTimeChange, initialValue}) => {
 
-  const changeTime = (e) => {
-    onTimeChange(e);
-  }
+  const [value, setValue] = useState(initialValue);  
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DateTimePicker
         renderInput={(props) => <TextField {...props} />}
-        value={initialValue}
+        value={value}
         label={label}
         onChange={(newValue) => {
           setValue(newValue);
-          changeTime(newValue);
+          onTimeChange(newValue);
         }}
       />
     </LocalizationProvider>

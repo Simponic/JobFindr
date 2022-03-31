@@ -57,6 +57,13 @@ export const JobView = () => {
             <li>
               Price: ${result?.job?.price.toFixed(2)}
             </li>
+            {
+              auth.user && auth.user.role === 'worker' ?
+                <li>
+                  Compensation: ${result?.job?.compensation.toFixed(2)}
+                </li>
+                : null
+            }
             <li>
               Available to complete: {moment(result?.job?.start_time*1000).format('M/D/Y H:mm')} - {moment(result?.job?.end_time*1000).format('M/D/Y H:mm')}
             </li>

@@ -107,6 +107,14 @@ export const JobsPage = () => {
                       Estimated: {job.time_estimate.toFixed(2)} hours
                       <br />
                       Price: ${job.price.toFixed(2)}
+                      {
+                        auth.user && auth.user.role === 'worker' ?
+                          <>
+                            <br />
+                            Compensation: ${job.compensation.toFixed(2)}
+                          </>
+                          : null
+                      }
                       <br />
                       Notes: {job.comment}
                     </p>
@@ -151,7 +159,7 @@ export const JobsPage = () => {
       {
         (auth.user.role === "worker" && jobFilterStatus === "assigned") ?
           <WorkerSchedule 
-            workerEvents={jobTimes.map((j) => {
+            workerEvents={jobTimes.filter((j) => j.status == "assigned").map((j) => {
               return {
                 id: j.job_id,
                 title: initialJobs.find((job) => job.id == j.job_id).title,

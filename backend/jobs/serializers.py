@@ -1,3 +1,5 @@
+from django.conf import settings
+
 def serialize_jobtype(job_type):
   return {
     'id': job_type.id,
@@ -12,6 +14,7 @@ def serialize_job(job):
     'title': job.get_title(),
     'job_type': serialize_jobtype(job.job_type),
     'price': job.price,
+    'compensation': job.price * settings.WORKER_PERCENTAGE,
     'time_estimate': job.time_estimate,
     'start_time': job.start_time,
     'end_time': job.end_time,

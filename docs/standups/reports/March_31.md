@@ -17,3 +17,4 @@ Scrum Master: Logan Hunt
 
 ## project board
 
+![](project_board/march31standup.PNG)

@@ -38,7 +38,7 @@ export const UserForm = ({ newUser }) => {
       setName(res.user.name);
       setEmail(res.user.email);
       setAvatar(res.user.avatar);
-      setBalance(res.user.balance.toFixed(2));
+      setBalance(res.user.balance);
       setPhoneNumber(res.user.phone_number);
 
       setAddress(res.user.home_address ? res.user.home_address : '');
@@ -108,7 +108,7 @@ export const UserForm = ({ newUser }) => {
       avatar,
       address,
       coords: coordinates,
-      balance: Math.max(balance, 0)
+      balance: balance
     };
 
     if (newUser) {

@@ -68,7 +68,7 @@ export const AvailabilitySelector = () => {
           end_hour: end.hour(),
           end_minute: end.minute(),
         });
-      } else {
+      } else if (start.weekday() === (((end.weekday() - 1) % 7) + 7) % 7)  {
         // In the worst case the availability is split into two days; no need to worry about anything longer
         availabilities.push({
           day: start.weekday(),
@@ -84,6 +84,10 @@ export const AvailabilitySelector = () => {
           end_hour: end.hour(),
           end_minute: end.minute(),
         })
+      } else {
+        console.log(start.weekday(), end.weekday());
+        toast.error('Availability can only be split into two days');
+        return;
       }
     }
     const res = await api.post(`/api/worker/${id}/availabilities`, { availabilities , jobtypes: selectedJobTypes.map((x) => x.id) });
