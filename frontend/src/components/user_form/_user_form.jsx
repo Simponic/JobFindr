@@ -151,7 +151,7 @@ export const UserForm = ({ newUser }) => {
   }  
 
   return (
-    <div className="mx-5">
+    <div className="mx-5 mt-5">
       <Form onSubmit={submit}>
         <h1 className="text-center">{ newUser ? "Sign Up" : "Edit Profile" }</h1>
 

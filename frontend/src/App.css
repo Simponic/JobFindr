@@ -1,3 +1,8 @@
+.app-background {
+  background: rgb(153,106,185);
+  background: linear-gradient(90deg, rgba(153,106,185,1) 0%, rgba(255,133,133,1) 50%, rgba(255,206,137,1) 100%);
+}
+
 .avatar {
   width: 100px;
   height: 100px;

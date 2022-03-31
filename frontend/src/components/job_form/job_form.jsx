@@ -177,7 +177,7 @@ export const JobForm = ({ newJob }) => {
   }
 
   return(
-    <Container>
+    <Container className="mt-5">
       <Form onSubmit={submit} className='mb-5'>
         <h1 className="text-center">{newJob ? 'New' : 'Update'} Job</h1>
         <Form.Group className="mb-3">

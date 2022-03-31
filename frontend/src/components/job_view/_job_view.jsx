@@ -40,7 +40,7 @@ export const JobView = () => {
   }
   return (
     <>
-      <Row>
+      <Row className="mt-5">
         {auth.user.role === "owner" || result?.job?.user_id == auth.user.id ? <Link to={`/job/${result.job.id}/edit`}>Edit</Link> : null}
         <Col lg={4}>
           <h3>Job Details</h3>

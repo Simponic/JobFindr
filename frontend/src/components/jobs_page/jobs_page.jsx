@@ -6,6 +6,7 @@ import { AuthContext } from "../../services/auth";
 import { WorkerSchedule } from './schedule';
 import moment from 'moment';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 export const JobsPage = () => {
   let CurrIcon = null;
@@ -17,6 +18,7 @@ export const JobsPage = () => {
   const [jobTimes, setJobTimes] = useState([]);
   const [jobFilterStatus, setJobFilterStatus] = useState("")
   const [highlighted, setHighlighted] = useState("");
+  const navigate = useNavigate();
 
   // Only take from gi library
   const icons = require('react-icons/gi');
@@ -142,6 +144,7 @@ export const JobsPage = () => {
                 </Row>
               ))}
           </div>
+          <Button className="w-100" variant="secondary" onClick={() => {navigate('add-job')}}>Create New Listing</Button>
         </Col>
       <Col lg={6}>
       {
