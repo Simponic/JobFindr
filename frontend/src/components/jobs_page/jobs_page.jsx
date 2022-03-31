@@ -151,7 +151,7 @@ export const JobsPage = () => {
       {
         (auth.user.role === "worker" && jobFilterStatus === "assigned") ?
           <WorkerSchedule 
-            workerEvents={jobTimes.map((j) => {
+            workerEvents={jobTimes.filter((j) => j.status == "assigned").map((j) => {
               return {
                 id: j.job_id,
                 title: initialJobs.find((job) => job.id == j.job_id).title,
