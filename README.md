@@ -82,19 +82,8 @@ Generally, the workflow of making a feature branch starts with the assigning of 
 
 Once the task is ready to be reviewed, the assigned team member will push their local feature branch onto `origin` and create a Pull Request to merge their branch into `main` so others can also view their work. The pull request will be under heavy subjugation in Code Review, and if it survives the perilous trials of fire, will be merged into the `main` branch.
 
-# Unit Testing
-Please use the `unittest` framework to write unit tests. Documentation on writing unit tests for Django can be found [on the official Django site](https://docs.djangoproject.com/en/4.0/topics/testing/).
-
-# System Testing
-Since system testing isn't (easily) automatable, please follow these steps when trying out system testing: (devs are notoriously good at QA right?...)
-
-1. Look for edge cases
-2. Always make sure user input is handled correctly
-3. Test and re-test the same feature
-4. Click on random buttons to see if stuff breaks. Bonus points if you crash your local server!!!
-
-Once you have found a bug or inconvenience to the user, create an issue on GitHub. In this issue please include steps to reproduce the bug (preferably on the main branch if it's reproducible there).
-As discussed above in the contribution guidelines, the issue will then be assigned to the backlog to die.
+# Testing
+Please see out [Testing.md](docs/Testing.md) document for our testing.
 
 # Deploying
 Deployment will be automated with Docker. Possibly hosted on a Rasperry Pi or something.

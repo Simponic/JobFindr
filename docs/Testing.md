@@ -16,6 +16,14 @@ system it was necessary to go back through and test some edge cases:
 3) A job continues over several days
 
 ### System Tests
+Since system testing isn't (easily) automatable, please follow these steps when trying out system testing: (devs are notoriously good at QA right?...)
+
+1. Look for edge cases
+2. Always make sure user input is handled correctly
+3. Test and re-test the same feature
+4. Click on random buttons to see if stuff breaks. Bonus points if you crash your local server!!!
+
+
 We have all regularly ran our program and tested the system as a whole sometimes focusing on specific parts but usually
 just going through and making sure everything works as expected. This is the main testing method we used to find bugs
 in our program. In this last sprint, we've created an issue where everyone can post minor bugs they find while testing
@@ -35,6 +43,9 @@ We wanted the UI to look really good and be intuitive to the user. During standu
 new change since the last standup was accepted by all of the team members.
 
 ### Other Bugs Encountered 
+Any bugs we encounter will be put in as an issue on github where we will be able to talk about them and assign someone 
+to fix them.
+
 There seems to be some rounding errors for our money. We believe this is due to our money being stored in a FloatField, 
 so we will change it to a decimal field and perform regression testing to make sure that everything still works 
 correctly. 
