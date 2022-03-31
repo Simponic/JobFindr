@@ -107,6 +107,14 @@ export const JobsPage = () => {
                       Estimated: {job.time_estimate.toFixed(2)} hours
                       <br />
                       Price: ${job.price.toFixed(2)}
+                      {
+                        auth.user && auth.user.role === 'worker' ?
+                          <>
+                            <br />
+                            Compensation: ${job.compensation.toFixed(2)}
+                          </>
+                          : null
+                      }
                       <br />
                       Notes: {job.comment}
                     </p>
