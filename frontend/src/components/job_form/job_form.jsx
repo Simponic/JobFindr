@@ -107,7 +107,7 @@ export const JobForm = ({ newJob }) => {
 
     if (newJob) {
       if (startUnix < currUnix) {
-        setError('Start must be before current time');
+        setError('Start must be after current time');
         return false;
       }
       
