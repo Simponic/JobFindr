@@ -21,6 +21,7 @@ export const JobForm = ({ newJob }) => {
   const [address, setAddress] = useState('');
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
+  const [jobStatus, setJobStatus] = useState('available');
 
   const [coords, setCoords] = useState(null);
 
@@ -39,6 +40,7 @@ export const JobForm = ({ newJob }) => {
       setComment(res.job.comment);
       setAddress(res.job.address);
       setCoords(res.job.coords);
+      setJobStatus(res.job.status);
     } else if (res.message) {
       toast.error(res.message);
     }
@@ -193,6 +195,20 @@ export const JobForm = ({ newJob }) => {
             }
           </Form.Select>
         </Form.Group>
+
+        {
+          auth.user && auth.user.role == "owner" ?
+            <Form.Group className="mb-3">
+              <Form.Label>Status*</Form.Label>
+              <Form.Select id="status" value={jobStatus} onChange={(e) => setJobStatus(e.target.value)} required>
+                <option value="disputed">Disputed</option>
+                <option value="complete">Complete</option>
+                <option value="assigned">Assigned</option>
+                <option value="available">Available</option>
+              </Form.Select>
+            </Form.Group>
+            : null
+        }
 
         <Form.Group className="mb-3">
           <Form.Label>Compensation (Dollars)*</Form.Label>

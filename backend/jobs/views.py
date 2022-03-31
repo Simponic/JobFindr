@@ -24,6 +24,8 @@ def __set_fields(user, body, method="POST", job=None):
         job.latitude = body['coords']['lat']
         job.longitude = body['coords']['lng']
         job.comment = body['comment']
+        if (user.role == Role.OWNER):
+            job.status = body['status']
         job.save()
         return job.try_assign_worker()
     except:
