@@ -13,7 +13,7 @@ Scrum Master: Logan Hunt
 
 ## Burndown
 
-
+![](burndown_charts/Burndown%203.31.png)
 
 ## project board
 
