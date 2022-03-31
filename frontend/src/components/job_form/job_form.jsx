@@ -210,11 +210,11 @@ export const JobForm = ({ newJob }) => {
         </Form.Group>
 
         <Form.Group className="mb-4">
-          <BasicDateTimePicker label="Listing Opens" value={startTime} onTimeChange={(e) => setStartTime(e)} />
+          <BasicDateTimePicker label="Listing Opens" value={startTime} initialValue={startTime} onTimeChange={(e) => setStartTime(e)} />
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <BasicDateTimePicker label="Listing Ends" value={endTime} onTimeChange={(e) => setEndTime(e)} />
+          <BasicDateTimePicker label="Listing Ends" value={endTime} initialValue={endTime} onTimeChange={(e) => setEndTime(e)} />
         </Form.Group>
 
         {/* TODO: Datetimepickers don't update with startTime and endTime */}
