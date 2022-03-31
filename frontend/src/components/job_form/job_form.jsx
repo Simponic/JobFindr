@@ -26,6 +26,7 @@ export const JobForm = ({ newJob }) => {
   const [coords, setCoords] = useState(null);
 
   const [error, setError] = useState('');
+  const currentTimestamp = Math.floor(new Date().getTime() / 1000); 
 
   const navigate = useNavigate();
 
@@ -81,7 +82,6 @@ export const JobForm = ({ newJob }) => {
   }, []);
 
   const validateForm = () => {
-    let currUnix = Math.floor(new Date().getTime() / 1000);
     let startUnix = Math.floor(startTime.getTime() / 1000);
     let endUnix = Math.floor(endTime.getTime() / 1000);
 
@@ -106,12 +106,12 @@ export const JobForm = ({ newJob }) => {
     }
 
     if (newJob) {
-      if (startUnix < currUnix) {
+      if (startUnix < currentTimestamp) {
         setError('Start must be after current time');
         return false;
       }
       
-      if (endUnix < startUnix || endUnix < currUnix) {
+      if (endUnix < startUnix || endUnix < currentTimestamp) {
         setError('End time must be after start time and after current time');
         return false;
       }
