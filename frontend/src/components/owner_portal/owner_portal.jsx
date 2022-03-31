@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaArrowRight} from 'react-icons/fa';
 import { AuthContext } from "../../services/auth";
 import { useContext } from "react";
-import { NotFound } from "../../components/errors/not_found";
+import { NotFound } from "../errors/not_found";
 import { Row, Col } from "react-bootstrap";
 
 
