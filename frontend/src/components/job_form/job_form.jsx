@@ -26,7 +26,7 @@ export const JobForm = ({ newJob }) => {
   const [coords, setCoords] = useState(null);
 
   const [error, setError] = useState('');
-  const currentTimestamp = Math.floor(new Date().getTime() / 1000); 
+  const [currentTimestamp, setCurrentTimestamp] = useState(''); 
 
   const navigate = useNavigate();
 
@@ -71,6 +71,7 @@ export const JobForm = ({ newJob }) => {
   }
 
   useEffect(() => {
+    setCurrentTimestamp(Math.floor(new Date().getTime() / 1000));
     fetchJobTypes();
     if (!newJob) {
       fetchJob();
