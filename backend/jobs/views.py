@@ -12,14 +12,17 @@ def job_types(request):
 
 def __set_fields(user, body, method="POST", job=None):
     try:
+        updated_time = False
         if (method == "POST"):
             job = Job()
             job.user = user
         job.price = body['price']
         job.job_type = JobType.objects.get(id=body['jobType'])
         job.time_estimate = float(body['timeEstimate'])
-        job.start_time = body['startTime']
-        job.end_time = body['endTime']
+        if (method == "POST" or (not job.start_time == body['startTime'] and not job.end_time == body['endTime'])):
+            job.start_time = body['startTime']
+            job.end_time = body['endTime']
+            updated_time = True
         job.address = body['address']
         job.latitude = body['coords']['lat']
         job.longitude = body['coords']['lng']
@@ -27,6 +30,10 @@ def __set_fields(user, body, method="POST", job=None):
         if (user.role == Role.OWNER):
             job.status = body['status']
         job.save()
+        if (method == "PUT" and updated_time):
+            return job.try_assign_worker()
+        elif (method == "PUT"):
+            return {'success': True, 'job': serialize_job(job)}
         return job.try_assign_worker()
     except:
         return {'success': False, 'message': 'Failed to create or update job'}
