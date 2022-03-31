@@ -4,6 +4,28 @@ Throughout this project there have been many test that we have conducted to make
 
 ### Unit Tests
 There can be some unit tests found in [backend/authentication/tests.py](../backend/authentication/tests.py)
+and [backend/jobs/tests.py](../backend/jobs/tests.py)
+
+First, list all the running docker containers:
+```bash
+$ sudo docker ps
+CONTAINER ID   IMAGE                      COMMAND                  CREATED        STATUS          PORTS                                       NAMES
+1a2205c294ab   project-v2_reverse_proxy   "/docker-entrypoint.…"   40 hours ago   Up 26 minutes   0.0.0.0:81->80/tcp, :::81->80/tcp           project-v2_reverse_proxy_1
+4a497a6396cf   project-v2_frontend        "docker-entrypoint.s…"   40 hours ago   Up 26 minutes   3000/tcp                                    project-v2_frontend_1
+5154452292bd   postgres:14.1              "docker-entrypoint.s…"   40 hours ago   Up 26 minutes   0.0.0.0:5438->5432/tcp, :::5438->5432/tcp   project-v2_db_1
+d20c2566bcbe   project-v2_backend         "python manage.py ru…"   40 hours ago   Up 26 minutes   8000/tcp                                    project-v2_backend_1
+```
+
+And select the container ID of the image running the backend; in this case `d20c2566bcbe`. Start a shell.
+
+Run tests using:
+```bash
+$ sudo docker exec -it d20c2566bcbe /usr/local/bin/python3 manage.py test <test-module>
+Current test module:
+	jobs.tests
+	authentication.tests
+...
+```
 
 ### Regression Tests
 We performed regression tests when we changed parts of our code. Whenever we edited the User sign up/ log in we would go 

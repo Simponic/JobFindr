@@ -7,7 +7,7 @@ export const About = () => {
   const auth = useContext(AuthContext);
   return (
   <div>
-    <Container className={"container-sm"}>
+    <Container className={"container-sm mb-5"}>
       <Row className="justify-content-md-center">
         <Col md={8}>
           <h1 className='mt-5 mb-5'> About JobFind </h1>
