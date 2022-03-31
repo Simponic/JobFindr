@@ -46,7 +46,7 @@ class Command(BaseCommand):
     )
 
     parser.add_argument(
-      '--address',
+      '--home-address',
       type=str,
       help='Specify home address',
     )

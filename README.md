@@ -8,7 +8,9 @@ This is a job finder where users can create a job or accept a job.
 + [Logan Hunt](https://github.com/Simponic)
 
 # Organization / Name Scheme
-The `docs` directory contains documentation relevant to the project. 
+The `docs` directory contains documentation relevant to the project.
+* [Standup Reports](docs/standups/reports)
+* [Sprint Planning Docs](docs/planning) 
 
 This project uses the [Django Framework](https://djangoproject.com) to resolve requests and mutate objects stored in a PostgreSQL database. For the frontend, we are using [React](https://reactjs.org/). [Nginx](https://nginx.com) is used to act as a reverse proxy for HTTP requests. [Docker](https://docker.com) is used to ease the build process of the app in development (and production in the future).
 
@@ -59,6 +61,14 @@ Operations to perform:
 To seed initial values into the database:
 ```bash
 $ sudo docker exec -it be5d05526668 /usr/local/bin/python3 manage.py loaddata <fixture-file-name>
+Current fixture file names:
+  contact_form.json, job_type.json
+...    
+```
+
+To seed an owner account into the database:
+```bash
+$ sudo docker exec -it be5d05526668 /usr/local/bin/python3 manage.py create_owner --email='yourEmail@email.com' --phone-number='4352225555' --password='examplePassword23#231$' --first-name='YourFirstName' --last-name='YourLastName' --home-address='4205 Old Main Hill Logan, UT 84322'
 ```
 # Meta-tools
 Most communication between members are done over [Discord](https://discord.com).
