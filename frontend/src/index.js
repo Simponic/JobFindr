@@ -18,12 +18,15 @@ import { JobView } from './components/job_view/_job_view';
 import { ViewAllJobs } from './components/owner_portal/view_all_jobs';
 import { ManageJobTypes } from './components/owner_portal/job_types/manage_job_types';
 import { JobTypeForm } from './components/owner_portal/job_types/job_type_form';
+import { Home } from './components/home/_home';
 
 
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />} >
+        <Route path="/" element={<Home />} />       
+
         <Route path="signup" element={<UserForm newUser={true} />} />
         <Route path="profile/:id/edit" element={<UserForm newUser={false} />} />
         <Route path="worker/:id/availability" element={<AvailabilitySelector />} />
