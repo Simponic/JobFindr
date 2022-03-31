@@ -82,8 +82,8 @@ Generally, the workflow of making a feature branch starts with the assigning of 
 
 Once the task is ready to be reviewed, the assigned team member will push their local feature branch onto `origin` and create a Pull Request to merge their branch into `main` so others can also view their work. The pull request will be under heavy subjugation in Code Review, and if it survives the perilous trials of fire, will be merged into the `main` branch.
 
-# Unit Testing
-Please use the `unittest` framework to write unit tests. Documentation on writing unit tests for Django can be found [on the official Django site](https://docs.djangoproject.com/en/4.0/topics/testing/).
+# Testing
+Please see out [Testing.md](docs/Testing.md) document for our testing.
 
 # System Testing
 Since system testing isn't (easily) automatable, please follow these steps when trying out system testing: (devs are notoriously good at QA right?...)
