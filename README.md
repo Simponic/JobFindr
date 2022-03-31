@@ -85,17 +85,6 @@ Once the task is ready to be reviewed, the assigned team member will push their 
 # Testing
 Please see out [Testing.md](docs/Testing.md) document for our testing.
 
-# System Testing
-Since system testing isn't (easily) automatable, please follow these steps when trying out system testing: (devs are notoriously good at QA right?...)
-
-1. Look for edge cases
-2. Always make sure user input is handled correctly
-3. Test and re-test the same feature
-4. Click on random buttons to see if stuff breaks. Bonus points if you crash your local server!!!
-
-Once you have found a bug or inconvenience to the user, create an issue on GitHub. In this issue please include steps to reproduce the bug (preferably on the main branch if it's reproducible there).
-As discussed above in the contribution guidelines, the issue will then be assigned to the backlog to die.
-
 # Deploying
 Deployment will be automated with Docker. Possibly hosted on a Rasperry Pi or something.
 

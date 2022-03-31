@@ -10,6 +10,14 @@ We preformed regression tests when we changed parts of our code. Whenever we edi
 through it and make sure it still functioned correctly.
 
 ### System Tests
+Since system testing isn't (easily) automatable, please follow these steps when trying out system testing: (devs are notoriously good at QA right?...)
+
+1. Look for edge cases
+2. Always make sure user input is handled correctly
+3. Test and re-test the same feature
+4. Click on random buttons to see if stuff breaks. Bonus points if you crash your local server!!!
+
+
 We have all regularly ran our program and tested the system as a whole sometimes focusing on specific parts but usually
 just going through and making sure everything works as expected.
 
@@ -19,6 +27,9 @@ follow along making sure that the program worked for everyone and that it was cl
 
 
 ### Other Bugs Encountered 
+Any bugs we encounter will be put in as an issue on github where we will be able to talk about them and assign someone 
+to fix them.
+
 There seems to be some rounding errors for our money. We believe this is due to our money being stored in a FloatField, 
 so we will change it to a decimal field and preform regression testing to make sure that everything still works 
 correctly. 
