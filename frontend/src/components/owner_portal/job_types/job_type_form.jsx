@@ -3,12 +3,15 @@ import { useState, useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import { APIUserContext } from "../../../services/api";
 import toast from "react-hot-toast";
+import { NotFound } from "../../errors/not_found";
+import { AuthContext } from '../../../services/auth';
 
 export const JobTypeForm = () => {
   const api = useContext(APIUserContext);
 	const [name, setName] = useState('');
 	const [icon, setIcon] = useState('');
 	const navigate = useNavigate();
+	const auth = useContext(AuthContext);
 
 	// Only take from gi library
 	const icons = require('react-icons/gi');
@@ -37,7 +40,8 @@ export const JobTypeForm = () => {
 
 	return (
 		<div className="mx-5">
-			<Form onSubmit={submit}>
+			{auth.user.role === 'owner' ? 
+			(<Form onSubmit={submit}>
 				<h1 className="text-center mt-5">New Job Type</h1>
 				<Form.Group className="mb-3">
 					<Form.Label>Name*</Form.Label>
@@ -59,7 +63,7 @@ export const JobTypeForm = () => {
 				<Button variant="primary" type="submit">
 					Create
 				</Button>
-			</Form>
+			</Form>) : <NotFound />}
 		</div>
 	)
 }

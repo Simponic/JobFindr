@@ -3,6 +3,8 @@ import { useState, useEffect, useContext } from 'react';
 import { APIUserContext } from '../../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { NotFound } from "../../errors/not_found";
+import { AuthContext } from '../../../services/auth';
 
 
 export const ManageJobTypes = () => {
@@ -10,6 +12,7 @@ export const ManageJobTypes = () => {
   const [jobTypes, setJobTypes] = useState([]);
   let CurrIcon = null;
   const navigate = useNavigate();
+  const auth = useContext(AuthContext);
 
   // Only take from gi library
   const icons = require('react-icons/gi');
@@ -62,43 +65,43 @@ export const ManageJobTypes = () => {
 
   return (
     <Container>
-      <Row>
-        <Col>
-          <h1 className="mt-5">Job Types</h1>
-        </Col>
-        <Col sm={1} className="mt-5 add-job-type-btn-col">
-          <Button variant="secondary" className="add-job-type-btn" onClick={() => navigate('add')}>Add Type</Button>
-        </Col>
-      </Row>
-      <Table className="mb-5" striped bordered hover>
-        <thead>
-          <tr>
-            <th>id</th>
-            <th>Name</th>
-            <th>Icon Name</th>
-            <th>Icon</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {jobTypes.map((jobType) => (
-            <tr key={jobType.id}>
-              <td>{jobType.id}</td>
-              <td>{jobType.job_type}</td>
-              <td>{jobType.icon}</td>
-              <td>
-                {getIcon(jobType.icon)}
-                <CurrIcon className="list-icons"/>
-              </td>
-              <td>
-                <Button className="status-btn" variant={jobType.archived ? "danger" : "outline-danger"} onClick={() => toggleJobTypeStatus(jobType.id)}>
-                  {jobType.archived ? 'Archived' : 'Active'}
-                </Button>
-              </td>
-            </tr>
-        ))}
-        </tbody>
-      </Table>
+      {auth.user.role === 'owner' ?
+      (<><Row>
+          <Col>
+            <h1 className="mt-5">Job Types</h1>
+          </Col>
+          <Col sm={1} className="mt-5 add-job-type-btn-col">
+            <Button variant="secondary" className="add-job-type-btn" onClick={() => navigate('add')}>Add Type</Button>
+          </Col>
+        </Row><Table className="mb-5" striped bordered hover>
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>Name</th>
+                <th>Icon Name</th>
+                <th>Icon</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {jobTypes.map((jobType) => (
+                <tr key={jobType.id}>
+                  <td>{jobType.id}</td>
+                  <td>{jobType.job_type}</td>
+                  <td>{jobType.icon}</td>
+                  <td>
+                    {getIcon(jobType.icon)}
+                    <CurrIcon className="list-icons" />
+                  </td>
+                  <td>
+                    <Button className="status-btn" variant={jobType.archived ? "danger" : "outline-danger"} onClick={() => toggleJobTypeStatus(jobType.id)}>
+                      {jobType.archived ? 'Archived' : 'Active'}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table></>) : <NotFound />}
     </Container>
   );
 

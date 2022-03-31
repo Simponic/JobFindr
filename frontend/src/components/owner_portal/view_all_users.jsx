@@ -2,6 +2,8 @@ import { Table, Container } from 'react-bootstrap';
 import { useState, useEffect, useContext } from 'react';
 import { APIUserContext } from "../../services/api";
 import { useNavigate } from 'react-router-dom';
+import { NotFound } from "../errors/not_found";
+import { AuthContext } from '../../services/auth';
 
 
 export const ViewAllUsers = () => {
@@ -9,6 +11,7 @@ export const ViewAllUsers = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
+  const auth = useContext(AuthContext);
 
   const fetchUsers = async () => {
     const res = await api.get('/api/user/all-users');
@@ -26,28 +29,27 @@ export const ViewAllUsers = () => {
 
   return (
     <Container>
-      <h1 className="mt-5" >Site Users</h1>
-      <Table className="mb-5" striped bordered hover>
-        <thead>
-          <tr>
-            <th>id</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-          </tr>
-        </thead>
-        <tbody className="portal-table">
-          {users.map((user) => (
-            <tr onClick={() =>(navigate(`/profile/${user.id}/edit`))} key={user.id}>
-              <td>{user.id}</td> 
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.role}</td>
+      {auth.user.role === 'owner' ?
+      (<><h1 className="mt-5">Site Users</h1><Table className="mb-5" striped bordered hover>
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>  
-      <p className="text-danger">{error}</p>
+          </thead>
+          <tbody className="portal-table">
+            {users.map((user) => (
+              <tr onClick={() => (navigate(`/profile/${user.id}/edit`))} key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.role}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table><p className="text-danger">{error}</p></>) : <NotFound />}
     </Container>                              
   ) 
 }
