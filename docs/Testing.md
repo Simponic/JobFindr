@@ -29,7 +29,7 @@ system it was necessary to go back through and test some edge cases:
 	* Status: Fixed
 
 * Issue: Inappropriate error handling for job types whose icons and names are not unique.
-	* Status: Fixed 
+	* Status: Decided it makes sense to allow this with the nature of job type archiving.
 
 ### System Tests
 Since system testing isn't (easily) automatable, please follow these steps when trying out system testing: (devs are notoriously good at QA right?...)
