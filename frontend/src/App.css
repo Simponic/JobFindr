@@ -27,6 +27,18 @@
   overflow-y: scroll;
 }
 
+.job-type-scroll {
+  width: 100%;
+  height: 15vh;
+  border: solid;
+  border-color: #f8f9fa;
+  overflow-y: scroll;
+}
+
+.calendar {
+  height: 40vh;
+}
+
 .logo-color {
   color: #000000e6;
 }

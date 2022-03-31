@@ -123,10 +123,10 @@ export const AvailabilitySelector = () => {
 
   return (
     <div>
-      <h1 className="text-center">Worker Availability</h1>
+      <h1 className="text-center mt-5">Worker Availability</h1>
       <div className="mx-5">
         <Container>
-          <Row>
+          <Row className="job-type-scroll scrollbar-primary">
             {jobTypes.map((jobType) => 
               <JobType key={jobType.id} jobType={jobType} selected={selectedJobTypes.find((s) => s.id == jobType.id)} onSelected={() => toggleSelect(jobType)} icon={icons[jobType.icon]} />
             )}
@@ -134,6 +134,7 @@ export const AvailabilitySelector = () => {
         </Container>
         <FullCalendar
           plugins={[ timeGridPlugin , interactionPlugin ]}
+          height="auto"
           initialView="timeGridWeek"
           headerToolbar={{
             left: '',
@@ -152,7 +153,7 @@ export const AvailabilitySelector = () => {
           eventClick={handleEventClick}
         />
         <br />
-        <Button variant="primary" onClick={updateAvailability}>
+        <Button variant="primary" className="mb-5" onClick={updateAvailability}>
           Save
         </Button>
       </div>
