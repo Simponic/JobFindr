@@ -152,7 +152,7 @@ export const JobsPage = () => {
                 </Row>
               ))}
           </div>
-          { auth.user.role === "customer" && <Button className="w-100" variant="secondary" onClick={() => {navigate('add-job')}}>Create New Listing</Button>}
+          { auth.user.role === "customer" && <Button className="w-100" variant="secondary" onClick={() => {navigate('/jobs/add-job')}}>Create New Listing</Button>}
           
         </Col>
       <Col lg={6}>
