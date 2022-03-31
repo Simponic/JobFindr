@@ -108,7 +108,7 @@ export const UserForm = ({ newUser }) => {
       avatar,
       address,
       coords: coordinates,
-      balance: Math.max(balance, 0)
+      balance: balance
     };
 
     if (newUser) {
