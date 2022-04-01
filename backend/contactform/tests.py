@@ -40,24 +40,26 @@ class SubmissionTestCase(TestCase):
                 )
         Submission.objects.create(
                     user = User.objects.get(name="kev"),
-                    job = Job.objects.get(user=User.objects.get(name="kev"),
+                    job = Job.objects.get(user=User.objects.get(name="kev")),
                     email = User.objects.get(name="kev").email,
                     body = "Message body",
                     status = Status.OPEN
                 )
         Submission.objects.create(
-                    email = "train@test.com",
-                    body = "Holy cow! A message for the admin!",
-                    status = Status.OPEN
-                )
-    
+                   email = "train@test.com",
+                   body = "Holy cow! A message for the admin!",
+                   status = Status.OPEN
+               )
+   
     def test_user_submission(self):
         submission = Submission.objects.get(user = User.objects.get(name="kev"))
+    
         self.assertTrue(Submission.user.phone_number == "3853378828")
-        self.assertTrue(Submission.job.price = 10.01)
+        self.assertTrue(Submission.job.price == 10.01)
         
     def test_anonymous_submission(self):
         submission = Submission.objects.get(email="train@test.com")
+
         self.assertTrue(Submission.user.phone_number == "Holy cow! A message for the admin!")
 
 
