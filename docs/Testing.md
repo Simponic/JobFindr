@@ -3,8 +3,7 @@
 Throughout this project there have been many test that we have conducted to make sure that our program runs correctly.
 
 ### Unit Tests
-There can be some unit tests found in [backend/authentication/tests.py](../backend/authentication/tests.py)
-and [backend/jobs/tests.py](../backend/jobs/tests.py)
+There can be some unit tests found in [backend/authentication/tests.py](../backend/authentication/tests.py), [backend/jobs/tests.py](../backend/jobs/tests.py), and [backend/contactform/tests.py](../backend/contactform/tests.py).
 
 First, list all the running docker containers:
 ```bash
@@ -24,7 +23,22 @@ $ sudo docker exec -it d20c2566bcbe /usr/local/bin/python3 manage.py test <test-
 Current test module:
 	jobs.tests
 	authentication.tests
+	contactform.tests
 ...
+```
+
+Or to run all tests simply don't instantiate a test module:
+```bash
+$ sudo docker exec -it d20c2566bcbe /usr/local/bin/python3 manage.py test
+Found 11 test(s).
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+...........
+----------------------------------------------------------------------
+Ran 11 tests in 7.133s
+
+OK
+Destroying test database for alias 'default'...
 ```
 
 ### Regression Tests
