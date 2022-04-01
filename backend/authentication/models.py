@@ -19,7 +19,7 @@ class User(models.Model):
   home_latitude = models.FloatField(null=True)
   home_longitude = models.FloatField(null=True)
 
-  balance = models.FloatField(default=0)
+  balance = models.DecimalField(default=0, decimal_places=2, max_digits=20)
 
   role = models.CharField(
     max_length=20,

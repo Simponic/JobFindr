@@ -1,7 +1,7 @@
 from django.test import TestCase
 from contactform.models import Submission, Status
 from authentication.models import User, Role, Worker
-from jobs.models import Job, JobType, Status
+from jobs.models import Job, JobType, Status as JobStatus
 
 # Create your tests here.
 
@@ -17,7 +17,7 @@ class SubmissionTestCase(TestCase):
                     balance=100,
                     role=Role.CUSTOMER,
                 )
-        user.set_password(self, "")
+        user.set_password("")
         user.save()
 
         JobType.objects.create(
@@ -35,12 +35,12 @@ class SubmissionTestCase(TestCase):
                     latitude = User.objects.get(name="kev").home_latitude,
                     longitude = User.objects.get(name="kev").home_longitude,
                     comment = "New Comment",
-                    status = Status.AVAILABLE,
+                    status = JobStatus.AVAILABLE,
                     job_type = JobType.objects.get(job_type="job-type")
                 )
         Submission.objects.create(
                     user = User.objects.get(name="kev"),
-                    job = Job.objects.get(user=User.objects.get(name="kev"),
+                    job = Job.objects.get(user=User.objects.get(name="kev")),
                     email = User.objects.get(name="kev").email,
                     body = "Message body",
                     status = Status.OPEN
@@ -53,11 +53,11 @@ class SubmissionTestCase(TestCase):
     
     def test_user_submission(self):
         submission = Submission.objects.get(user = User.objects.get(name="kev"))
-        self.assertTrue(Submission.user.phone_number == "3853378828")
-        self.assertTrue(Submission.job.price = 10.01)
+        self.assertTrue(submission.user.phone_number == "3853378828")
+        self.assertTrue(submission.job.price == 10.01)
         
     def test_anonymous_submission(self):
         submission = Submission.objects.get(email="train@test.com")
-        self.assertTrue(Submission.user.phone_number == "Holy cow! A message for the admin!")
+        self.assertTrue(submission.body == "Holy cow! A message for the admin!")
 
 

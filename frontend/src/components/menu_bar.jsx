@@ -1,30 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../services/auth";
-import { Nav, Navbar, Button, Popover, OverlayTrigger, Image, Container, Row, Col } from "react-bootstrap";
+import { Nav, Navbar, Button, Popover, OverlayTrigger, Container } from "react-bootstrap";
 import { APIUserContext } from "../services/api";
+import { UserCard } from "./user_card/_user_card";
 import toast from "react-hot-toast";
 
 const popover = (user, logoutF) => {
   return (
     <Popover id="popover-basic">
       <Popover.Body>
-        {user.id ?
-          <a href={`/profile/${user.id}/edit`}>
-            <Button variant="secondary">
-              <Container>
-                <Row>
-                  <Col xs={3}><Image src={user.avatar} className="avatar-sm" alt="avatar" /></Col>
-                  <Col xs={9}>
-                    <h5>{user.name}</h5>
-                    <span>{user.role}</span>
-                    <br />
-                    <span>${parseFloat(user.balance, 10).toFixed(2)}</span>
-                  </Col>
-                </Row>
-              </Container>
-            </Button>
-          </a>
-          : null }
+        <UserCard user={user} />
         <Button variant="danger" onClick={logoutF}>
           Logout
         </Button>
@@ -67,6 +52,10 @@ export const MenuBar = () => {
             <Nav.Item>
               <Nav.Link href="/contact">Contact Us</Nav.Link>
             </Nav.Item>
+            {auth.user && auth.user.role === "owner" ?
+              <Nav.Item>
+                <Nav.Link href="/owner/portal">Owner Portal</Nav.Link>
+              </Nav.Item> : null}
           </Nav>
           {
             auth.user ?

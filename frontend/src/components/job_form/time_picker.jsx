@@ -4,12 +4,9 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 
-export const BasicDateTimePicker = ({label, onTimeChange}) => {
-  const [value, setValue] = useState(new Date());
+export const BasicDateTimePicker = ({label, onTimeChange, initialValue}) => {
 
-  const changeTime = (e) => {
-    onTimeChange(e);
-  }
+  const [value, setValue] = useState(initialValue);  
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -19,7 +16,7 @@ export const BasicDateTimePicker = ({label, onTimeChange}) => {
         label={label}
         onChange={(newValue) => {
           setValue(newValue);
-          changeTime(newValue);
+          onTimeChange(newValue);
         }}
       />
     </LocalizationProvider>

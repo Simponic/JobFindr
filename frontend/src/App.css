@@ -1,3 +1,8 @@
+.app-background {
+  background: rgb(153,106,185);
+  background: linear-gradient(90deg, rgba(153,106,185,1) 0%, rgba(255,133,133,1) 50%, rgba(255,206,137,1) 100%);
+}
+
 .avatar {
   width: 100px;
   height: 100px;
@@ -13,12 +18,25 @@
 }
 
 .job-scroll {
-  width: 50%;
+  max-width: 800px;
+  width: 100%;
   height: 60vh;
   padding: 20px;
   border: solid;
   border-color: #f8f9fa;
   overflow-y: scroll;
+}
+
+.job-type-scroll {
+  width: 100%;
+  height: 25vh;
+  border: solid;
+  border-color: #f8f9fa;
+  overflow-y: scroll;
+}
+
+.calendar {
+  height: 40vh;
 }
 
 .logo-color {
@@ -49,15 +67,6 @@
 
 .job-title {
   font-weight: bold;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  word-wrap: break-word;
-  white-space: nowrap;;
-  left: 0;
-  right: 0;
-  padding-inline-end: 20vh;
-  padding-inline-start: 1.5vh;
-  position: absolute;
 }
 
 .list-icons {
@@ -66,4 +75,32 @@
 
 .job-desc {
   resize: none;
+}
+
+.card-shadow {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.highlighted {
+  background-color: #c7bda0;
+}
+
+.status-btn {
+  width: 100%;
+}
+
+.add-job-type-btn-col {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-job-type-btn {
+  height: 70%;
+  width: 100%;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.table-hover {
+  cursor: pointer;
 }

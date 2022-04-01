@@ -38,7 +38,7 @@ export const UserForm = ({ newUser }) => {
       setName(res.user.name);
       setEmail(res.user.email);
       setAvatar(res.user.avatar);
-      setBalance(res.user.balance);
+      setBalance(res.user.balance.toFixed(2));
       setPhoneNumber(res.user.phone_number);
 
       setAddress(res.user.home_address ? res.user.home_address : '');
@@ -49,7 +49,7 @@ export const UserForm = ({ newUser }) => {
         });
       }
     } else if (res.message) {
-      setError(res.message);
+      toast.error(res.message);
     }
   }
 
@@ -140,7 +140,9 @@ export const UserForm = ({ newUser }) => {
     } else {
       const res = await api.put(`/api/user/${id}`, body);
       if (res.success) {
-        auth.updateUserAndToken(res.new_token);
+        if (auth.user.role !== "owner") {
+          auth.updateUserAndToken(res.new_token);
+        }
         toast.success('Updated successfully');
       } else if (res.message) {
         setError(res.message);
@@ -149,7 +151,7 @@ export const UserForm = ({ newUser }) => {
   }  
 
   return (
-    <div className="mx-5">
+    <div className="mx-5 mt-5">
       <Form onSubmit={submit}>
         <h1 className="text-center">{ newUser ? "Sign Up" : "Edit Profile" }</h1>
 
@@ -192,7 +194,7 @@ export const UserForm = ({ newUser }) => {
 
         <Form.Group className="mb-3">
           <Form.Label>Balance</Form.Label>
-          <Form.Control type="number" step="0.01" min="0" value={balance} placeholder={"0.00"} onChange={(e) => setBalance(e.target.value) } />
+          <Form.Control type="number" step="0.01" value={balance} placeholder={"0.00"} onChange={(e) => setBalance(e.target.value) } />
         </Form.Group>
         <hr />
         <Form.Group className="mb-3">
@@ -228,7 +230,7 @@ export const UserForm = ({ newUser }) => {
               <Form.Control id="name" type="text" placeholder="123 Apple Drive #6, Logan, Utah, 84321" value={address} onChange={(e) => setAddress(e.target.value)} />
               {
                 coords?.lat && coords?.lng ? 
-                  <p class="text-muted">Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`} and ignore address.<br />Or, enter your address and submit to update your location.</p>
+                  <p className="text-muted">Leave blank to only store your home location at coordinates {`${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`} and ignore address.<br />Or, enter your address and submit to update your location.</p>
                   : null}
             </Col>
           </Row>

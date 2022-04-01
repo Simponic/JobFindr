@@ -68,7 +68,7 @@ export const AvailabilitySelector = () => {
           end_hour: end.hour(),
           end_minute: end.minute(),
         });
-      } else {
+      } else if (start.weekday() === (((end.weekday() - 1) % 7) + 7) % 7)  {
         // In the worst case the availability is split into two days; no need to worry about anything longer
         availabilities.push({
           day: start.weekday(),
@@ -84,6 +84,10 @@ export const AvailabilitySelector = () => {
           end_hour: end.hour(),
           end_minute: end.minute(),
         })
+      } else {
+        console.log(start.weekday(), end.weekday());
+        toast.error('Availability can only be split into two days');
+        return;
       }
     }
     const res = await api.post(`/api/worker/${id}/availabilities`, { availabilities , jobtypes: selectedJobTypes.map((x) => x.id) });
@@ -123,10 +127,10 @@ export const AvailabilitySelector = () => {
 
   return (
     <div>
-      <h1 className="text-center">Worker Availability</h1>
+      <h1 className="text-center mt-5">Worker Availability</h1>
       <div className="mx-5">
         <Container>
-          <Row>
+          <Row className="job-type-scroll scrollbar-primary">
             {jobTypes.map((jobType) => 
               <JobType key={jobType.id} jobType={jobType} selected={selectedJobTypes.find((s) => s.id == jobType.id)} onSelected={() => toggleSelect(jobType)} icon={icons[jobType.icon]} />
             )}
@@ -134,6 +138,7 @@ export const AvailabilitySelector = () => {
         </Container>
         <FullCalendar
           plugins={[ timeGridPlugin , interactionPlugin ]}
+          height="auto"
           initialView="timeGridWeek"
           headerToolbar={{
             left: '',
@@ -152,7 +157,7 @@ export const AvailabilitySelector = () => {
           eventClick={handleEventClick}
         />
         <br />
-        <Button variant="primary" onClick={updateAvailability}>
+        <Button variant="primary" className="mb-5" onClick={updateAvailability}>
           Save
         </Button>
       </div>

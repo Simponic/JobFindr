@@ -8,7 +8,9 @@ This is a job finder where users can create a job or accept a job.
 + [Logan Hunt](https://github.com/Simponic)
 
 # Organization / Name Scheme
-The `docs` directory contains documentation relevant to the project. 
+The `docs` directory contains documentation relevant to the project.
+* [Standup Reports](docs/standups/reports)
+* [Sprint Planning Docs](docs/planning) 
 
 This project uses the [Django Framework](https://djangoproject.com) to resolve requests and mutate objects stored in a PostgreSQL database. For the frontend, we are using [React](https://reactjs.org/). [Nginx](https://nginx.com) is used to act as a reverse proxy for HTTP requests. [Docker](https://docker.com) is used to ease the build process of the app in development (and production in the future).
 
@@ -59,6 +61,14 @@ Operations to perform:
 To seed initial values into the database:
 ```bash
 $ sudo docker exec -it be5d05526668 /usr/local/bin/python3 manage.py loaddata <fixture-file-name>
+Current fixture file names:
+  contact_form.json, job_type.json
+...    
+```
+
+To seed an owner account into the database:
+```bash
+$ sudo docker exec -it be5d05526668 /usr/local/bin/python3 manage.py create_owner --email='yourEmail@email.com' --phone-number='4352225555' --password='examplePassword23#231$' --first-name='YourFirstName' --last-name='YourLastName' --home-address='4205 Old Main Hill Logan, UT 84322'
 ```
 # Meta-tools
 Most communication between members are done over [Discord](https://discord.com).
@@ -72,19 +82,8 @@ Generally, the workflow of making a feature branch starts with the assigning of 
 
 Once the task is ready to be reviewed, the assigned team member will push their local feature branch onto `origin` and create a Pull Request to merge their branch into `main` so others can also view their work. The pull request will be under heavy subjugation in Code Review, and if it survives the perilous trials of fire, will be merged into the `main` branch.
 
-# Unit Testing
-Please use the `unittest` framework to write unit tests. Documentation on writing unit tests for Django can be found [on the official Django site](https://docs.djangoproject.com/en/4.0/topics/testing/).
-
-# System Testing
-Since system testing isn't (easily) automatable, please follow these steps when trying out system testing: (devs are notoriously good at QA right?...)
-
-1. Look for edge cases
-2. Always make sure user input is handled correctly
-3. Test and re-test the same feature
-4. Click on random buttons to see if stuff breaks. Bonus points if you crash your local server!!!
-
-Once you have found a bug or inconvenience to the user, create an issue on GitHub. In this issue please include steps to reproduce the bug (preferably on the main branch if it's reproducible there).
-As discussed above in the contribution guidelines, the issue will then be assigned to the backlog to die.
+# Testing
+Please see out [Testing.md](docs/Testing.md) document for our testing.
 
 # Deploying
 Deployment will be automated with Docker. Possibly hosted on a Rasperry Pi or something.

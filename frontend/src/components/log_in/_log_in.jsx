@@ -31,7 +31,7 @@ export const LogIn = () => {
     }
   }
   return (
-    <div className="mx-5">
+    <div className="mx-5 mt-5">
       <Form onSubmit={login}>
         <h1 className="text-center">Log In</h1>
         <Form.Group className="mb-3" controlId="formBasicEmail">
