@@ -46,11 +46,11 @@ class SubmissionTestCase(TestCase):
                     status = Status.OPEN
                 )
         Submission.objects.create(
-                    email = "train@test.com",
-                    body = "Holy cow! A message for the admin!",
-                    status = Status.OPEN
-                )
-    
+                   email = "train@test.com",
+                   body = "Holy cow! A message for the admin!",
+                   status = Status.OPEN
+               )
+   
     def test_user_submission(self):
         submission = Submission.objects.get(user = User.objects.get(name="kev"))
         self.assertTrue(submission.user.phone_number == "3853378828")
@@ -59,5 +59,3 @@ class SubmissionTestCase(TestCase):
     def test_anonymous_submission(self):
         submission = Submission.objects.get(email="train@test.com")
         self.assertTrue(submission.body == "Holy cow! A message for the admin!")
-
-
