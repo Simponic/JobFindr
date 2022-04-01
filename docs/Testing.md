@@ -68,8 +68,7 @@ in our program. In this last sprint, we've created an issue where everyone can p
 edge cases and program correctness (handling data).
 
 As an example, when testing the worker assignments a system test was included in an automated script to find a worker,
-a job, and an availability. This test in [backend/jobs/management/commands/testavailability.py)(../backend/jobs/management/commands/testavailability.py]
-tested several components of the system; the production database, that workers can exist, that jobs can exist, and that
+a job, and an availability. This system test tested several components of the system; the production database, that workers can exist, that jobs can exist, and that
 workers can correctly be assigned jobs. This is different from a unit test because it does not check a single module or
 independent module, rather it attempts to show that several moving parts of the system are working correctly.
 
