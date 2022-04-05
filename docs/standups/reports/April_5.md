@@ -2,7 +2,7 @@
 
 Team Name: Team one
 
-Scrum Master: Logan Hunt
+Scrum Master: Jake Cogswell
 
 | Team Member   | What did you do since last scrum  | What do you plan to do before the next scrum                  | What obstacles do you have                                                            |
 | :---          | :---                              | :---                                                          | :---                                                                                  |
