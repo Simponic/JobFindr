@@ -88,6 +88,18 @@ Please see out [Testing.md](docs/Testing.md) document for our testing.
 # Deploying
 Deployment will be automated with Docker. Possibly hosted on a Rasperry Pi or something.
 
+When deployed, the following list of accounts will be accessible from the site:
+
+| Emails                   | Password | Role     |
+|--------------------------|----------|----------|
+| owner@mailinator.com     | password | owner    |
+| joeschmoe@mailinator.com | password | customer |
+| workerone@mailinator.com | password | worker   |
+| workertwo@mailinator.com | password | worker   |
+| worker3@mailinator.com   | password | worker   |
+| worker4@mailinator.com   | password | worker   |
+| schmoejoe@mailinator.com | password | customer |
+
 # Helpful commands
 
 ## Interacting with DB
