@@ -22,7 +22,6 @@ export const UserCard = ({ user, showContact }) => {
                   </>
                   : null
                 }
-                { user.balance !== undefined ? <span>${parseFloat(user.balance, 10).toFixed(2)}</span> : null }
               </Col>
             </Row>
           </Container>
