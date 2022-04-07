@@ -39,7 +39,7 @@ export const AvailabilitySelector = () => {
         if (i < availability.length-1 && ((availability[i].day + 1) % 7) === availability[i+1].day && availability[i].end_hour === 23 && availability[i].end_minute === 59 && availability[i+1].start_hour === 0 && availability[i+1].start_minute === 0) {
           availabilities.push({
             start: moment().utc().day(availability[i].day).hour(availability[i].start_hour).minute(availability[i].start_minute).format(),
-            end: moment().utc().day(availability[i+1].day).hour(availability[i+1].end_hour).minute(availability[i+1].end_minute).format(),
+            end: (availability[i].day == 6 && availability[i+1].day == 0 ? moment().add(1, 'weeks') : moment()).utc().day(availability[i+1].day).hour(availability[i+1].end_hour).minute(availability[i+1].end_minute).format(),
           });
           i += 1;
         } else {
