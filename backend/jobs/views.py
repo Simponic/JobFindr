@@ -5,6 +5,7 @@ from authentication.models import Role, User, Worker, WorkerAvailability
 from jobs.serializers import serialize_jobtype, serialize_job, serialize_job_time
 from django.conf import settings
 import json
+import decimal
 from authentication.views import get_user_or_error
 
 def job_types(request):
@@ -175,9 +176,9 @@ def complete_job(request, id):
         return JsonResponse({'success': False, 'message': 'No owner found. Job cannot be marked completed'})
 
     # MONEY
-    job.user.balance -= job.price
-    worker.user.balance += settings.WORKER_PERCENTAGE * job.price
-    owner.balance += (1 - settings.WORKER_PERCENTAGE) * job.price
+    job.user.balance -= decimal.Decimal(job.price)
+    worker.user.balance += decimal.Decimal(settings.WORKER_PERCENTAGE * job.price)
+    owner.balance += decimal.Decimal((1 - settings.WORKER_PERCENTAGE) * job.price)
 
     job.status = Status.COMPLETE
     job.save()
