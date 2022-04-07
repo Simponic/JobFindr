@@ -79,7 +79,7 @@ export const JobView = () => {
             {
               result?.job?.status === "assigned" && result?.job_time ?
               <li>
-                <strong>Scheduled: {moment(result?.job_time?.start_time*1000).format('M/D/Y H:mm')} - {moment(result?.job_time?.end_time*1000).format('M/D/Y h:mm')}</strong>
+                <strong>Scheduled: {moment(result?.job_time?.start_time*1000).format('M/D/Y H:mm')} - {moment(result?.job_time?.end_time*1000).format('M/D/Y H:mm')}</strong>
               </li>
               : null
             }

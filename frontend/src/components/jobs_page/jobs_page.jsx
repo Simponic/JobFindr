@@ -159,7 +159,7 @@ export const JobsPage = () => {
       {
         (auth.user.role === "worker" && jobFilterStatus === "assigned") ?
           <WorkerSchedule 
-            workerEvents={jobTimes.filter((j) => j.status == "assigned").map((j) => {
+            workerEvents={jobTimes.map((j) => {
               return {
                 id: j.job_id,
                 title: initialJobs.find((job) => job.id == j.job_id).title,
@@ -169,7 +169,6 @@ export const JobsPage = () => {
             })}
             onEventClick={(e) => {
               const jobCard = document.getElementById(`job-${e.event.id}`);
-              setJobFilterStatus("assigned");
               if (jobCard) {
                 jobCard.scrollIntoView()
                 setHighlighted(e.event.id);

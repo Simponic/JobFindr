@@ -16,7 +16,7 @@ def __set_fields(user, body, method="POST", job=None):
         if (method == "POST"):
             job = Job()
             job.user = user
-        job.price = body['price']
+        job.price = float(body['price'])
         job.job_type = JobType.objects.get(id=body['jobType'])
         job.time_estimate = float(body['timeEstimate'])
         if (method == "POST" or (not job.start_time == body['startTime'] and not job.end_time == body['endTime'])):
