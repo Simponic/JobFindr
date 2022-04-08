@@ -5,7 +5,7 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.22.0.0/16
+      - subnet: 172.23.1.0/16
 
 services:
   backend:
@@ -16,14 +16,16 @@ services:
       - 8000
     environment:
       - ENV=DEV
-      - PGHOST=172.22.0.102
+      - PGHOST=172.23.1.102
       - PGDATABASE=postgres
       - PGUSER=postgres
       - PGPASSWORD=postgres
       - PGPORT=5432
     networks:
       static:
-        ipv4_address: 172.22.0.100
+        ipv4_address: 172.23.1.100
+    depends_on:
+      - db
 
   frontend:
     stdin_open: true
@@ -39,7 +41,7 @@ services:
       - .env
     networks:
       static:
-        ipv4_address: 172.22.0.101
+        ipv4_address: 172.23.1.101
     depends_on:
       - backend
 
@@ -57,7 +59,7 @@ services:
       - '5438:5432'
     networks:
       static:
-        ipv4_address: 172.22.0.102
+        ipv4_address: 172.23.1.102
     volumes: 
       - ./postgres-data:/var/lib/postgresql/data
 
@@ -67,7 +69,7 @@ services:
       - 81:80
     networks:
       static:
-        ipv4_address: 172.22.0.103
+        ipv4_address: 172.23.1.103
     depends_on:
       - backend
       - frontend

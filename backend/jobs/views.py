@@ -20,18 +20,18 @@ def __set_fields(user, body, method="POST", job=None):
         job.price = float(body['price'])
         job.job_type = JobType.objects.get(id=body['jobType'])
         job.time_estimate = float(body['timeEstimate'])
-        if (method == "POST" or (not job.start_time == body['startTime'] and not job.end_time == body['endTime'])):
-            job.start_time = body['startTime']
-            job.end_time = body['endTime']
-            updated_time = True
+        job.start_time = body['startTime']
+        job.end_time = body['endTime']
         job.address = body['address']
         job.latitude = body['coords']['lat']
         job.longitude = body['coords']['lng']
         job.comment = body['comment']
         if (user.role == Role.OWNER):
             job.status = body['status']
+        if (method == "PUT"):
+            job.status = Status.AVAILABLE
         job.save()
-        if (method == "PUT" and updated_time):
+        if (job.status == Status.AVAILABLE):
             return job.try_assign_worker()
         elif (method == "PUT"):
             return {'success': True, 'job': serialize_job(job)}
@@ -86,7 +86,6 @@ def job_update(request, id):
     except Job.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'Job does not exist'})
     
-    job.status = Status.AVAILABLE
     return JsonResponse(__set_fields(user, body, method="PUT", job=job))
 
 def create_job(request):

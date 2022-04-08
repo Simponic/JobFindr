@@ -85,7 +85,7 @@ class WorkerAvailability(models.Model):
     for i in range(len(availabilities)):
       s = availabilities[i]
       if ((i < len(availabilities)-1) and ((s[1].weekday() + 1) % 7) == (availabilities[i+1][0].weekday()) and s[1].hour == 23 and s[1].minute == 59 and availabilities[i+1][0].hour == 0 and availabilities[i+1][0].minute == 0):
-        work_ranges.append((s[0], availabilities[i+1][1]))
+        work_ranges.append([s[0], availabilities[i+1][1]])
       else:
         work_ranges.append(s)
     if len(work_ranges) <= 1:

@@ -56,7 +56,7 @@ class Job(models.Model):
             for a in availabilities_on_day:
                 s = max(max(start_time.replace(hour=a.start_hour, minute=a.start_minute)+datetime.timedelta(days=i), datetime.datetime.now()), start_time)
                 e = min(end_time, start_time.replace(hour=a.end_hour, minute=a.end_minute)+datetime.timedelta(days=i))
-                possible_work_times.append((s, e))
+                possible_work_times.append([s, e])
         work_ranges = WorkerAvailability.union_datetime_ranges_over_days(possible_work_times)
 
         return list(filter(lambda x: x[1] - x[0] >= datetime.timedelta(hours=self.time_estimate), work_ranges))
@@ -82,17 +82,17 @@ class Job(models.Model):
             worker_availabilities = self.availabilities_job_completeable_in(WorkerAvailability.objects.filter(worker=worker).order_by('start_hour', 'start_minute'))
 
             worker_job_times = WorkerJobTimes.objects.filter(worker=worker)
-            for job_times in worker_job_times:
+            for job_time in worker_job_times:
                 availabilities = []
-                job_times.start_time = datetime.datetime.fromtimestamp(job_times.start_time).replace(second=0)
-                job_times.end_time = datetime.datetime.fromtimestamp(job_times.end_time).replace(second=0)
+                start_time = datetime.datetime.fromtimestamp(job_time.start_time).replace(second=0)
+                end_time = datetime.datetime.fromtimestamp(job_time.end_time).replace(second=0)
                 for a in worker_availabilities:
-                    if a[0] <= job_times.start_time and a[1] >= job_times.end_time:
-                        availabilities += list(filter(lambda x: x[1] - x[0] >= datetime.timedelta(hours=self.time_estimate), [(a[0], job_times.start_time), (job_times.end_time, a[1])]))
-                        continue
+                    if a[0] <= start_time and a[1] >= end_time:
+                        availabilities += [[a[0], start_time], [end_time, a[1]]]
                     else:
                         availabilities.append(a)
                 worker_availabilities = availabilities
+            worker_availabilities = list(filter(lambda x: x[1] - x[0] >= datetime.timedelta(hours=self.time_estimate), worker_availabilities))
             if len(worker_availabilities):
                 WorkerJobTimes.objects.create(
                     job=self,
