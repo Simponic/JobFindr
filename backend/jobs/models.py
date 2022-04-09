@@ -81,10 +81,10 @@ class Job(models.Model):
         for worker in workers_in_radius:
             worker_availabilities = self.availabilities_job_completeable_in(WorkerAvailability.objects.filter(worker=worker).order_by('start_hour', 'start_minute'))
 
-            worker_job_times = WorkerJobTimes.objects.filter(worker=worker)
+            worker_job_times = WorkerJobTimes.objects.filter(worker=worker).order_by('start_time')
             for job_time in worker_job_times:
                 availabilities = []
-                start_time = datetime.datetime.fromtimestamp(job_time.start_time).replace(second=0)
+                start_time = max(datetime.datetime.fromtimestamp(job_time.start_time).replace(second=0), datetime.datetime.now())
                 end_time = datetime.datetime.fromtimestamp(job_time.end_time).replace(second=0)
                 for a in worker_availabilities:
                     if a[0] <= start_time and a[1] >= end_time:

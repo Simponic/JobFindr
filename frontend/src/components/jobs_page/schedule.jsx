@@ -13,8 +13,8 @@ export const WorkerSchedule = ({ workerEvents, onEventClick }) => {
         selectable={true}
         dayHeaderFormat={{ weekday: 'short' }}
         allDaySlot={false}
-        slotMinTime={'08:00:00'}
-        slotMaxTime={'20:00:00'}
+        slotMinTime={'06:00:00'}
+        slotMaxTime={'22:00:00'}
         events={workerEvents}
         eventClick={onEventClick}
       />
