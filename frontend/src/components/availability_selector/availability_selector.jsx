@@ -85,7 +85,6 @@ export const AvailabilitySelector = () => {
           end_minute: end.minute(),
         })
       } else {
-        console.log(start.weekday(), end.weekday());
         toast.error('Availability can only be split into two days');
         return;
       }
@@ -153,6 +152,7 @@ export const AvailabilitySelector = () => {
           slotMinTime={'08:00:00'}
           slotMaxTime={'20:00:00'}
           events={initialEvents}
+          initialDate={moment().utc().weekday(6).format()}
           eventsSet={(e) => { setEvents(e); }}
           eventClick={handleEventClick}
         />
