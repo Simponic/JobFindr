@@ -72,7 +72,7 @@ a job, and an availability. This system test tested several components of the sy
 workers can correctly be assigned jobs. This is different from a unit test because it does not check a single module or
 independent module, rather it attempts to show that several moving parts of the system are working correctly.
 
-#### Owner Portal Regression Tests
+#### Owner Portal System Tests
 * Portal
 	* Expected behavior: Only the owner can access this page. From here, they can access pages to view/edit users,
 		jobs, forms, and job types.
