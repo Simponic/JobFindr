@@ -63,6 +63,7 @@ To seed initial values into the database:
 $ sudo docker exec -it be5d05526668 /usr/local/bin/python3 manage.py loaddata <fixture-file-name>
 Current fixture file names:
   contact_form.json, job_type.json
+	* For contact forms, please make sure to create at least 1 job and 2 accounts before seeding.
 ...    
 ```
 
